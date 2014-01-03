@@ -1,4 +1,5 @@
-$(function () {
+var nreplDrawbridgeHandler = function (responseCallback) {
+
     var sendREPLCommand = function (command) {
         $.ajax({
                 type: 'POST',
@@ -6,7 +7,7 @@ $(function () {
                 data: command,
                 success: function (data) {
                     if (data) {
-                        data.map(processResponses)
+                        data.map(responseCallback)
                     }
                 },
                 dataType: 'json'
@@ -14,16 +15,12 @@ $(function () {
         )
     };
 
-    var processResponses = function (response) {
-        $('#result').append(JSON.stringify(response) + '<br/>')
-    };
-
-    setInterval(function () {
-        sendREPLCommand({})
-    }, 250)
-
-    $('#execute').click(function () {
-        sendREPLCommand({'op': 'eval', 'code': $('#command').val()})
-    });
-
-});
+    return {
+        execute: function (command) {
+            sendREPLCommand({'op': 'eval', 'code': command});
+        },
+        poll: function () {
+            sendREPLCommand({})
+        }
+    }
+};
