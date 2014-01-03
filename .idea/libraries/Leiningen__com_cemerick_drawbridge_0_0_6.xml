@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="Leiningen: com.cemerick/drawbridge:0.0.6">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/cemerick/drawbridge/0.0.6/drawbridge-0.0.6.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

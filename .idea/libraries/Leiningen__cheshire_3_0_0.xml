@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="Leiningen: cheshire:3.0.0">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/cheshire/cheshire/3.0.0/cheshire-3.0.0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
