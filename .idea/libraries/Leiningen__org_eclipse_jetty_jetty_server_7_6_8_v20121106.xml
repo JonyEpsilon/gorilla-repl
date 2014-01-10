@@ -3,7 +3,11 @@
     <CLASSES>
       <root url="jar://$MAVEN_REPOSITORY$/org/eclipse/jetty/jetty-server/7.6.8.v20121106/jetty-server-7.6.8.v20121106.jar!/" />
     </CLASSES>
-    <JAVADOC />
-    <SOURCES />
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/org/eclipse/jetty/jetty-server/7.6.8.v20121106/jetty-server-7.6.8.v20121106-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/org/eclipse/jetty/jetty-server/7.6.8.v20121106/jetty-server-7.6.8.v20121106-sources.jar!/" />
+    </SOURCES>
   </library>
 </component>

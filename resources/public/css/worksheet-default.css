@@ -1,0 +1,174 @@
+/*
+ * This file is part of MonkeyCruncher. Copyright (C) 2012-2013, Jony Hudson.
+ *
+ * MonkeyCruncher is licenced to you under the MIT licence. See the file
+ * LICENCE.txt for full details.
+ */
+
+body {
+    padding-top: 40px;
+}
+
+div#contents {
+    margin-left: 10%;
+    margin-right: 10%;
+    /*-webkit-perspective: 500px;*/
+    /*-webkit-transform-style: preserve-3d;*/
+}
+
+h1 {
+    margin-bottom: 0.3em;
+}
+
+div.segment {
+    padding: 0.5em;
+    margin: 0.2em 0.2em 0.2em 0.2em;
+    border-style: solid;
+    border-width: 1px;
+    border-color: #cccccc;
+}
+
+
+div.free {
+    background-color: #ffffff;
+    border-style: none;
+    padding: 0em 0.5em 0em 0.5em;
+    font-family: 'Lora', serif;
+}
+
+div.heading-editor+div.CodeMirror {
+    font-family: 'Arvo', serif;
+}
+
+div.code {
+    background-color: #eeeeee;
+    margin: 0.5em 1.5em 0.2em 1.5em;
+    padding: 0.2em;
+}
+
+div.code .segment-main {
+    padding: 0.5em;
+    overflow: hidden;
+}
+
+div.code .segment-main-narrow {
+    padding: 0.5em;
+}
+
+div.output {
+    border-style: solid;
+    background-color: white;
+    border-width: 1px;
+    border-color: #cccccc;
+}
+
+div.browser {
+    font-family: monospace;
+    clear: both;
+}
+
+div.error-text {
+    font-family: monospace;
+    border-style: solid;
+    border-width: 1px;
+    border-color: #ff0000;
+    color: #ff0000;
+    clear: both;
+}
+
+div.visual {
+    width: 640px;
+    height: 480px;
+    float: left;
+    margin-bottom: 2px;
+}
+
+div.visual-narrow {
+    width: 640px;
+    height: 480px;
+    margin-bottom: 2px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+div.segment-footer {
+    clear: both;
+}
+
+/* So named to avoid conflict with bootstrap container */
+div.container-segment {
+    border-style: none;
+}
+
+/*.segment-main {*/
+    /*width: 100%;*/
+/*}*/
+
+.segment-horizontal-cursor {
+    height: 1px;
+}
+
+.horizontal-cursor-container {
+    height: 12px;
+    cursor: vertical-text;
+}
+
+div.selected {
+    outline-style: solid;
+    outline-width: 1px;
+    outline-color: #4682b4;
+}
+
+.cursor-selected {
+    background-color: #4682b4;
+}
+
+:focus {
+    outline: none;
+}
+
+.code-warning {
+    box-shadow: 0 0 10px red;
+}
+
+.live {
+    box-shadow: 0 0 10px green;
+}
+
+/* Hack for FF as it puts the outline around the box-shadow :-( */
+@-moz-document url-prefix() {
+    .live {outline-offset: -15px}
+}
+
+
+.browser-muted {
+    opacity: 0.5;
+}
+
+div.running {
+    background-color: #d9ffd9;
+}
+
+.settings-menu {
+    opacity: 0.5;
+}
+
+.share-link {
+    font-size: 12px;
+    font-family: monospace;
+}
+
+.scroll-pad {
+    padding-bottom: 200px;
+}
+
+.CodeMirror {
+    height: auto;
+}
+
+.CodeMirror-scroll {
+    height: auto;
+    overflow-y: hidden;
+    overflow-x: auto;
+    width: 100%
+}

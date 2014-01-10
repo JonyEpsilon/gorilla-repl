@@ -1,0 +1,83 @@
+/*
+ * This file is part of MonkeyCruncher. Copyright (C) 2012-2013, Jony Hudson.
+ *
+ * MonkeyCruncher is licenced to you under the MIT licence. See the file
+ * LICENCE.txt for full details.
+ */
+
+.ov {
+    padding: 1em;
+}
+
+.ov-boolean-true {
+    color: green;
+}
+
+.ov-boolean-false {
+    color: red;
+}
+
+.ov-number {
+    color: black;
+}
+
+.ov-string {
+    color: gray;
+}
+
+.ov-function {
+    color: purple;
+}
+
+.ov-element {
+    color: #aa00aa;
+}
+
+.ov-object-header {
+    color: #00008b;
+    cursor: pointer;
+}
+
+.ov-closed {
+    -webkit-transform-origin: center;
+    -webkit-transform: rotateZ(0deg);
+    -webkit-transition: -webkit-transform 0.1s;
+}
+
+.ov-open {
+    -webkit-transform: rotateZ(90deg);
+    -webkit-transition: -webkit-transform 0.1s;
+}
+
+.ov img {
+    padding-left: 2px;
+    padding-right: 2px;
+}
+
+.ov-object {
+    padding-left: 0;
+    margin: 0;
+    border-left-style: solid;
+    border-left-width: 1px;
+    border-left-color: #ddd;
+}
+
+.ov-object-key {
+    color: blue;
+    padding-left: 1em;
+    margin-top: 0.1em;
+    list-style-type: none;
+}
+
+.ov-array-header {
+    color: #a52a2a;
+    cursor: pointer;
+}
+
+.ov-array {
+    padding-left: 1em;
+    border-left-style: solid;
+    border-left-width: 1px;
+    border-left-color: #ddd;
+    color: #a52a2a;
+}

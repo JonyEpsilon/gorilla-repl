@@ -3,7 +3,11 @@
     <CLASSES>
       <root url="jar://$MAVEN_REPOSITORY$/joda-time/joda-time/2.1/joda-time-2.1.jar!/" />
     </CLASSES>
-    <JAVADOC />
-    <SOURCES />
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/joda-time/joda-time/2.1/joda-time-2.1-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/joda-time/joda-time/2.1/joda-time-2.1-sources.jar!/" />
+    </SOURCES>
   </library>
 </component>

@@ -4,6 +4,8 @@
       <root url="jar://$MAVEN_REPOSITORY$/org/codehaus/jackson/jackson-smile/1.9.5/jackson-smile-1.9.5.jar!/" />
     </CLASSES>
     <JAVADOC />
-    <SOURCES />
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/org/codehaus/jackson/jackson-smile/1.9.5/jackson-smile-1.9.5-sources.jar!/" />
+    </SOURCES>
   </library>
 </component>
