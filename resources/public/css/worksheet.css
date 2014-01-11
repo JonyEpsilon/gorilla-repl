@@ -6,7 +6,7 @@
  */
 
 body {
-    padding-top: 40px;
+    /*padding-top: 40px;*/
 }
 
 div#contents {
@@ -164,6 +164,7 @@ div.running {
 
 .CodeMirror {
     height: auto;
+    background-color: #eeeeee;
 }
 
 .CodeMirror-scroll {

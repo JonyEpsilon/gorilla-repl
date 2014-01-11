@@ -11,6 +11,7 @@
     <link href='https://fonts.googleapis.com/css?family=Lora:400,700' rel='stylesheet' type='text/css'/>
     <link href='https://fonts.googleapis.com/css?family=Arvo:400,700' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" href="jslib/codemirror-3.20/lib/codemirror.css"/>
+    <link rel="stylesheet" href="css/object-viewer.css"/>
     <link rel="stylesheet" href="css/worksheet.css"/>
     <script type="text/javascript"
             src="jslib/mathjax/MathJax.js?config=TeX-AMS-MML_SVG-full.js&delayStartupUntil=configured"></script>
@@ -30,7 +31,11 @@
 
 <!-- The page stub -->
 <div id="contents">
-    <div data-bind="template: {name: 'segment-template', foreach: worksheet().segments()}">
+    <div class="segment container-segment">
+        <div class="container-children">
+        <div data-bind="template: {name: 'segment-template', foreach: worksheet().segments()}">
+        </div>
+        </div>
     </div>
 </div>
 <div class="scroll-pad"></div>
@@ -44,14 +49,17 @@
     <div class="segment code running"
          data-bind="css: {selected: active(), 'code-warning': warningIndicator() && active(), running: runningIndicator}, attr: {id: id}">
 
-        <div class="output" data-bind="attr: {id: 'output-' + id}"></div>
-
-        <div>
+        <div class="segment-main">
             <textarea class="codeTextArea" data-bind="codemirror: content"></textarea>
         </div>
         <div class="error-text" data-bind="text: errorText, visible: errorText() !== ''"></div>
         <div class="output browser"
-             data-bind="objectViewer: output, visible: (objectBrowserVisible()), css: {'browser-muted': warningIndicator}"></div>
+             data-bind="visible: (outputVisible()), css: {'browser-muted': warningIndicator}">
+            <!-- temp hack -->
+            <div class='ov'>
+                <span class='ov-string' data-bind="text: output"></span>
+            </div>
+             </div>
         <div class="segment-footer"></div>
     </div>
 </script>
