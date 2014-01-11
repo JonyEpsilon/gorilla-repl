@@ -11,21 +11,26 @@
     <link href='https://fonts.googleapis.com/css?family=Lora:400,700' rel='stylesheet' type='text/css'/>
     <link href='https://fonts.googleapis.com/css?family=Arvo:400,700' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" href="jslib/codemirror-3.20/lib/codemirror.css"/>
-    <link rel="stylesheet" href="css/worksheet-default.css"/>
-    <script src="jslib/mathjax/MathJax.js?config=TeX-AMS-MML_SVG-full.js&delayStartupUntil=configured"></script>
-    <script src="jslib/jquery-1.10.2.min.js"></script>
-    <script src="jslib/knockout-3.0.0.min.js"></script>
-    <script src="js/worksheet.js"></script>
-    <script src="js/codemirror_ko_binding.js"></script>
-    <script src="js/segment.js"></script>
-    <script src="js/main.js"></script>
+    <link rel="stylesheet" href="css/worksheet.css"/>
+    <script type="text/javascript"
+            src="jslib/mathjax/MathJax.js?config=TeX-AMS-MML_SVG-full.js&delayStartupUntil=configured"></script>
+    <script type="text/javascript" src="jslib/markdown/Markdown.Converter.js"></script>
+    <script type="text/javascript" src="jslib/markdown/Markdown.Sanitizer.js"></script>
+    <script type="text/javascript" src="jslib/jquery-1.10.2.min.js"></script>
+    <script type="text/javascript" src="jslib/knockout-3.0.0.min.js"></script>
+    <script type="text/javascript" src="jslib/codemirror-3.20/lib/codemirror.js"></script>
+    <script type="text/javascript" src="jslib/codemirror-3.20/mode/clojure/clojure.js"></script>
+    <script type="text/javascript" src="js/worksheet.js"></script>
+    <script type="text/javascript" src="js/codemirrorVM.js"></script>
+    <script type="text/javascript" src="js/segment.js"></script>
+    <script type="text/javascript" src="js/main.js"></script>
     <title>Gorilla REPL</title>
 </head>
 <body>
 
 <!-- The page stub -->
 <div id="contents">
-    <div data-bind="template: {name: 'segment-template', data: worksheet().segmentTree()}">
+    <div data-bind="template: {name: 'segment-template', foreach: worksheet().segments()}">
     </div>
 </div>
 <div class="scroll-pad"></div>
@@ -37,33 +42,11 @@
 
 <script type="text/html" id="code-segment-template">
     <div class="segment code running"
-         data-bind="css: {selected: cursor.selected, 'code-warning': warningIndicator() && cursor.selected(), running: runningIndicator}, attr: {id: id}, event: {keypress: handleSegmentKeypress}">
-        <div class="btn-group pull-right">
-            <a class="btn btn-mini dropdown-toggle" data-toggle="dropdown" href="#">
-                <span class="settings-menu">
-                    <i class="icon-wrench"></i>
-                    <span class="caret"></span>
-                </span>
-            </a>
-            <ul class="dropdown-menu">
-                <li data-bind="click: visualToggleClicked">
-                    <a href="#">Show output
-                        <i class="pull-right" data-bind="css: {'icon-ok': visualPaneVisible}"></i></a>
-                </li>
-                <li data-bind="click: objectToggleClicked">
-                    <a href="#">Show objects
-                        <i class="pull-right" data-bind="css: {'icon-ok': objectBrowserVisible}"></i></a>
-                </li>
-                <li data-bind="click: liveModeClicked">
-                    <a href="#">Live evaluation
-                        <i class="pull-right" data-bind="css: {'icon-ok': liveEvaluationMode}"></i></a>
-                </li>
-            </ul>
-        </div>
-        <div class="output"
-             data-bind="visible: visualPaneVisible, attr: {id: 'output-' + id()}, css: {visual: !$root.narrowMode(), 'visual-narrow': $root.narrowMode()}">
-        </div>
-        <div data-bind="css: {'segment-main': !$root.narrowMode(), 'segment-main-narrow': $root.narrowMode()}">
+         data-bind="css: {selected: active(), 'code-warning': warningIndicator() && active(), running: runningIndicator}, attr: {id: id}">
+
+        <div class="output" data-bind="attr: {id: 'output-' + id}"></div>
+
+        <div>
             <textarea class="codeTextArea" data-bind="codemirror: content"></textarea>
         </div>
         <div class="error-text" data-bind="text: errorText, visible: errorText() !== ''"></div>
@@ -73,23 +56,23 @@
     </div>
 </script>
 
-<script type="text/html" id="free-segment-template">
-    <div class="segment free" data-bind="css: {selected: cursor.selected}, attr: {id: id}">
-        <a href="#"
-           data-bind="hasfocus: targetFocused, event: {keydown: cursor.handleSegmentKeydown},
-                      attr: {id: 'segment-focus-target-' + id()}"></a>
+<!--<script type="text/html" id="free-segment-template">-->
+    <!--<div class="segment free" data-bind="css: {selected: active()}, attr: {id: id}">-->
+        <!--<a href="#"-->
+           <!--data-bind="hasfocus: targetFocused, event: {keydown: cursor.handleSegmentKeydown},-->
+                      <!--attr: {id: 'segment-focus-target-' + id()}"></a>-->
 
-        <div class="segment-main">
-            <div class="free-preview"
-                 data-bind="mathJaxViewer: content.renderedContent, click: cursor.handleSegmentClick, visible: !cursor.markupVisible()"></div>
-            <div class="free-markup"
-                 data-bind="visible: cursor.markupVisible, event: {keydown: content.handleMarkupKeyup}">
-                <textarea data-bind="codemirror: content.markupEditor"></textarea>
-            </div>
-        </div>
-        <div class="segment-footer"></div>
-    </div>
-</script>
+        <!--<div class="segment-main">-->
+            <!--<div class="free-preview"-->
+                 <!--data-bind="mathJaxViewer: content.renderedContent, click: cursor.handleSegmentClick, visible: !cursor.markupVisible()"></div>-->
+            <!--<div class="free-markup"-->
+                 <!--data-bind="visible: cursor.markupVisible, event: {keydown: content.handleMarkupKeyup}">-->
+                <!--<textarea data-bind="codemirror: content.markupEditor"></textarea>-->
+            <!--</div>-->
+        <!--</div>-->
+        <!--<div class="segment-footer"></div>-->
+    <!--</div>-->
+<!--</script>-->
 
 <!-- Dialogs -->
 

@@ -8,45 +8,44 @@
 // to a textarea, and bind it to a viewmodel made with makeCodeMirrorViewmodel.
 //
 // The viewmodel takes a parameter to a cursor callback object. This object is notified of any events that
-// are relevant to the cursor.
+// are relevant to the worksheet cursor, namely if the focus is entering or leaving the editor. The editor can be
+// given an id, and it will pass this id in to the cursor callbacks.
+//
 // It also implements the standard functions that a segment content item should: positionCursorAtContentStart,
 // positionCursorAtContentEnd, and positionCursorAtContentStartOfLastLine
 
-var codeMirrorVM = function (id, cursorCallbackObject, initialContents, contentType) {
+var codemirrorVM = function (id, cursorCallbackObject, initialContents, contentType) {
     var self = {};
     self.id = id;
-
-    self.contents = ko.observable(initialContents);
     self.contentType = contentType;
 
+    self.contents = ko.observable(initialContents);
 
     // asks the editor to redraw itself. Needed when its size has changed.
     self.reflow = function () {
         self.codeMirror.refresh();
     };
 
-    self.inletEnabled = false;
-
+    // Cursor callback methods. These will be called by the CodeMirror component, and will notify the cursorCallback
+    // that a change of cell focus should happen.
     self.notifyMoveCursorBack = function () {
-        cursorCallbackObject.notifyMoveCursorBack();
+        cursorCallbackObject.notifyMoveCursorBack(id);
     };
 
     self.notifyMoveCursorForward = function () {
-        cursorCallbackObject.notifyMoveCursorForward();
+        cursorCallbackObject.notifyMoveCursorForward(id);
     };
 
     self.notifyFocused = function () {
-        cursorCallbackObject.notifyFocused();
+        cursorCallbackObject.notifyFocused(id);
     };
 
-    self.notifyBackspaceOnEmpty = function () {
-        cursorCallbackObject.notifyBackspaceOnEmpty();
-    };
+//    self.notifyBackspaceOnEmpty = function () {
+//        cursorCallbackObject.notifyBackspaceOnEmpty();
+//    };
 
-    self.relinquishCursor = function () {
-        self.codeMirror.hideInletUI();
-    };
-
+    // These can be called to position the CodeMirror cursor appropriately. They are used when the cell is receiving
+    // focus from another cell.
     self.positionCursorAtContentStart = function () {
         self.codeMirror.focus();
         self.codeMirror.setCursor(0, 0);
@@ -79,7 +78,6 @@ ko.bindingHandlers.codemirror = {
                 lineNumbers: false,
                 matchBrackets: true,
                 lineWrapping: true,
-                readOnly: !(require('js/application').isWorksheetEditable()),
                 mode: valueAccessor().contentType,
                 onKeyEvent: function (editor, event) {
                     // only check on cursor key keydowns
@@ -116,17 +114,10 @@ ko.bindingHandlers.codemirror = {
                                     valueAccessor().notifyMoveCursorForward();
                             }
                         }
-                        // delete on an empty editor
-                        if (event.keyCode === 8) {
-                            if (editor.getValue() === "") valueAccessor().notifyBackspaceOnEmpty();
-                        }
-                        // ctrl + space is autocomplete, depending on mode
-                        if (event.ctrlKey && event.keyCode === 32) {
-                            if (valueAccessor().contentType === 'text/javascript') {
-                                CodeMirror.simpleHint(editor, CodeMirror.javascriptHint);
-                                event.preventDefault();
-                            }
-                        }
+//                        // delete on an empty editor
+//                        if (event.keyCode === 8) {
+//                            if (editor.getValue() === "") valueAccessor().notifyBackspaceOnEmpty();
+//                        }
                     }
                 }
             });
@@ -140,7 +131,6 @@ ko.bindingHandlers.codemirror = {
         cm.on('focus', function () {
             valueAccessor().notifyFocused();
         });
-        inlet.addInletFeatures(cm, valueAccessor());
         // store the editor object on the viewmodel
         valueAccessor().codeMirror = cm;
         // set the initial content

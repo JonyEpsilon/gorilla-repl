@@ -37,19 +37,8 @@ var worksheetWrapper = function (worksheet) {
 var worksheet = function () {
     var self = {};
 
-    // this is the root segment of the document. It has no parent, and a link to this worksheet.
-    self.segments = ko.observable([]);
-
-    // these getModel functions return a representation of the model suitable for serialization.
-    self.getModel = function () {
-        return {
-            segments: self.segments.getModel()
-        };
-    };
-    // and a convenience function to serialize
-    self.serialize = function () {
-        return JSON.stringify(self.getModel());
-    };
+    // the content of the worksheet is a list of segments.
+    self.segments = ko.observableArray();
 
     return self;
 };

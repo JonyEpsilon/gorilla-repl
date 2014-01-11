@@ -7,8 +7,12 @@
 // The application entry point
 $(function () {
 
-    var worksheet = worksheet();
-    var wsWrapper = worksheetWrapper(worksheet);
+    var ws = worksheet();
+    ws.segments.push(codeSegment("(+ 1 1)", 1));
+    ws.segments.push(codeSegment("(+ 1 2)", 2));
+    ws.segments.push(codeSegment("(+ 1 3)", 3));
+    ws.segments.push(codeSegment("(+ 1 4)", 4));
+    var wsWrapper = worksheetWrapper(ws);
 
     ko.applyBindings(wsWrapper);
 
