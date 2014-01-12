@@ -5,7 +5,7 @@
  */
 
 // a free segment contains markdown
-var freeSegment = function (contents, id) {
+var freeSegment = function (contents, worksheet, id) {
     var self = {};
     self.renderTemplate = "free-segment-template";
 
@@ -17,7 +17,7 @@ var freeSegment = function (contents, id) {
     // The markdown content
     self.content = markdownEditor.makeMarkdownEditorViewmodel(
         self.id(),
-        self.cursor.getContentCursorCallback(),
+        self.worksheet,
         contents
     );
 
@@ -25,9 +25,10 @@ var freeSegment = function (contents, id) {
 };
 
 // a code segment contains code, and shows the results of running that code.
-var codeSegment = function (contents, id) {
+var codeSegment = function (contents, worksheet, id) {
     var self = {};
     self.renderTemplate = "code-segment-template";
+    self.worksheet = worksheet;
     self.id = id;
     self.type = "code";
 
@@ -38,14 +39,14 @@ var codeSegment = function (contents, id) {
     self.active = ko.observable(false);
     self.errorText = ko.observable("");
     self.runningIndicator = ko.observable(false);
-    self.output = ko.observable("7878");
+    self.output = ko.observable("Hello, world!");
     self.warningIndicator = ko.observable(false);
     self.outputVisible = ko.observable(true);
 
     // The code
     self.content = codemirrorVM(
         self.id,
-        self,
+        self.worksheet,
         contents,
         "text/x-clojure"
     );

@@ -40,5 +40,18 @@ var worksheet = function () {
     // the content of the worksheet is a list of segments.
     self.segments = ko.observableArray();
 
+    // The cell content editors will call these callbacks when something needs to happen at the worksheet level
+    self.notifyMoveCursorBack = function (id) {
+    };
+
+    self.notifyMoveCursorForward = function (id) {
+    };
+
+    self.notifyFocused = function (id) {
+    };
+
+    self.notifyBackspaceOnEmpty = function (id) {
+    };
+
     return self;
 };

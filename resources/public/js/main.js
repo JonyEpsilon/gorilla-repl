@@ -8,10 +8,10 @@
 $(function () {
 
     var ws = worksheet();
-    ws.segments.push(codeSegment("(+ 1 1)", 1));
-    ws.segments.push(codeSegment("(+ 1 2)", 2));
-    ws.segments.push(codeSegment("(+ 1 3)", 3));
-    ws.segments.push(codeSegment("(+ 1 4)", 4));
+    ws.segments.push(codeSegment("(defn f\n  [x y]\n  (let [q (* 2 x)\n        p (* 3 y)]\n    (+ p q)))", ws, 1));
+    ws.segments.push(codeSegment("(+ 1 2)", ws, 2));
+    ws.segments.push(codeSegment("(+ 1 3)", ws, 3));
+    ws.segments.push(codeSegment("(+ 1 4)", ws, 4));
     var wsWrapper = worksheetWrapper(ws);
 
     ko.applyBindings(wsWrapper);

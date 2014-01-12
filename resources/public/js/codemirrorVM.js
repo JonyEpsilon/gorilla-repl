@@ -7,14 +7,14 @@
 // This is a viewmodel and KO binding for the codemirror code editor. You should apply the codemirror binding
 // to a textarea, and bind it to a viewmodel made with makeCodeMirrorViewmodel.
 //
-// The viewmodel takes a parameter to a cursor callback object. This object is notified of any events that
-// are relevant to the worksheet cursor, namely if the focus is entering or leaving the editor. The editor can be
-// given an id, and it will pass this id in to the cursor callbacks.
+// The viewmodel takes a parameter to a worksheet callback object. This object is notified of any events that
+// are relevant to the worksheet, namely if the focus is entering or leaving the editor, or if a segment should be
+// deleted. The editor can be given an id, and it will pass this id in to the worksheet callbacks.
 //
 // It also implements the standard functions that a segment content item should: positionCursorAtContentStart,
 // positionCursorAtContentEnd, and positionCursorAtContentStartOfLastLine
 
-var codemirrorVM = function (id, cursorCallbackObject, initialContents, contentType) {
+var codemirrorVM = function (id, worksheetCallbackObject, initialContents, contentType) {
     var self = {};
     self.id = id;
     self.contentType = contentType;
@@ -26,23 +26,23 @@ var codemirrorVM = function (id, cursorCallbackObject, initialContents, contentT
         self.codeMirror.refresh();
     };
 
-    // Cursor callback methods. These will be called by the CodeMirror component, and will notify the cursorCallback
-    // that a change of cell focus should happen.
+    // Worksheet callback methods. These will be called by the CodeMirror component, and will notify the
+    // worksheetCallback that something of note to the worksheet has happened.
     self.notifyMoveCursorBack = function () {
-        cursorCallbackObject.notifyMoveCursorBack(id);
+        worksheetCallbackObject.notifyMoveCursorBack(id);
     };
 
     self.notifyMoveCursorForward = function () {
-        cursorCallbackObject.notifyMoveCursorForward(id);
+        worksheetCallbackObject.notifyMoveCursorForward(id);
     };
 
     self.notifyFocused = function () {
-        cursorCallbackObject.notifyFocused(id);
+        worksheetCallbackObject.notifyFocused(id);
     };
 
-//    self.notifyBackspaceOnEmpty = function () {
-//        cursorCallbackObject.notifyBackspaceOnEmpty();
-//    };
+    self.notifyBackspaceOnEmpty = function () {
+        worksheetCallbackObject.notifyBackspaceOnEmpty(id);
+    };
 
     // These can be called to position the CodeMirror cursor appropriately. They are used when the cell is receiving
     // focus from another cell.
@@ -114,10 +114,10 @@ ko.bindingHandlers.codemirror = {
                                     valueAccessor().notifyMoveCursorForward();
                             }
                         }
-//                        // delete on an empty editor
-//                        if (event.keyCode === 8) {
-//                            if (editor.getValue() === "") valueAccessor().notifyBackspaceOnEmpty();
-//                        }
+                        // delete on an empty editor
+                        if (event.keyCode === 8) {
+                            if (editor.getValue() === "") valueAccessor().notifyBackspaceOnEmpty();
+                        }
                     }
                 }
             });
