@@ -7,41 +7,22 @@
 // This is a viewmodel and KO binding for the codemirror code editor. You should apply the codemirror binding
 // to a textarea, and bind it to a viewmodel made with makeCodeMirrorViewmodel.
 //
-// The viewmodel takes a parameter to a worksheet callback object. This object is notified of any events that
-// are relevant to the worksheet, namely if the focus is entering or leaving the editor, or if a segment should be
-// deleted. The editor can be given an id, and it will pass this id in to the worksheet callbacks.
-//
-// It also implements the standard functions that a segment content item should: positionCursorAtContentStart,
-// positionCursorAtContentEnd, and positionCursorAtContentStartOfLastLine
+// The viewmodel raises events when something that might warrant external action happens. For instance, if the focus
+// is entering or leaving the editor, or if a segment should be deleted. The editor must be given an id, and it will
+// include this id in the events it raises.
 
-var codemirrorVM = function (id, worksheetCallbackObject, initialContents, contentType) {
+var codemirrorVM = function (id, initialContents, contentType) {
     var self = {};
     self.id = id;
     self.contentType = contentType;
 
     self.contents = ko.observable(initialContents);
 
+    // ** Public methods for manipulating this editor **
+
     // asks the editor to redraw itself. Needed when its size has changed.
     self.reflow = function () {
         self.codeMirror.refresh();
-    };
-
-    // Worksheet callback methods. These will be called by the CodeMirror component, and will notify the
-    // worksheetCallback that something of note to the worksheet has happened.
-    self.notifyMoveCursorBack = function () {
-        worksheetCallbackObject.notifyMoveCursorBack(id);
-    };
-
-    self.notifyMoveCursorForward = function () {
-        worksheetCallbackObject.notifyMoveCursorForward(id);
-    };
-
-    self.notifyFocused = function () {
-        worksheetCallbackObject.notifyFocused(id);
-    };
-
-    self.notifyBackspaceOnEmpty = function () {
-        worksheetCallbackObject.notifyBackspaceOnEmpty(id);
     };
 
     // These can be called to position the CodeMirror cursor appropriately. They are used when the cell is receiving
@@ -67,6 +48,25 @@ var codemirrorVM = function (id, worksheetCallbackObject, initialContents, conte
         self.codeMirror.focus();
     };
 
+    // ** Internal methods - should only be called by our CodeMirror instance. **
+
+    // Worksheet callback methods. These will be called by the CodeMirror component, and will notify the
+    // worksheetCallback that something of note to the worksheet has happened.
+    self.notifyMoveCursorBack = function () {
+        eventBus.trigger("segment:leaveBack", {id: self.id})
+    };
+
+    self.notifyMoveCursorForward = function () {
+        eventBus.trigger("segment:leaveForward", {id: self.id})
+    };
+
+    self.notifyFocused = function () {
+        eventBus.trigger("segment:focus", {id: self.id})
+    };
+
+    self.notifyBackspaceOnEmpty = function () {
+        eventBus.trigger("segment:delete", {id: self.id})
+    };
 
     return self;
 };

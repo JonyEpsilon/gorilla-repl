@@ -37,20 +37,28 @@ var worksheetWrapper = function (worksheet) {
 var worksheet = function () {
     var self = {};
 
+    // the cursor manages the activation/deactivation and focusing of segments. It will call the worksheets segment
+    // management functions in response to events (see cursor.js).
+    var cs = cursor(self);
+
     // the content of the worksheet is a list of segments.
     self.segments = ko.observableArray();
 
-    // The cell content editors will call these callbacks when something needs to happen at the worksheet level
-    self.notifyMoveCursorBack = function (id) {
+    // Segment management
+    self.segmentIndexForID = function (id) {
+        for (var i = 0; i < self.segments().length; i++) {
+            if (self.segments()[i].id == id) return i;
+        }
+        // this had better never happen!
+        return -1;
     };
 
-    self.notifyMoveCursorForward = function (id) {
+    self.activateSegment = function (index) {
+        self.segments()[index].activate();
     };
 
-    self.notifyFocused = function (id) {
-    };
-
-    self.notifyBackspaceOnEmpty = function (id) {
+    self.deactivateSegment = function (index) {
+        self.segments()[index].deactivate();
     };
 
     return self;

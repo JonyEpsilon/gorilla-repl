@@ -17,7 +17,6 @@ var freeSegment = function (contents, worksheet, id) {
     // The markdown content
     self.content = markdownEditor.makeMarkdownEditorViewmodel(
         self.id(),
-        self.worksheet,
         contents
     );
 
@@ -46,10 +45,24 @@ var codeSegment = function (contents, worksheet, id) {
     // The code
     self.content = codemirrorVM(
         self.id,
-        self.worksheet,
         contents,
         "text/x-clojure"
     );
+
+    // activation and deactivation - these control whether the segment has the "cursor" outline, and focusing
+    // the content component.
+
+    // activate the segment. fromTop will be true is the user's focus is coming from above (and so the cursor should
+    // be placed at the top), false indicates the focus is coming from below.
+    self.activate = function (fromTop) {
+        self.active(true);
+        if (fromTop) self.content.positionCursorAtContentStart();
+        else self.content.positionCursorAtContentStartOfLastLine();
+    };
+
+    self.deactivate = function () {
+        self.active(false);
+    };
 
     return self;
 };
