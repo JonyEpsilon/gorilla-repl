@@ -101,8 +101,19 @@ var worksheet = function () {
     });
 
     eventBus.on("segment:delete", function(e, d) {
+        // if there's only one segment, don't delete it
+        if (self.segments().length == 1) return;
         var deleteIndex = self.segmentIndexForID(d.id);
         self.deleteSegment(deleteIndex);
+    });
+
+    // Note that this is handled globally, so no reference to the currently selected segment is contained in the event.
+    eventBus.on("segment:newBelow", function () {
+        // do nothing if no segment is active
+        if (self.activeSegmentIndex == null) return;
+        var seg = codeSegment("new", 785);
+        self.segments.splice(self.activeSegmentIndex + 1, 0, seg);
+        self.activateSegment(self.activeSegmentIndex + 1);
     });
 
     return self;

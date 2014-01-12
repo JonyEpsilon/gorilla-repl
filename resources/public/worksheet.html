@@ -23,6 +23,7 @@
     <script type="text/javascript" src="jslib/codemirror-3.20/mode/clojure/clojure.js"></script>
     <script type="text/javascript" src="jslib/mousetrap.min.js"></script>
     <script type="text/javascript" src="js/eventbus.js"></script>
+    <script type="text/javascript" src="js/keyboard.js"></script>
     <script type="text/javascript" src="js/worksheet.js"></script>
     <script type="text/javascript" src="js/codemirrorVM.js"></script>
     <script type="text/javascript" src="js/segment.js"></script>
@@ -52,7 +53,7 @@
          data-bind="css: {selected: active(), 'code-warning': warningIndicator() && active(), running: runningIndicator}, attr: {id: id}">
 
         <div class="segment-main">
-            <textarea class="codeTextArea" data-bind="codemirror: content"></textarea>
+            <textarea class="codeTextArea mousetrap" data-bind="codemirror: content"></textarea>
         </div>
         <div class="error-text" data-bind="text: errorText, visible: errorText() !== ''"></div>
         <div class="output browser"

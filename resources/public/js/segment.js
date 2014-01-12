@@ -5,7 +5,7 @@
  */
 
 // a free segment contains markdown
-var freeSegment = function (contents, worksheet, id) {
+var freeSegment = function (contents, id) {
     var self = {};
     self.renderTemplate = "free-segment-template";
 
@@ -24,7 +24,7 @@ var freeSegment = function (contents, worksheet, id) {
 };
 
 // a code segment contains code, and shows the results of running that code.
-var codeSegment = function (contents, worksheet, id) {
+var codeSegment = function (contents, id) {
     var self = {};
     self.renderTemplate = "code-segment-template";
     self.worksheet = worksheet;
