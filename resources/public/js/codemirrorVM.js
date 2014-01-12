@@ -51,7 +51,7 @@ var codemirrorVM = function (id, initialContents, contentType) {
     // ** Internal methods - should only be called by our CodeMirror instance. **
 
     // Worksheet callback methods. These will be called by the CodeMirror component, and will notify the
-    // worksheetCallback that something of note to the worksheet has happened.
+    // worksheet that something of note has happened.
     self.notifyMoveCursorBack = function () {
         eventBus.trigger("segment:leaveBack", {id: self.id})
     };

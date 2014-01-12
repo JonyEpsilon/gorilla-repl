@@ -11,10 +11,11 @@ var ws;
 $(function () {
 
     ws = worksheet();
-    ws.segments.push(codeSegment("(defn f\n  [x y]\n  (let [q (* 2 x)\n        p (* 3 y)]\n    (+ p q)))", ws, 1));
-    ws.segments.push(codeSegment("(+ 1 2)", ws, 2));
-    ws.segments.push(codeSegment("(+ 1 3)", ws, 3));
-    ws.segments.push(codeSegment("(+ 1 4)", ws, 4));
+    ws.segments().push(codeSegment("(defn f\n  [x y]\n  (let [q (* 2 x)\n        p (* 3 y)]\n    (+ p q)))", ws, 0));
+    ws.segments().push(codeSegment("(+ 1 2)", ws, 1));
+    ws.segments().push(codeSegment("(+ 1 3)", ws, 2));
+    ws.segments().push(codeSegment("(+ 1 4)", ws, 3));
+ //   for (var i = 4; i < 1000; i++) ws.segments()[i] = (codeSegment("(+ 1 " + i + ")", ws, i));
     var wsWrapper = worksheetWrapper(ws);
 
     ko.applyBindings(wsWrapper);

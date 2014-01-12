@@ -57,7 +57,7 @@ var codeSegment = function (contents, worksheet, id) {
     self.activate = function (fromTop) {
         self.active(true);
         if (fromTop) self.content.positionCursorAtContentStart();
-        else self.content.positionCursorAtContentStartOfLastLine();
+        else self.content.positionCursorAtContentEnd();
     };
 
     self.deactivate = function () {

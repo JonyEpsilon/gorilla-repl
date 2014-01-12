@@ -33,19 +33,20 @@ var worksheetWrapper = function (worksheet) {
 
 // ** The worksheet **
 
-// this viewmodel represents the worksheet document itself.
+// this viewmodel represents the worksheet document itself. Code to manage the "cursor" that is, the highlight on the
+// active segment, and the position of the editor cursors, is in the worksheet, as it needs to know about the
+// relationship between the segments.
 var worksheet = function () {
     var self = {};
-
-    // the cursor manages the activation/deactivation and focusing of segments. It will call the worksheets segment
-    // management functions in response to events (see cursor.js).
-    var cs = cursor(self);
 
     // the content of the worksheet is a list of segments.
     self.segments = ko.observableArray();
 
-    // Segment management
+    // ** Segment management **
+
     self.segmentIndexForID = function (id) {
+        // so, this is not perhaps the most efficient way you could think of doing this, but for reasonable conditions
+        // it will be fine.
         for (var i = 0; i < self.segments().length; i++) {
             if (self.segments()[i].id == id) return i;
         }
@@ -53,13 +54,56 @@ var worksheet = function () {
         return -1;
     };
 
-    self.activateSegment = function (index) {
-        self.segments()[index].activate();
+    self.activeSegmentIndex = null;
+
+    self.activateSegment = function (index, fromTop) {
+        self.segments()[index].activate(fromTop);
+        self.activeSegmentIndex = index;
     };
 
     self.deactivateSegment = function (index) {
         self.segments()[index].deactivate();
+        self.activeSegmentIndex = null;
     };
+
+    self.deleteSegment = function (index) {
+        self.segments.splice(index, 1);
+        // after deletion, should activate segment before, unless it was the first segment, or there are no segments
+        // remaining.
+        if (self.segments().length == 0) return;
+        if (index == 0) self.activateSegment(0, true);
+        else self.activateSegment(index - 1, false);
+    };
+
+    // ** Event handlers **
+
+    // activation/deactivation and focusing of segments.
+    eventBus.on("segment:leaveForward", function(e, d) {
+        var leavingIndex = self.segmentIndexForID(d.id);
+        // can't leave the bottom segment forwards
+        if (leavingIndex == self.segments().length - 1) return;
+        self.deactivateSegment(leavingIndex);
+        self.activateSegment(leavingIndex + 1, true);
+    });
+
+    eventBus.on("segment:leaveBack", function(e, d) {
+        var leavingIndex = self.segmentIndexForID(d.id);
+        // can't leave the top segment upwards
+        if (leavingIndex == 0) return;
+        self.deactivateSegment(leavingIndex);
+        self.activateSegment(leavingIndex - 1, false);
+    });
+
+    eventBus.on("segment:focus", function(e, d) {
+        if (self.activeSegmentIndex != null) self.deactivateSegment(self.activeSegmentIndex);
+        var focusIndex = self.segmentIndexForID(d.id);
+        self.activateSegment(focusIndex, true);
+    });
+
+    eventBus.on("segment:delete", function(e, d) {
+        var deleteIndex = self.segmentIndexForID(d.id);
+        self.deleteSegment(deleteIndex);
+    });
 
     return self;
 };
