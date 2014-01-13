@@ -75,11 +75,22 @@ var codemirrorVM = function (id, initialContents, contentType) {
 
 ko.bindingHandlers.codemirror = {
     init: function (element, valueAccessor, allBindingsAccessor, viewModel) {
+        // we define a custom CodeMirror keymap, which takes a few steps.
+        // First we need to define a CodeMirror command that does nothing
+        // (according to the CodeMirror docs, one should be able set a key-binding as 'false' and have it do nothing
+        // but I can't seem to get that to work.
+        CodeMirror.commands['doNothing'] = function () {};
+        // then patch the Mac default keymap to get rid of the emacsy binding, which interfere with our shortcuts
+        CodeMirror.keyMap['macDefault'].fallthrough = "basic";
+        // and then create our custom map, which will fall through to the (patched) default. Shift+Enter is stopped
+        // from doing anything.
+        CodeMirror.keyMap["gorilla"] = {'Shift-Enter': "doNothing", fallthrough: "default"};
         var cm = CodeMirror.fromTextArea(element,
             {
                 lineNumbers: false,
                 matchBrackets: true,
                 lineWrapping: true,
+                keyMap: 'gorilla',
                 mode: valueAccessor().contentType,
                 onKeyEvent: function (editor, event) {
                     // only check on cursor key keydowns
