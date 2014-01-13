@@ -116,10 +116,11 @@ var worksheet = function () {
     eventBus.on("worksheet:newBelow", function () {
         // do nothing if no segment is active
         if (self.activeSegmentIndex == null) return;
-        self.deactivateSegment(self.activeSegmentIndex);
         var seg = codeSegment("(new-segment)");
-        self.segments.splice(self.activeSegmentIndex + 1, 0, seg);
-        self.activateSegment(self.activeSegmentIndex + 1);
+        var currentIndex = self.activeSegmentIndex;
+        self.deactivateSegment(currentIndex);
+        self.segments.splice(currentIndex + 1, 0, seg);
+        self.activateSegment(currentIndex + 1);
     });
 
     eventBus.on("worksheet:segment-clicked", function(e, d) {
@@ -127,6 +128,8 @@ var worksheet = function () {
         var focusIndex = self.segmentIndexForID(d.id);
         self.activateSegment(focusIndex, true);
     });
+
+    // messages from the evaluator
 
     eventBus.on("evaluator:value-response", function (e, d) {
         var segID = d.segmentID;
