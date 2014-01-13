@@ -14,6 +14,9 @@ eventBus.on("command:evaluator:evaluate", function () {
     // - when responses are received, route them to the originating segment for display (see the repl:response event
     // handler below).
 
+    // TODO: it feels a bit wrong to do this here (seems to know a lot about the internals of a segment). Should
+    // think whether this is the right structure.
+
     // check that it makes sense to evaluate
     var seg = app.worksheet.getActiveSegment();
     if (seg == null) return;
@@ -21,6 +24,7 @@ eventBus.on("command:evaluator:evaluate", function () {
 
     var code = seg.getCode();
     seg.runningIndicator(true);
+    
     // generate an ID to tie the evaluation to its results
     var id = UUID.generate();
     // store the evaluation ID and the segment ID in the evaluationMap
@@ -45,6 +49,7 @@ eventBus.on("repl:response", function (e, d) {
         // is this an evaluation done message
         if (d.status.indexOf("done") >= 0) {
             eventBus.trigger("evaluator:done-response", {segmentID: segID});
+            delete evaluationMap[d.id];
             return;
         }
     }
