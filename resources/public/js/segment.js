@@ -39,7 +39,7 @@ var codeSegment = function (contents, id) {
     self.active = ko.observable(false);
     self.errorText = ko.observable("");
     self.runningIndicator = ko.observable(false);
-    self.output = ko.observable("Hello, world!");
+    self.output = ko.observable("");
     self.warningIndicator = ko.observable(false);
     self.outputVisible = ko.observable(true);
 

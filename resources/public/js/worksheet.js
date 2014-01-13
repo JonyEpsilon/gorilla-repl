@@ -88,6 +88,8 @@ var worksheet = function () {
 
     // ** Event handlers **
 
+    // * Activation cursor / focus handling *
+
     // activation/deactivation and focusing of segments.
     eventBus.on("worksheet:leaveForward", function() {
         var leavingIndex = self.activeSegmentIndex;
@@ -116,7 +118,7 @@ var worksheet = function () {
     eventBus.on("worksheet:newBelow", function () {
         // do nothing if no segment is active
         if (self.activeSegmentIndex == null) return;
-        var seg = codeSegment("(new-segment)");
+        var seg = codeSegment("");
         var currentIndex = self.activeSegmentIndex;
         self.deactivateSegment(currentIndex);
         self.segments.splice(currentIndex + 1, 0, seg);
@@ -127,6 +129,30 @@ var worksheet = function () {
         if (self.activeSegmentIndex != null) self.deactivateSegment(self.activeSegmentIndex);
         var focusIndex = self.segmentIndexForID(d.id);
         self.activateSegment(focusIndex, true);
+    });
+
+    // * Evaluation *
+
+    // The evaluation command will fire this event. The worksheet will then send a message to the evaluator
+    // to do the evaluation itself.
+    eventBus.on("worksheet:evaluate", function () {
+        // check that it makes sense to evaluate
+        var seg = self.getActiveSegment();
+        if (seg == null) return;
+        if (seg.type != "code") return;
+
+        var code = seg.getCode();
+        // clear the output
+        seg.output("");
+        seg.errorText("");
+        seg.runningIndicator(true);
+
+        eventBus.trigger("evaluator:evaluate", {code: code, segmentID: seg.id});
+
+        // if this isn't the last segment, move to the next
+        if (self.activeSegmentIndex != self.segments().length - 1) eventBus.trigger("command:worksheet:leaveForward");
+        // if it is the last, create a new one at the end
+        else eventBus.trigger("worksheet:newBelow")
     });
 
     // messages from the evaluator
@@ -141,6 +167,12 @@ var worksheet = function () {
         var segID = d.segmentID;
         var seg = self.getSegmentForID(segID);
         seg.runningIndicator(false);
+    });
+
+    eventBus.on("evaluator:error-response", function (e, d) {
+        var segID = d.segmentID;
+        var seg = self.getSegmentForID(segID);
+        seg.errorText(d.error);
     });
 
     return self;

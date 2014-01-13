@@ -7,30 +7,13 @@
 // This maps evaluation IDs to the IDs of the segment that initiated them.
 evaluationMap = {};
 
-eventBus.on("command:evaluator:evaluate", function () {
-    // There are several things to do be done:
-    // - we need to find the active segment and get the code contained within it
-    // - we must send this send this code across to the REPL, tagging it with an ID that we keep a note of
-    // - when responses are received, route them to the originating segment for display (see the repl:response event
-    // handler below).
-
-    // TODO: it feels a bit wrong to do this here (seems to know a lot about the internals of a segment). Should
-    // think whether this is the right structure.
-
-    // check that it makes sense to evaluate
-    var seg = app.worksheet.getActiveSegment();
-    if (seg == null) return;
-    if (seg.type != "code") return;
-
-    var code = seg.getCode();
-    seg.runningIndicator(true);
-    
-    // generate an ID to tie the evaluation to its results
+eventBus.on("evaluator:evaluate", function (e, d) {
+    // generate an ID to tie the evaluation to its results - when responses are received, we route them to the
+    // originating segment for display using this ID (see the repl:response event handler below).
     var id = UUID.generate();
     // store the evaluation ID and the segment ID in the evaluationMap
-    evaluationMap[id] = seg.id;
-    repl.execute(code, id);
-    eventBus.trigger("command:worksheet:leaveForward");
+    evaluationMap[id] = d.segmentID;
+    repl.execute(d.code, id);
 });
 
 // handle the various different nREPL responses
@@ -38,6 +21,9 @@ eventBus.on("repl:response", function (e, d) {
 
     // look up the segment that this evaluation corresponds to
     var segID = evaluationMap[d.id];
+    if (segID == null) {
+        console.log("Orphaned response: " + JSON.stringify(d));
+    }
 
     // - evaluation result (Hopefully no other responses have an ns component!)
     if (d.ns) {
@@ -49,9 +35,21 @@ eventBus.on("repl:response", function (e, d) {
         // is this an evaluation done message
         if (d.status.indexOf("done") >= 0) {
             eventBus.trigger("evaluator:done-response", {segmentID: segID});
+            // keep the evaluation map clean
             delete evaluationMap[d.id];
             return;
         }
+    }
+    // - error message
+    if (d.err) {
+        eventBus.trigger("evaluator:error-response", {error: d.err, segmentID: segID});
+        return;
+    }
+    // - root-ex message
+    if (d['root-ex']) {
+        // at the minute we just eat (and log) these - I'm not really sure what they're for!
+        console.log("Root-ex message: " + JSON.stringify(d));
+        return;
     }
     console.log(JSON.stringify(d));
 });

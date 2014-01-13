@@ -60,7 +60,7 @@
         </div>
         <div class="error-text" data-bind="text: errorText, visible: errorText() !== ''"></div>
         <div class="output browser"
-             data-bind="visible: (outputVisible()), css: {'browser-muted': warningIndicator}">
+             data-bind="visible: (output() != ''), css: {'browser-muted': warningIndicator}">
             <!-- temp hack -->
             <div class='ov'>
                 <span class='ov-string' data-bind="text: output"></span>
