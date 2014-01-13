@@ -50,22 +50,24 @@ var codemirrorVM = function (id, initialContents, contentType) {
 
     // ** Internal methods - should only be called by our CodeMirror instance. **
 
-    // Worksheet callback methods. These will be called by the CodeMirror component, and will notify the
-    // worksheet that something of note has happened.
+    // These will be called by the CodeMirror component, and will notify the application that something of note has
+    // happened. Cursor movement and segment deletion generate "command" events, which will be handled by the command
+    // processor (which will then delegate to the worksheet). Segment clicks are not sent as commands as it doesn't
+    // really make sense.
     self.notifyMoveCursorBack = function () {
-        eventBus.trigger("segment:leaveBack", {id: self.id})
+        eventBus.trigger("command:worksheet:leaveBack")
     };
 
     self.notifyMoveCursorForward = function () {
-        eventBus.trigger("segment:leaveForward", {id: self.id})
-    };
-
-    self.notifyFocused = function () {
-        eventBus.trigger("segment:focus", {id: self.id})
+        eventBus.trigger("command:worksheet:leaveForward")
     };
 
     self.notifyBackspaceOnEmpty = function () {
-        eventBus.trigger("segment:delete", {id: self.id})
+        eventBus.trigger("command:worksheet:delete")
+    };
+
+    self.notifyClicked = function () {
+        eventBus.trigger("worksheet:segment-clicked", {id: self.id})
     };
 
     return self;
@@ -128,8 +130,8 @@ ko.bindingHandlers.codemirror = {
             var value = valueAccessor();
             value.contents(editor.getValue());
         });
-        cm.on('focus', function () {
-            valueAccessor().notifyFocused();
+        cm.on('mousedown', function () {
+            valueAccessor().notifyClicked();
         });
         // store the editor object on the viewmodel
         valueAccessor().codeMirror = cm;

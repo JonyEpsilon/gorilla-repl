@@ -78,42 +78,43 @@ var worksheet = function () {
     // ** Event handlers **
 
     // activation/deactivation and focusing of segments.
-    eventBus.on("segment:leaveForward", function(e, d) {
-        var leavingIndex = self.segmentIndexForID(d.id);
+    eventBus.on("worksheet:leaveForward", function() {
+        var leavingIndex = self.activeSegmentIndex;
         // can't leave the bottom segment forwards
         if (leavingIndex == self.segments().length - 1) return;
         self.deactivateSegment(leavingIndex);
         self.activateSegment(leavingIndex + 1, true);
     });
 
-    eventBus.on("segment:leaveBack", function(e, d) {
-        var leavingIndex = self.segmentIndexForID(d.id);
+    eventBus.on("worksheet:leaveBack", function() {
+        var leavingIndex = self.activeSegmentIndex;
         // can't leave the top segment upwards
         if (leavingIndex == 0) return;
         self.deactivateSegment(leavingIndex);
         self.activateSegment(leavingIndex - 1, false);
     });
 
-    eventBus.on("segment:focus", function(e, d) {
-        if (self.activeSegmentIndex != null) self.deactivateSegment(self.activeSegmentIndex);
-        var focusIndex = self.segmentIndexForID(d.id);
-        self.activateSegment(focusIndex, true);
-    });
-
-    eventBus.on("segment:delete", function(e, d) {
+    eventBus.on("worksheet:delete", function() {
         // if there's only one segment, don't delete it
         if (self.segments().length == 1) return;
-        var deleteIndex = self.segmentIndexForID(d.id);
+        var deleteIndex = self.activeSegmentIndex;
         self.deleteSegment(deleteIndex);
     });
 
     // Note that this is handled globally, so no reference to the currently selected segment is contained in the event.
-    eventBus.on("segment:newBelow", function () {
+    eventBus.on("worksheet:newBelow", function () {
         // do nothing if no segment is active
         if (self.activeSegmentIndex == null) return;
-        var seg = codeSegment("new", 785);
+        self.deactivateSegment(self.activeSegmentIndex);
+        var seg = codeSegment("(new-segment)");
         self.segments.splice(self.activeSegmentIndex + 1, 0, seg);
         self.activateSegment(self.activeSegmentIndex + 1);
+    });
+
+    eventBus.on("worksheet:segment-clicked", function(e, d) {
+        if (self.activeSegmentIndex != null) self.deactivateSegment(self.activeSegmentIndex);
+        var focusIndex = self.segmentIndexForID(d.id);
+        self.activateSegment(focusIndex, true);
     });
 
     return self;

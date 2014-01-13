@@ -28,7 +28,8 @@ var codeSegment = function (contents, id) {
     var self = {};
     self.renderTemplate = "code-segment-template";
     self.worksheet = worksheet;
-    self.id = id;
+    if (id) self.id = id;
+    else self.id = UUID.generate();
     self.type = "code";
 
     // Segment configuration
@@ -49,7 +50,7 @@ var codeSegment = function (contents, id) {
         "text/x-clojure"
     );
 
-    // activation and deactivation - these control whether the segment has the "cursor" outline, and focusing
+    // activation and deactivation - these control whether the segment has the "cursor" outline, and focus
     // the content component.
 
     // activate the segment. fromTop will be true is the user's focus is coming from above (and so the cursor should
