@@ -60,5 +60,13 @@ var commandProcessor = (function () {
         action: function () {
             eventBus.trigger("worksheet:newBelow");
         }
+    },
+    {
+        name: "command:evaluator:evaluate",
+        desc: "Evaluate the active segment.",
+        kb: "shift+enter",
+        action: function () {
+            eventBus.trigger("evaluator:evaluate");
+        }
     }
 ].forEach(commandProcessor.addCommand);
