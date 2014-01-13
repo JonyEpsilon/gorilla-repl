@@ -131,8 +131,13 @@ var worksheet = function () {
     eventBus.on("evaluator:value-response", function (e, d) {
         var segID = d.segmentID;
         var seg = self.getSegmentForID(segID);
-
         seg.output(d.ns + " => " + d.value);
+    });
+
+    eventBus.on("evaluator:done-response", function (e, d) {
+        var segID = d.segmentID;
+        var seg = self.getSegmentForID(segID);
+        seg.runningIndicator(false);
     });
 
     return self;

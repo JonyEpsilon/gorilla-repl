@@ -20,6 +20,7 @@ eventBus.on("command:evaluator:evaluate", function () {
     if (seg.type != "code") return;
 
     var code = seg.getCode();
+    seg.runningIndicator(true);
     // generate an ID to tie the evaluation to its results
     var id = UUID.generate();
     // store the evaluation ID and the segment ID in the evaluationMap
@@ -28,14 +29,24 @@ eventBus.on("command:evaluator:evaluate", function () {
     eventBus.trigger("command:worksheet:leaveForward");
 });
 
+// handle the various different nREPL responses
 eventBus.on("repl:response", function (e, d) {
-    // handle the various different nREPL responses
+
+    // look up the segment that this evaluation corresponds to
+    var segID = evaluationMap[d.id];
+
     // - evaluation result (Hopefully no other responses have an ns component!)
     if (d.ns) {
-        // look up the segment that this evaluation corresponds to
-        var segID = evaluationMap[d.id];
         eventBus.trigger("evaluator:value-response", {ns: d.ns, value: d.value, segmentID: segID});
         return;
+    }
+    // - status response
+    if (d.status) {
+        // is this an evaluation done message
+        if (d.status.indexOf("done") >= 0) {
+            eventBus.trigger("evaluator:done-response", {segmentID: segID});
+            return;
+        }
     }
     console.log(JSON.stringify(d));
 });
