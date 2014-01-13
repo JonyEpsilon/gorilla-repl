@@ -4,16 +4,18 @@
  * gorilla-repl is licenced to you under the MIT licence. See the file LICENCE.txt for full details.
  */
 
-var nreplDrawbridgeHandler = function (responseCallback) {
+var repl = (function () {
 
-    var sendREPLCommand = function (command) {
+    var sendREPLCommand = function (message) {
         $.ajax({
                 type: 'POST',
                 url: '/repl',
-                data: command,
+                data: message,
                 success: function (data) {
                     if (data) {
-                        data.map(responseCallback)
+                        data.map(function (d) {
+                            eventBus.trigger("repl:response", d);
+                        });
                     }
                 },
                 dataType: 'json'
@@ -21,15 +23,20 @@ var nreplDrawbridgeHandler = function (responseCallback) {
         )
     };
 
+    var connect = function () {
+        // get a REPL session and store its ID
+        startPolling();
+    };
+
     var startPolling = function () {
         setInterval(function () {sendREPLCommand({})}, 500);
     };
 
     return {
-        connect: startPolling,
+        connect: connect,
 
-        execute: (function (command) {
-            sendREPLCommand({'op': 'eval', 'code': command});
+        execute: (function (command, id) {
+            sendREPLCommand({'op': 'eval', 'code': command, id: id});
         })
     }
-};
+})();

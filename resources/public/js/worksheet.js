@@ -54,7 +54,18 @@ var worksheet = function () {
         return -1;
     };
 
+    self.getSegmentForID = function (id) {
+        var index = self.segmentIndexForID(id);
+        if (index >= 0) return self.segments()[index];
+        else return null;
+    };
+
     self.activeSegmentIndex = null;
+
+    self.getActiveSegment = function () {
+        if (self.activeSegmentIndex != null) return self.segments()[self.activeSegmentIndex];
+        else return null;
+    };
 
     self.activateSegment = function (index, fromTop) {
         self.segments()[index].activate(fromTop);
@@ -115,6 +126,13 @@ var worksheet = function () {
         if (self.activeSegmentIndex != null) self.deactivateSegment(self.activeSegmentIndex);
         var focusIndex = self.segmentIndexForID(d.id);
         self.activateSegment(focusIndex, true);
+    });
+
+    eventBus.on("evaluator:value-response", function (e, d) {
+        var segID = d.segmentID;
+        var seg = self.getSegmentForID(segID);
+
+        seg.output(d.ns + " => " + d.value);
     });
 
     return self;

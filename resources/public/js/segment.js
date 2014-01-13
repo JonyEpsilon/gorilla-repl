@@ -50,6 +50,10 @@ var codeSegment = function (contents, id) {
         "text/x-clojure"
     );
 
+    self.getCode = function() {
+        return self.content.contents();
+    };
+
     // activation and deactivation - these control whether the segment has the "cursor" outline, and focus
     // the content component.
 
