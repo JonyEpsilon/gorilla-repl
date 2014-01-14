@@ -91,13 +91,18 @@ var freeSegment = function (contents, id) {
     // activate the segment. fromTop will be true is the user's focus is coming from above (and so the cursor should
     // be placed at the top), false indicates the focus is coming from below.
     self.activate = function (fromTop) {
-        // when we are activated we just highlight the cell - the markup remains hidden
+        self.markupVisible(true);
+        self.content.reflow();
         self.active(true);
+        if (fromTop) self.content.positionCursorAtContentStart();
+        else self.content.positionCursorAtContentEnd();
     };
 
     self.deactivate = function () {
         self.content.blur();
+        self.markupVisible(false);
         self.active(false);
+
     };
 
     return self;
