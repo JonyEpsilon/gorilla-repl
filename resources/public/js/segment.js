@@ -79,7 +79,7 @@ var freeSegment = function (contents, id) {
 
     self.renderedContent = ko.computed(function () {
         return mdConverter.makeHtml(self.content.contents());
-    }).extend({throttle: 50});
+    }).extend({throttle: 250});
 
     self.handleClick = function () {
         eventBus.trigger("worksheet:segment-clicked", {id: self.id})

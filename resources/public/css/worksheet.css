@@ -44,6 +44,11 @@ div.free p {
     padding-left: 0.5em;
 }
 
+div.free-markup div.CodeMirror {
+    font-size: 14px;
+    padding: 0.5em;
+}
+
 div.code {
     background-color: #eeeeee;
     margin: 0.5em 1.5em 0.2em 1.5em;

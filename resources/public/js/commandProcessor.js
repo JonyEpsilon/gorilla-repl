@@ -48,7 +48,7 @@ var commandProcessor = (function () {
     {
         name: "command:worksheet:delete",
         desc: "Delete the active next segment.",
-        kb: "ctrl+y",
+        kb: "ctrl+m ctrl+x",
         action: function () {
             eventBus.trigger("worksheet:delete");
         }
@@ -56,7 +56,7 @@ var commandProcessor = (function () {
     {
         name: "command:worksheet:newBelow",
         desc: "Create a new segment below the active segment.",
-        kb: "ctrl+m",
+        kb: "ctrl+m ctrl+n",
         action: function () {
             eventBus.trigger("worksheet:newBelow");
         }
