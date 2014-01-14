@@ -28,6 +28,9 @@ var commandProcessor = (function () {
 
 })();
 
+// The list of commands. These could be located with the components they belong too if the list gets too unwieldy,
+// but for now they're fine together here.
+
 [
     {
         name: "command:worksheet:leaveBack",
