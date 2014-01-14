@@ -25,6 +25,11 @@ var codemirrorVM = function (id, initialContents, contentType) {
         self.codeMirror.refresh();
     };
 
+    self.blur = function () {
+        // this doesn't seem to be built in to the editor
+        self.codeMirror.getInputField().blur();
+    };
+
     // These can be called to position the CodeMirror cursor appropriately. They are used when the cell is receiving
     // focus from another cell.
     self.positionCursorAtContentStart = function () {
@@ -94,6 +99,8 @@ ko.bindingHandlers.codemirror = {
                 mode: valueAccessor().contentType,
                 onKeyEvent: function (editor, event) {
                     // only check on cursor key keydowns
+                    // we stop() the cursor events, as we don't want them reaching the worksheet. We explicity
+                    // generate events when the cursor should leave the segment.
                     if (event.type === 'keydown') {
                         // up
                         var curs;
@@ -102,6 +109,7 @@ ko.bindingHandlers.codemirror = {
                             curs = editor.getCursor();
                             // check for first line
                             if (curs.line === 0) valueAccessor().notifyMoveCursorBack();
+                            event.stop();
                         }
                         // left
                         if (event.keyCode === 37) {
@@ -109,6 +117,7 @@ ko.bindingHandlers.codemirror = {
                             curs = editor.getCursor();
                             // check for first line, start position
                             if (curs.line === 0 && curs.ch === 0) valueAccessor().notifyMoveCursorBack();
+                            event.stop();
                         }
                         // down
                         if (event.keyCode === 40) {
@@ -116,6 +125,7 @@ ko.bindingHandlers.codemirror = {
                             curs = editor.getCursor();
                             // check for last line
                             if (curs.line === (editor.lineCount() - 1)) valueAccessor().notifyMoveCursorForward();
+                            event.stop();
                         }
                         // right
                         if (event.keyCode === 39) {
@@ -126,6 +136,7 @@ ko.bindingHandlers.codemirror = {
                                 if (curs.ch === editor.getLine(curs.line).length)
                                     valueAccessor().notifyMoveCursorForward();
                             }
+                            event.stop();
                         }
                         // delete on an empty editor
                         if (event.keyCode === 8) {

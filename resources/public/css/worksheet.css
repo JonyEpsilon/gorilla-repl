@@ -35,8 +35,13 @@ div.free {
     font-family: 'Lora', serif;
 }
 
-div.heading-editor+div.CodeMirror {
+div.free h1,h2,h3,h4,h5 {
     font-family: 'Arvo', serif;
+    color: #4682b4;
+}
+
+div.free p {
+    padding-left: 0.5em;
 }
 
 div.code {
@@ -48,10 +53,6 @@ div.code {
 div.code .segment-main {
     padding: 0.5em;
     overflow: hidden;
-}
-
-div.code .segment-main-narrow {
-    padding: 0.5em;
 }
 
 div.output {
@@ -75,21 +76,6 @@ div.error-text {
     clear: both;
 }
 
-div.visual {
-    width: 640px;
-    height: 480px;
-    float: left;
-    margin-bottom: 2px;
-}
-
-div.visual-narrow {
-    width: 640px;
-    height: 480px;
-    margin-bottom: 2px;
-    margin-left: auto;
-    margin-right: auto;
-}
-
 div.segment-footer {
     clear: both;
 }
@@ -99,27 +85,10 @@ div.container-segment {
     border-style: none;
 }
 
-/*.segment-main {*/
-    /*width: 100%;*/
-/*}*/
-
-.segment-horizontal-cursor {
-    height: 1px;
-}
-
-.horizontal-cursor-container {
-    height: 12px;
-    cursor: vertical-text;
-}
-
 div.selected {
     outline-style: solid;
     outline-width: 1px;
-    outline-color: #4682b4;
-}
-
-.cursor-selected {
-    background-color: #4682b4;
+    outline-color: #FF29D2;
 }
 
 :focus {
@@ -131,7 +100,7 @@ div.selected {
 }
 
 .live {
-    box-shadow: 0 0 10px green;
+    box-shadow: 0 0 10px #FF29D2;
 }
 
 /* Hack for FF as it puts the outline around the box-shadow :-( */
@@ -146,15 +115,6 @@ div.selected {
 
 div.running {
     background-color: #d9ffd9;
-}
-
-.settings-menu {
-    opacity: 0.5;
-}
-
-.share-link {
-    font-size: 12px;
-    font-family: monospace;
 }
 
 .scroll-pad {

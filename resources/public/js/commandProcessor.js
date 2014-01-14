@@ -32,7 +32,7 @@ var commandProcessor = (function () {
     {
         name: "command:worksheet:leaveBack",
         desc: "Move to the previous segment.",
-        kb: "ctrl+u",
+        kb: "up",
         action: function () {
             eventBus.trigger("worksheet:leaveBack");
         }
@@ -40,7 +40,7 @@ var commandProcessor = (function () {
     {
         name: "command:worksheet:leaveForward",
         desc: "Move to the next segment.",
-        kb: "ctrl+b",
+        kb: "down",
         action: function () {
             eventBus.trigger("worksheet:leaveForward");
         }

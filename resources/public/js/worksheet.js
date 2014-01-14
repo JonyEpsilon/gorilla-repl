@@ -139,7 +139,12 @@ var worksheet = function () {
         // check that it makes sense to evaluate
         var seg = self.getActiveSegment();
         if (seg == null) return;
-        if (seg.type != "code") return;
+        // evaluating a free segment does nothing except move the cursor to the next segment. It doesn't create a new
+        // segment if this is the last.
+        if (seg.type != "code") {
+            eventBus.trigger("command:worksheet:leaveForward");
+            return;
+        }
 
         var code = seg.getCode();
         // clear the output

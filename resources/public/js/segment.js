@@ -47,6 +47,7 @@ var codeSegment = function (contents, id) {
     };
 
     self.deactivate = function () {
+        self.content.blur();
         self.active(false);
     };
 
@@ -57,7 +58,8 @@ var codeSegment = function (contents, id) {
 var freeSegment = function (contents, id) {
     var self = {};
     self.renderTemplate = "free-segment-template";
-    self.id = id;
+    if (id) self.id = id;
+    else self.id = UUID.generate();
 
     self.type = "free";
 
@@ -79,20 +81,22 @@ var freeSegment = function (contents, id) {
         return mdConverter.makeHtml(self.content.contents());
     }).extend({throttle: 50});
 
+    self.handleClick = function () {
+        eventBus.trigger("worksheet:segment-clicked", {id: self.id})
+    };
+
     // activation and deactivation - these control whether the segment has the "cursor" outline, and focus
     // the content component.
 
     // activate the segment. fromTop will be true is the user's focus is coming from above (and so the cursor should
     // be placed at the top), false indicates the focus is coming from below.
     self.activate = function (fromTop) {
+        // when we are activated we just highlight the cell - the markup remains hidden
         self.active(true);
-        self.markupVisible(true);
-        if (fromTop) self.content.positionCursorAtContentStart();
-        else self.content.positionCursorAtContentEnd();
     };
 
     self.deactivate = function () {
-        self.markupVisible(false);
+        self.content.blur();
         self.active(false);
     };
 
