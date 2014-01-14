@@ -68,5 +68,21 @@ var commandProcessor = (function () {
         action: function () {
             eventBus.trigger("worksheet:evaluate");
         }
+    },
+    {
+        name: "command:worksheet:changeToFree",
+        desc: "Convert the highlighted segment to a free segment.",
+        kb: "ctrl+m ctrl+f",
+        action: function () {
+            eventBus.trigger("worksheet:changeToFree");
+        }
+    },
+    {
+        name: "command:worksheet:changeToCode",
+        desc: "Convert the highlighted segment to a code segment.",
+        kb: "ctrl+m ctrl+c",
+        action: function () {
+            eventBus.trigger("worksheet:changeToCode");
+        }
     }
 ].forEach(commandProcessor.addCommand);

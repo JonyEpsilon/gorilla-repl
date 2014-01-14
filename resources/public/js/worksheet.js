@@ -131,6 +131,30 @@ var worksheet = function () {
         self.activateSegment(focusIndex, true);
     });
 
+    // * Changing segment types *
+
+    // a helper function that changes the type of the active segment
+    var changeActiveSegmentType = function (newType, newSegmentConstructor) {
+        var index = self.activeSegmentIndex;
+        if (index == null) return;
+        var seg = self.segments()[index];
+        // if the segment is already a free segment, do nothing.
+        if (seg.type == newType) return;
+
+        var contents = seg.content.contents();
+        var newSeg = newSegmentConstructor(contents);
+        self.segments.splice(index, 1, newSeg);
+        self.activateSegment(index, true);
+    };
+
+    eventBus.on("worksheet:changeToFree", function () {
+        changeActiveSegmentType("free", freeSegment);
+    });
+
+    eventBus.on("worksheet:changeToCode", function () {
+        changeActiveSegmentType("code", codeSegment);
+    });
+
     // * Evaluation *
 
     // The evaluation command will fire this event. The worksheet will then send a message to the evaluator
