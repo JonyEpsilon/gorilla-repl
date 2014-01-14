@@ -136,23 +136,20 @@ var worksheet = function () {
     // The evaluation command will fire this event. The worksheet will then send a message to the evaluator
     // to do the evaluation itself.
     eventBus.on("worksheet:evaluate", function () {
-        // check that it makes sense to evaluate
+        // check that a segment is active
         var seg = self.getActiveSegment();
         if (seg == null) return;
-        // evaluating a free segment does nothing except move the cursor to the next segment. It doesn't create a new
-        // segment if this is the last.
-        if (seg.type != "code") {
-            eventBus.trigger("command:worksheet:leaveForward");
-            return;
+
+        if (seg.type == "code") {
+            // if this is a code segment, then evaluate the contents
+            var code = seg.getCode();
+            // clear the output
+            seg.output("");
+            seg.errorText("");
+            seg.runningIndicator(true);
+
+            eventBus.trigger("evaluator:evaluate", {code: code, segmentID: seg.id});
         }
-
-        var code = seg.getCode();
-        // clear the output
-        seg.output("");
-        seg.errorText("");
-        seg.runningIndicator(true);
-
-        eventBus.trigger("evaluator:evaluate", {code: code, segmentID: seg.id});
 
         // if this isn't the last segment, move to the next
         if (self.activeSegmentIndex != self.segments().length - 1) eventBus.trigger("command:worksheet:leaveForward");
