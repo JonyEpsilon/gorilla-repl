@@ -4,25 +4,6 @@
  * gorilla-repl is licenced to you under the MIT licence. See the file LICENCE.txt for full details.
  */
 
-// a free segment contains markdown
-var freeSegment = function (contents, id) {
-    var self = {};
-    self.renderTemplate = "free-segment-template";
-
-    self.type = "free";
-
-    // Segment UI state
-    self.active = ko.observable(false);
-
-    // The markdown content
-    self.content = markdownEditor.makeMarkdownEditorViewmodel(
-        self.id(),
-        contents
-    );
-
-    return self;
-};
-
 // a code segment contains code, and shows the results of running that code.
 var codeSegment = function (contents, id) {
     var self = {};
@@ -66,6 +47,52 @@ var codeSegment = function (contents, id) {
     };
 
     self.deactivate = function () {
+        self.active(false);
+    };
+
+    return self;
+};
+
+// a free segment contains markdown
+var freeSegment = function (contents, id) {
+    var self = {};
+    self.renderTemplate = "free-segment-template";
+    self.id = id;
+
+    self.type = "free";
+
+    // Segment UI state
+    self.active = ko.observable(false);
+    self.markupVisible = ko.observable(false);
+
+    // The markup
+    self.content = codemirrorVM(
+        self.id,
+        contents,
+        "text/x-markdown"
+    );
+
+    // var mdConverter = Markdown.getSanitizingConverter();
+    var mdConverter = new Markdown.Converter();
+
+    self.renderedContent = ko.computed(function () {
+        return mdConverter.makeHtml(self.content.contents());
+    }).extend({throttle: 50});
+
+    // activation and deactivation - these control whether the segment has the "cursor" outline, and focus
+    // the content component.
+
+    // activate the segment. fromTop will be true is the user's focus is coming from above (and so the cursor should
+    // be placed at the top), false indicates the focus is coming from below.
+    self.activate = function (fromTop) {
+        self.active(true);
+        self.markupVisible(true);
+        if (fromTop) self.content.positionCursorAtContentStart();
+        else self.content.positionCursorAtContentEnd();
+    };
+
+    self.deactivate = function () {
+        self.markupVisible(false);
         self.active(false);
     };
 

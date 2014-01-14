@@ -28,6 +28,7 @@
     <script type="text/javascript" src="js/repl.js"></script>
     <script type="text/javascript" src="js/evaluator.js"></script>
     <script type="text/javascript" src="js/codemirrorVM.js"></script>
+    <script type="text/javascript" src="js/mathJaxViewer.js"></script>
     <script type="text/javascript" src="js/segment.js"></script>
     <script type="text/javascript" src="js/worksheet.js"></script>
     <script type="text/javascript" src="js/main.js"></script>
@@ -70,23 +71,23 @@
     </div>
 </script>
 
-<!--<script type="text/html" id="free-segment-template">-->
-    <!--<div class="segment free" data-bind="css: {selected: active()}, attr: {id: id}">-->
+<script type="text/html" id="free-segment-template">
+    <div class="segment free" data-bind="css: {selected: active()}, attr: {id: id}">
         <!--<a href="#"-->
            <!--data-bind="hasfocus: targetFocused, event: {keydown: cursor.handleSegmentKeydown},-->
                       <!--attr: {id: 'segment-focus-target-' + id()}"></a>-->
 
-        <!--<div class="segment-main">-->
-            <!--<div class="free-preview"-->
-                 <!--data-bind="mathJaxViewer: content.renderedContent, click: cursor.handleSegmentClick, visible: !cursor.markupVisible()"></div>-->
-            <!--<div class="free-markup"-->
-                 <!--data-bind="visible: cursor.markupVisible, event: {keydown: content.handleMarkupKeyup}">-->
-                <!--<textarea data-bind="codemirror: content.markupEditor"></textarea>-->
-            <!--</div>-->
-        <!--</div>-->
-        <!--<div class="segment-footer"></div>-->
-    <!--</div>-->
-<!--</script>-->
+        <div class="segment-main">
+            <div class="free-preview"
+                 data-bind="mathJaxViewer: renderedContent, visible: !markupVisible()"></div>
+            <div class="free-markup"
+                 data-bind="visible: markupVisible">
+                <textarea data-bind="codemirror: content"></textarea>
+            </div>
+        </div>
+        <div class="segment-footer"></div>
+    </div>
+</script>
 
 <!-- Dialogs -->
 

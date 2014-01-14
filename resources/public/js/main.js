@@ -14,6 +14,7 @@ var app = (function () {
 
         // prepare a skeleton worksheet
         var ws = worksheet();
+        ws.segments().push(freeSegment("# Gorilla REPL\n\nWelcome to gorilla ..."))
         ws.segments().push(codeSegment("(defn f\n  [x y]\n  (let [q (* 2 x)\n        p (* 3 y)]\n    (+ p q)))"));
         ws.segments().push(codeSegment("(f 20 30)"));
         var wsWrapper = worksheetWrapper(ws);

@@ -11,7 +11,7 @@ var markdownEditor = function (id, cursorCallbackObject, initialContents) {
     // var mdConverter = Markdown.getSanitizingConverter();
     var mdConverter = new Markdown.Converter();
 
-    self.markupEditor = codemirrorVM(id, cursorCallbackObject, initialContents, "text/x-markdown");
+    self.markupEditor = codemirrorVM(id, initialContents, "text/x-markdown");
     self.renderedContent = ko.computed(function () {
         return mdConverter.makeHtml(self.markupEditor.contents());
     }).extend({throttle: 50});
