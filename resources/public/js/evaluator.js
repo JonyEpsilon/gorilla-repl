@@ -30,6 +30,11 @@ eventBus.on("repl:response", function (e, d) {
         eventBus.trigger("evaluator:value-response", {ns: d.ns, value: d.value, segmentID: segID});
         return;
     }
+    // - console output
+    if (d.out) {
+        eventBus.trigger("evaluator:console-response", {out: d.out, segmentID: segID});
+        return;
+    }
     // - status response
     if (d.status) {
         // is this an evaluation done message

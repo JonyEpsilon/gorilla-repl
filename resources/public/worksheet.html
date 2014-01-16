@@ -62,6 +62,7 @@
             <textarea class="codeTextArea mousetrap" data-bind="codemirror: content"></textarea>
         </div>
         <div class="error-text" data-bind="text: errorText, visible: errorText() !== ''"></div>
+        <div class="console-text" data-bind="html: consoleText, visible: consoleText() !== ''"></div>
         <div class="output browser"
              data-bind="visible: (output() != ''), css: {'browser-muted': warningIndicator}">
             <!-- temp hack -->

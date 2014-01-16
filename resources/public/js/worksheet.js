@@ -114,7 +114,6 @@ var worksheet = function () {
         self.deleteSegment(deleteIndex);
     });
 
-    // Note that this is handled globally, so no reference to the currently selected segment is contained in the event.
     eventBus.on("worksheet:newBelow", function () {
         // do nothing if no segment is active
         if (self.activeSegmentIndex == null) return;
@@ -125,6 +124,7 @@ var worksheet = function () {
         self.activateSegment(currentIndex + 1);
     });
 
+    // the event for this action contains the segment id
     eventBus.on("worksheet:segment-clicked", function(e, d) {
         if (self.activeSegmentIndex != null) self.deactivateSegment(self.activeSegmentIndex);
         var focusIndex = self.segmentIndexForID(d.id);
@@ -141,7 +141,7 @@ var worksheet = function () {
         // if the segment is already a free segment, do nothing.
         if (seg.type == newType) return;
 
-        var contents = seg.content.contents();
+        var contents = seg.getContents();
         var newSeg = newSegmentConstructor(contents);
         self.segments.splice(index, 1, newSeg);
         self.activateSegment(index, true);
@@ -166,10 +166,9 @@ var worksheet = function () {
 
         if (seg.type == "code") {
             // if this is a code segment, then evaluate the contents
-            var code = seg.getCode();
+            var code = seg.getContents();
             // clear the output
-            seg.output("");
-            seg.errorText("");
+            seg.clearOutput();
             seg.runningIndicator(true);
 
             eventBus.trigger("evaluator:evaluate", {code: code, segmentID: seg.id});
@@ -187,6 +186,16 @@ var worksheet = function () {
         var segID = d.segmentID;
         var seg = self.getSegmentForID(segID);
         seg.output(d.ns + " => " + d.value);
+    });
+
+    eventBus.on("evaluator:console-response", function (e, d){
+        var segID = d.segmentID;
+        var seg = self.getSegmentForID(segID);
+        var oldText = seg.consoleText();
+        // note that no escaping is done to console strings - you could cause havoc by returning inappropriate HTML
+        // if you were so minded. Newlines are replaced by <br/>s to make it look right.
+        var newText = d.out.replace("\n", "<br/>");
+        seg.consoleText(oldText + newText);
     });
 
     eventBus.on("evaluator:done-response", function (e, d) {

@@ -19,6 +19,7 @@ var codeSegment = function (contents, id) {
     // Segment UI state
     self.active = ko.observable(false);
     self.errorText = ko.observable("");
+    self.consoleText = ko.observable("");
     self.runningIndicator = ko.observable(false);
     self.output = ko.observable("");
     self.warningIndicator = ko.observable(false);
@@ -31,8 +32,14 @@ var codeSegment = function (contents, id) {
         "text/x-clojure"
     );
 
-    self.getCode = function() {
+    self.getContents = function() {
         return self.content.contents();
+    };
+
+    self.clearOutput = function () {
+        self.output("");
+        self.errorText("");
+        self.consoleText("");
     };
 
     // activation and deactivation - these control whether the segment has the "cursor" outline, and focus
