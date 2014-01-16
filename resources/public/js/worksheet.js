@@ -194,7 +194,7 @@ var worksheet = function () {
         var oldText = seg.consoleText();
         // note that no escaping is done to console strings - you could cause havoc by returning inappropriate HTML
         // if you were so minded. Newlines are replaced by <br/>s to make it look right.
-        var newText = d.out.replace("\n", "<br/>");
+        var newText = d.out.replace(/\n/g, "<br/>");
         seg.consoleText(oldText + newText);
     });
 

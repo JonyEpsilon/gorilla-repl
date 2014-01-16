@@ -79,6 +79,9 @@ div.error-text {
     border-color: #ff0000;
     color: #ff0000;
     clear: both;
+    padding: 0.5em 1em 0.5em 1em;
+    margin-bottom: 0.3em;
+    background-color: #FCE4E8;
 }
 
 div.console-text {
