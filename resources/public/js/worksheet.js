@@ -185,7 +185,7 @@ var worksheet = function () {
     eventBus.on("evaluator:value-response", function (e, d) {
         var segID = d.segmentID;
         var seg = self.getSegmentForID(segID);
-        seg.output(d.ns + " => " + d.value);
+        seg.output(d.value);
     });
 
     eventBus.on("evaluator:console-response", function (e, d){
@@ -193,9 +193,8 @@ var worksheet = function () {
         var seg = self.getSegmentForID(segID);
         var oldText = seg.consoleText();
         // note that no escaping is done to console strings - you could cause havoc by returning inappropriate HTML
-        // if you were so minded. Newlines are replaced by <br/>s to make it look right.
-        var newText = d.out.replace(/\n/g, "<br/>");
-        seg.consoleText(oldText + newText);
+        // if you were so minded.
+        seg.consoleText(oldText + d.out);
     });
 
     eventBus.on("evaluator:done-response", function (e, d) {

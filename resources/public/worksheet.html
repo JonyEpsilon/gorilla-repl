@@ -11,7 +11,6 @@
     <link href='https://fonts.googleapis.com/css?family=Lora:400,700' rel='stylesheet' type='text/css'/>
     <link href='https://fonts.googleapis.com/css?family=Arvo:400,700' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" href="jslib/codemirror-3.20/lib/codemirror.css"/>
-    <link rel="stylesheet" href="css/object-viewer.css"/>
     <link rel="stylesheet" href="css/worksheet.css"/>
     <script type="text/javascript"
             src="jslib/mathjax/MathJax.js?config=TeX-AMS-MML_SVG-full.js&delayStartupUntil=configured"></script>
@@ -62,14 +61,13 @@
             <textarea class="codeTextArea mousetrap" data-bind="codemirror: content"></textarea>
         </div>
         <div class="error-text" data-bind="text: errorText, visible: errorText() !== '', click: handleClick"></div>
-        <div class="console-text" data-bind="html: consoleText, visible: consoleText() !== '', click: handleClick"></div>
+        <div class="console-text" data-bind="visible: consoleText() !== '', click: handleClick">
+            <pre><code data-bind="html: consoleText"></code></pre>
+        </div>
         <div class="output browser"
              data-bind="visible: (output() != ''), css: {'browser-muted': warningIndicator}, click: handleClick">
-            <!-- temp hack -->
-            <div class='ov'>
-                <span class='ov-string' data-bind="text: output"></span>
+            <pre><code data-bind="text: output"></code></pre>
             </div>
-             </div>
         <div class="segment-footer"></div>
     </div>
 </script>
