@@ -27,12 +27,14 @@
     <script type="text/javascript" src="jslib/vega/vega.1.3.3.min.js"></script>
     <script type="text/javascript" src="jslib/uuid/uuid.core.js"></script>
     <script type="text/javascript" src="jslib/mousetrap.min.js"></script>
+    <script type="text/javascript" src="jslib/gorilla.util.js"></script>
     <script type="text/javascript" src="js/eventbus.js"></script>
     <script type="text/javascript" src="js/commandProcessor.js"></script>
     <script type="text/javascript" src="js/repl.js"></script>
     <script type="text/javascript" src="js/evaluator.js"></script>
     <script type="text/javascript" src="js/codemirrorVM.js"></script>
     <script type="text/javascript" src="js/mathJaxViewer.js"></script>
+    <script type="text/javascript" src="js/outputViewer.js"></script>
     <script type="text/javascript" src="js/segment.js"></script>
     <script type="text/javascript" src="js/worksheet.js"></script>
     <script type="text/javascript" src="js/main.js"></script>
@@ -69,7 +71,7 @@
         </div>
         <div class="output browser"
              data-bind="visible: (output() != ''), css: {'browser-muted': warningIndicator}, click: handleClick">
-            <pre><code class="output-content" data-bind="html: output"></code></pre>
+            <pre><code class="output-content" data-bind="outputViewer: output"></code></pre>
             </div>
         <div class="segment-footer"></div>
     </div>
