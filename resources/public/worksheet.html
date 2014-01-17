@@ -66,7 +66,7 @@
         </div>
         <div class="output browser"
              data-bind="visible: (output() != ''), css: {'browser-muted': warningIndicator}, click: handleClick">
-            <pre><code data-bind="text: output"></code></pre>
+            <pre><code class="output-content" data-bind="html: output"></code></pre>
             </div>
         <div class="segment-footer"></div>
     </div>
