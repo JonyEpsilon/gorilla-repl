@@ -85,6 +85,10 @@ var freeSegment = function (contents, id) {
         "text/x-markdown"
     );
 
+    self.getContents = function() {
+        return self.content.contents();
+    };
+
     // var mdConverter = Markdown.getSanitizingConverter();
     var mdConverter = new Markdown.Converter();
 
