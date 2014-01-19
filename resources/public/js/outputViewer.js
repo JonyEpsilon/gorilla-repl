@@ -47,7 +47,7 @@ ko.bindingHandlers.outputViewer = {
             }
 
             // if the object has a key called :vega at the top level, then we treat it as a Vega graphics spec
-            if (jsValue[":vega"]) {
+            if (jsValue && jsValue[":vega"]) {
                 renderVega(jsValue[":vega"], element, errorHandler);
                 return;
             }

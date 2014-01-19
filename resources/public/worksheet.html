@@ -66,12 +66,12 @@
         <div class="segment-main">
             <textarea class="codeTextArea mousetrap" data-bind="codemirror: content"></textarea>
         </div>
-        <div class="error-text" data-bind="text: errorText, visible: errorText() !== '', click: handleClick"></div>
-        <div class="console-text" data-bind="visible: consoleText() !== '', click: handleClick">
+        <div class="error-text" data-bind="text: errorText, visible: errorText() !== ''"></div>
+        <div class="console-text" data-bind="visible: consoleText() !== ''">
             <pre><code data-bind="html: consoleText"></code></pre>
         </div>
         <div class="output"
-             data-bind="visible: (output() != ''), outputViewer: output, segmentID: id, css: {'browser-muted': warningIndicator}, click: handleClick">
+             data-bind="visible: (output() != ''), outputViewer: output, segmentID: id, css: {'browser-muted': warningIndicator}">
             </div>
         <div class="segment-footer"></div>
     </div>

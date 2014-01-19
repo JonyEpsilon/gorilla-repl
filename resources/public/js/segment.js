@@ -42,10 +42,6 @@ var codeSegment = function (contents, id) {
         self.consoleText("");
     };
 
-    self.handleClick = function () {
-        eventBus.trigger("worksheet:segment-clicked", {id: self.id})
-    };
-
     // activation and deactivation - these control whether the segment has the "cursor" outline, and focus
     // the content component.
 
