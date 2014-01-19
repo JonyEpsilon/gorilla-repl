@@ -12,8 +12,6 @@
 // to parse the output and generate output from the parse tree (think lists of graphics for instance). But that can come
 // later.
 
-goog.require("gorilla.util");
-
 ko.bindingHandlers.outputViewer = {
     init: function (element, valueAccessor, allBindingsAccessor, viewModel) {
     },
@@ -21,32 +19,42 @@ ko.bindingHandlers.outputViewer = {
 
         // get the value to display
         var value = ko.utils.unwrapObservable(valueAccessor()());
+        // the default is just to show the value as plain HTML in a pre/code block. We define a function to do that
+        // here.
+        var outputPlain = function () {
+            $(element).html('<pre><code>' + value + '</code></pre>');
+        };
         // to handle any errors, we need to know the ID of the segment that this output belongs to
         var segID = allBindingsAccessor.get('segmentID');
+        // this function will be passed to custom renderers (which can fail, say if their data is valid EDN, but not in
+        // the right format for them to render) to signal there was a problem.
         var errorHandler = function (msg) {
             eventBus.trigger("output:output-error", {segmentID: segID, error: msg});
             // set the output to plain text
-            $(element).html('<pre><code>' + value + '</code></pre>');
+            outputPlain();
         };
+
 
         if (value !== "") {
             // first try and parse the output as EDN. It might not be valid EDN, so this can and will fail.
             // TODO: switch to real EDN parser
             var jsValue = {};
             try {
-                jsValue = gorilla.util.clojureStringToJS(value);
+                var edn = jsedn.parse(value);
+                jsValue = jsedn.toJS(edn);
             } catch (e) {
                 // not a lot we can do if anything goes wrong - and it's expected to happen often, so just ignore!
             }
 
-            // if the object has a key called vega at the top level, then we treat it as a Vega graphics spec
-            if (jsValue.vega) {
-                renderVega(jsValue.vega, element, errorHandler);
+            // if the object has a key called :vega at the top level, then we treat it as a Vega graphics spec
+            if (jsValue[":vega"]) {
+                renderVega(jsValue[":vega"], element, errorHandler);
                 return;
             }
 
             // default is just to show plain html
-            $(element).html('<pre><code>' + value + '</code></pre>');
+            outputPlain();
+
         }
     }
 };
