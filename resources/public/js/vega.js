@@ -16,11 +16,11 @@ renderVega = function (spec, element, errorCallback) {
     };
     vg.parse.spec(spec, function (chart) {
         try {
-            chart({el: element}).update();
-        } catch (e2) {
+            chart({el: element, renderer: 'svg'}).update();
+        } catch (e) {
             // we'll end up here if vega throws an error. We try and route this error back to the
             // segment so the user has an idea of what's going on.
-            errorCallback("Vega error (js): " + e2.message);
+            errorCallback("Vega error (js): " + e.message);
         }
     });
 };

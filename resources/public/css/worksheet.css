@@ -93,6 +93,15 @@ div.console-text {
     background-color: #FFFFFF;
 }
 
+div.vega {
+    width: 100%;
+    text-align: center;
+}
+
+canvas.marks {
+    display: inline-block;
+}
+
 div.segment-footer {
     clear: both;
 }
