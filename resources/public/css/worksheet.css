@@ -69,11 +69,6 @@ div.output {
     border-color: #cccccc;
 }
 
-div.browser {
-    font-family: monospace;
-    clear: both;
-}
-
 div.error-text {
     font-family: monospace;
     border-style: solid;

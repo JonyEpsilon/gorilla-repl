@@ -17,6 +17,7 @@ var repl = (function () {
                 success: function (data) {
                     if (data) {
                         data.map(function (d) {
+                            // responses are sent out asynchronously as messages on the eventBus
                             eventBus.trigger("repl:response", d);
                         });
                     }

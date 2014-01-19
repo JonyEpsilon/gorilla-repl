@@ -203,7 +203,7 @@ var worksheet = function () {
         seg.runningIndicator(false);
     });
 
-    eventBus.on("evaluator:error-response", function (e, d) {
+    eventBus.on("evaluator:error-response output:output-error", function (e, d) {
         var segID = d.segmentID;
         var seg = self.getSegmentForID(segID);
         seg.errorText(d.error);
