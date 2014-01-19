@@ -7,7 +7,7 @@
 // A helper for rendering a vega spec into a DOM element. If something goes wrong then the errorCallback will be called
 // with the error message.
 
-renderVega = function (spec, element, errorCallback) {
+viewVega = function (spec, element, errorCallback) {
 // for some reason, Vega will sometimes try and pop up an alert if there's an error, which is not a
 // great user experience. Here we patch the error handling function to re-route any generated message
 // to the segment.
