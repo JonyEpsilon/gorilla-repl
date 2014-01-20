@@ -5,7 +5,7 @@
 (defn container
   []
   {"width"   400
-   "height"  200
+   "height"  247
    "padding" {"top" 10, "left" 30, "bottom" 20, "right" 10}})
 
 (defn data-from-list
