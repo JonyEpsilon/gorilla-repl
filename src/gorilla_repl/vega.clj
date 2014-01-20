@@ -26,7 +26,6 @@
   {"scales" [{"name"   "x",
               "type"   "linear",
               "range"  "width",
-              "zero"   false,
               "domain" {"data" data-key, "field" "data.x"}
               },
              {"name"   "y",
@@ -43,7 +42,6 @@
              "from"       {"data" data-key},
              "properties" {"enter"  {"x"           {"scale" "x", "field" "data.x"},
                                      "y"           {"scale" "y", "field" "data.y"},
-                                     "y2"          {"scale" "y", "value" 0},
                                      "fill"        {"value" "steelblue"},
                                      "fillOpacity" {"value" 0.5}
                                      },
