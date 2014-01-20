@@ -11,8 +11,6 @@ body {
 div#contents {
     margin-left: 10%;
     margin-right: 10%;
-    /*-webkit-perspective: 500px;*/
-    /*-webkit-transform-style: preserve-3d;*/
 }
 
 h1 {
@@ -33,6 +31,7 @@ div.free {
     border-style: none;
     padding: 0em 0.5em 0em 0.5em;
     font-family: 'Lora', serif;
+    margin-top: 0.5em;
 }
 
 div.free h1,h2,h3,h4,h5 {

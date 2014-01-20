@@ -37,7 +37,6 @@ ko.bindingHandlers.outputViewer = {
 
         if (value !== "") {
             // first try and parse the output as EDN. It might not be valid EDN, so this can and will fail.
-            // TODO: switch to real EDN parser
             var jsValue = {};
             try {
                 var edn = jsedn.parse(value);
