@@ -35,25 +35,22 @@ ko.bindingHandlers.outputViewer = {
         };
 
 
-        if (value !== "") {
-            // first try and parse the output as EDN. It might not be valid EDN, so this can and will fail.
-            var jsValue = {};
-            try {
-                var edn = jsedn.parse(value);
-                jsValue = jsedn.toJS(edn);
-            } catch (e) {
-                // not a lot we can do if anything goes wrong - and it's expected to happen often, so just ignore!
-            }
-
-            // if the object has a key called :gorilla-vega at the top level, then we treat it as a Vega graphics spec
-            if (jsValue && jsValue[":gorilla-vega"]) {
-                viewVega(jsValue[":gorilla-vega"], element, errorHandler);
-                return;
-            }
-
-            // default is just to show plain html
-            outputPlain();
-
+        // first try and parse the output as EDN. It might not be valid EDN, so this can and will fail.
+        var jsValue = {};
+        try {
+            var edn = jsedn.parse(value);
+            jsValue = jsedn.toJS(edn);
+        } catch (e) {
+            // not a lot we can do if anything goes wrong - and it's expected to happen often, so just ignore!
         }
+
+        // if the object has a key called :gorilla-vega at the top level, then we treat it as a Vega graphics spec
+        if (jsValue && jsValue[":gorilla-vega"]) {
+            viewVega(jsValue[":gorilla-vega"], element, errorHandler);
+            return;
+        }
+
+        // default is just to show plain html
+        outputPlain();
     }
 };
