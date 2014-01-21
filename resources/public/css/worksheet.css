@@ -96,6 +96,10 @@ div.console-text {
     background-color: #FFFFFF;
 }
 
+div.console-text pre {
+    white-space: pre-wrap;
+}
+
 div.vega {
     width: 100%;
     text-align: center;
