@@ -68,6 +68,10 @@ div.output {
     border-color: #cccccc;
 }
 
+div.output pre {
+    white-space: pre-wrap;
+}
+
 div.error-text {
     font-family: monospace;
     border-style: solid;
