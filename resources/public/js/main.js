@@ -18,6 +18,7 @@ var app = (function () {
         ws.segments().push(codeSegment("(defn f\n  [x y]\n  (let [q (* 2 x)\n        p (* 3 y)]\n    (+ p q)))"));
         ws.segments().push(freeSegment("Some notes could go here."));
         ws.segments().push(codeSegment("(f 20 30)"));
+        ws.segments().push(codeSegment("(doall (map println (range 10)))"));
         var wsWrapper = worksheetWrapper(ws);
         self.worksheet = ws;
 

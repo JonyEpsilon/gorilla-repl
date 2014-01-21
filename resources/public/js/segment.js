@@ -58,6 +58,20 @@ var codeSegment = function (contents, id) {
         self.active(false);
     };
 
+    // serialises the segment for saving. The result is valid clojure code, marked up with some magic comments.
+    self.toClojure = function () {
+        var header = ";; @@\n";
+        var outputStart = "\n;; => \n";
+        var outputEnd = "\n;; <=\n";
+        var consoleStart = "\n;; ->\n";
+        var consoleEnd = "\n;; <-";
+        var cText = "";
+        var oText = "";
+        if (self.consoleText() !== "") cText = consoleStart + makeClojureComment(self.consoleText()) + consoleEnd;
+        if (self.output() !== "") oText = outputStart + makeClojureComment(self.output()) + outputEnd;
+        return header + self.getContents() + cText + oText + "\n";
+    };
+
     return self;
 };
 
@@ -115,6 +129,13 @@ var freeSegment = function (contents, id) {
         self.active(false);
 
     };
+
+    // serialises the segment for saving. The result is valid clojure code, marked up with some magic comments.
+    self.toClojure = function () {
+        var header = ";; **\n";
+        return header + makeClojureComment(self.getContents()) + "\n";
+    };
+
 
     return self;
 };

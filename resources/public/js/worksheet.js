@@ -42,6 +42,14 @@ var worksheet = function () {
     // the content of the worksheet is a list of segments.
     self.segments = ko.observableArray();
 
+    // serialises the worksheet for saving. The result is valid clojure code, marked up with some magic comments.
+    self.toClojure = function () {
+        return ";; gorilla-repl.fileformat = 1\n\n" +
+            self.segments().map(function (s) {
+                return s.toClojure()
+            }).join('\n');
+    };
+
     // ** Segment management **
 
     self.segmentIndexForID = function (id) {
@@ -91,7 +99,7 @@ var worksheet = function () {
     // * Activation cursor / focus handling *
 
     // activation/deactivation and focusing of segments.
-    eventBus.on("worksheet:leaveForward", function() {
+    eventBus.on("worksheet:leaveForward", function () {
         var leavingIndex = self.activeSegmentIndex;
         // can't leave the bottom segment forwards
         if (leavingIndex == self.segments().length - 1) return;
@@ -99,7 +107,7 @@ var worksheet = function () {
         self.activateSegment(leavingIndex + 1, true);
     });
 
-    eventBus.on("worksheet:leaveBack", function() {
+    eventBus.on("worksheet:leaveBack", function () {
         var leavingIndex = self.activeSegmentIndex;
         // can't leave the top segment upwards
         if (leavingIndex == 0) return;
@@ -107,7 +115,7 @@ var worksheet = function () {
         self.activateSegment(leavingIndex - 1, false);
     });
 
-    eventBus.on("worksheet:delete", function() {
+    eventBus.on("worksheet:delete", function () {
         // if there's only one segment, don't delete it
         if (self.segments().length == 1) return;
         var deleteIndex = self.activeSegmentIndex;
@@ -125,7 +133,7 @@ var worksheet = function () {
     });
 
     // the event for this action contains the segment id
-    eventBus.on("worksheet:segment-clicked", function(e, d) {
+    eventBus.on("worksheet:segment-clicked", function (e, d) {
         if (self.activeSegmentIndex != null) self.deactivateSegment(self.activeSegmentIndex);
         var focusIndex = self.segmentIndexForID(d.id);
         self.activateSegment(focusIndex, true);
@@ -188,7 +196,7 @@ var worksheet = function () {
         seg.output(d.value);
     });
 
-    eventBus.on("evaluator:console-response", function (e, d){
+    eventBus.on("evaluator:console-response", function (e, d) {
         var segID = d.segmentID;
         var seg = self.getSegmentForID(segID);
         var oldText = seg.consoleText();
