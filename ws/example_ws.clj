@@ -4,6 +4,7 @@
 ;;; # Gorilla REPL
 ;;; 
 ;;; Welcome to gorilla ...
+;; **
 
 ;; @@
 (defn f
@@ -11,20 +12,21 @@
   (let [q (* 2 x)
         p (* 3 y)]
     (+ p q)))
-;; => 
+;; =>
 ;;; #'user/f
 ;; <=
-
+;; @@
 
 ;; **
 ;;; Some notes could go here.
+;; **
 
 ;; @@
 (f 20 30)
-;; => 
+;; =>
 ;;; 130
 ;; <=
-
+;; @@
 
 ;; @@
 (doall (map println (range 10)))
@@ -41,9 +43,10 @@
 ;;; 9
 ;;; 
 ;; <-
-;; => 
+;; =>
 ;;; (nil nil nil nil nil nil nil nil nil nil)
 ;; <=
+;; @@
 
-
+;; @@
 ;; @@
