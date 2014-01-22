@@ -16,7 +16,10 @@ var makeClojureComment = function (code) {
 // the funny name indicates that it undoes what the above function does. It doesn't check whether the line is actually
 // commented, so will break text that isn't in the format it expects.
 var unmakeClojureComment = function (code) {
-    return code.split('\n').map(function (x) {
-        return x.slice(4);
-    }).join("\n");
+    if (code) {
+        return code.split('\n').map(function (x) {
+            return x.slice(4);
+        }).join("\n");
+    }
+    else return null;
 };

@@ -8,19 +8,26 @@ var app = (function () {
 
     var self = {};
 
-    self.start = function () {
+    // start the app with a default worksheet
+    self.start = function (initialWorksheetString) {
         // start the REPL
         repl.connect();
 
-        // prepare a skeleton worksheet
-        var ws = worksheet();
-        ws.segments().push(freeSegment("# Gorilla REPL\n\nWelcome to gorilla ..."));
-        ws.segments().push(codeSegment("(defn f\n  [x y]\n  (let [q (* 2 x)\n        p (* 3 y)]\n    (+ p q)))"));
-        ws.segments().push(freeSegment("Some notes could go here."));
-        ws.segments().push(codeSegment("(f 20 30)"));
-        ws.segments().push(codeSegment("(doall (map println (range 10)))"));
+        var ws;
+        if (initialWorksheetString) {
+            var segments = worksheetParser.parse(initialWorksheetString);
+            ws = worksheet();
+            ws.segments = ko.observableArray(segments);
+            self.wrapper.worksheet(ws);
+        }
+        else {
+            // prepare a skeleton worksheet
+            ws = worksheet();
+            ws.segments().push(freeSegment("# Gorilla REPL\n\nWelcome to gorilla ..."));
+            ws.segments().push(codeSegment(""));
+        }
         var wsWrapper = worksheetWrapper(ws);
-        self.worksheet = ws;
+        self.wrapper = wsWrapper;
 
         ko.applyBindings(wsWrapper);
     };

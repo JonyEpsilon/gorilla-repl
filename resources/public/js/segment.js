@@ -5,12 +5,11 @@
  */
 
 // a code segment contains code, and shows the results of running that code.
-var codeSegment = function (contents, id) {
+var codeSegment = function (contents, output, consoleText) {
     var self = {};
     self.renderTemplate = "code-segment-template";
     self.worksheet = worksheet;
-    if (id) self.id = id;
-    else self.id = UUID.generate();
+    self.id = UUID.generate();
     self.type = "code";
 
     // Segment configuration
@@ -19,9 +18,11 @@ var codeSegment = function (contents, id) {
     // Segment UI state
     self.active = ko.observable(false);
     self.errorText = ko.observable("");
-    self.consoleText = ko.observable("");
+    if (consoleText) self.consoleText(consoleText);
+    else self.consoleText = ko.observable("");
+    if (output) self.output = ko.observable(output);
+    else self.output = ko.observable("");
     self.runningIndicator = ko.observable(false);
-    self.output = ko.observable("");
     self.warningIndicator = ko.observable(false);
     self.outputVisible = ko.observable(true);
 
@@ -76,11 +77,10 @@ var codeSegment = function (contents, id) {
 };
 
 // a free segment contains markdown
-var freeSegment = function (contents, id) {
+var freeSegment = function (contents) {
     var self = {};
     self.renderTemplate = "free-segment-template";
-    if (id) self.id = id;
-    else self.id = UUID.generate();
+    self.id = UUID.generate();
 
     self.type = "free";
 
