@@ -10,12 +10,15 @@
     </content>
     <orderEntry type="jdk" jdkName="1.8" jdkType="JavaSDK" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="Leiningen: ch.qos.logback/logback-classic:1.0.13" level="project" />
     <orderEntry type="library" name="Leiningen: clojure-complete:0.2.3" level="project" />
     <orderEntry type="library" name="Leiningen: com.cemerick/drawbridge:0.0.6" level="project" />
     <orderEntry type="library" name="Leiningen: compojure:1.1.6" level="project" />
     <orderEntry type="library" name="Leiningen: org.clojure/clojure:1.5.1" level="project" />
     <orderEntry type="library" name="Leiningen: org.clojure/tools.nrepl:0.2.3" level="project" />
+    <orderEntry type="library" name="Leiningen: org.slf4j/slf4j-api:1.7.5" level="project" />
     <orderEntry type="library" name="Leiningen: ring/ring-jetty-adapter:1.2.1" level="project" />
+    <orderEntry type="library" name="Leiningen: ch.qos.logback/logback-core:1.0.13" level="project" />
     <orderEntry type="library" name="Leiningen: cheshire:3.0.0" level="project" />
     <orderEntry type="library" name="Leiningen: clj-http:0.3.6" level="project" />
     <orderEntry type="library" name="Leiningen: org.codehaus.jackson/jackson-core-asl:1.9.5" level="project" />

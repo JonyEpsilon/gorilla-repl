@@ -27,5 +27,15 @@
            (ANY "/repl" {:as req} (drawbridge req))
            (route/resources "/"))
 
+
+(defn run-gorilla-server
+  []
+  (println "Gorilla-REPL starting ...")
+  (let [s (jetty/run-jetty app-routes {:port 8080 :join? false})]
+    (println "Ready. Running at http://localhost:8080/worksheet.html .")
+    (println "Ctrl+C to exit.")
+    (.join s)))
+
+
 (defn -main []
-  (jetty/run-jetty app-routes {:port 8080 :join? false}))
+  (run-gorilla-server))

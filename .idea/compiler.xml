@@ -4,6 +4,8 @@
     <option name="DEFAULT_COMPILER" value="Javac" />
     <resourceExtensions />
     <wildcardResourcePatterns>
+      <entry name="!dev-resources:*" />
+      <entry name="!resources:*" />
       <entry name="!?*.java" />
       <entry name="!?*.form" />
       <entry name="!?*.class" />
