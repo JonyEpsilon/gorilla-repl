@@ -79,16 +79,16 @@ commandList = [
     },
     {
         name: "command:worksheet:changeToFree",
-        desc: "Convert the highlighted segment to a free segment.",
+        desc: "Convert the highlighted segment to a markdown segment.",
         showInMenu: true,
-        kb: "ctrl+g ctrl+f",
+        kb: "ctrl+g ctrl+m",
         action: function () {
             eventBus.trigger("worksheet:changeToFree");
         }
     },
     {
         name: "command:worksheet:changeToCode",
-        desc: "Convert the highlighted segment to a code segment.",
+        desc: "Convert the highlighted segment to a clojure segment.",
         showInMenu: true,
         kb: "ctrl+g ctrl+c",
         action: function () {
