@@ -45,15 +45,14 @@
 <body>
 
 <!-- The page stub -->
-<div class="help">?
-    <div class="help-contents">
-        <h2>Help</h2>
-        <ul>
-            <li>Command 1</li>
-            <li>Command 2</li>
-            <li>Command 3</li>
-            <li>Command 4</li>
-            <li>Command 5</li>
+<div class="commands">?
+    <div class="command-contents">
+        <!--<h2>Commands</h2>-->
+        <ul data-bind="foreach: commandList.filter(function (x) {return x.showInMenu})">
+            <li>
+                <div class="command" data-bind="text: desc"></div>
+                <div class="command-shortcut" data-bind="text: kb"></div>
+            </li>
         </ul>
     </div>
 </div>

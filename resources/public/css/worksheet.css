@@ -13,7 +13,7 @@ div#contents {
     margin-right: 10%;
 }
 
-div.help {
+div.commands {
     position: fixed;
     top: 10px;
     right: 10px;
@@ -23,32 +23,53 @@ div.help {
     opacity: 0.1;
 }
 
-div.help:hover {
+div.commands:hover {
     opacity: 1;
 }
 
-div.help div.help-contents {
+div.commands div.command-contents {
     display: none;
-    font-family: 'Lora', serif;
-    font-weight: normal;
-    font-size: 12px;
-}
-
-div.help:hover div.help-contents {
-    display: block;
     position: fixed;
-    top: 35px;
-    right: 0;
-    width: 200px;
-    padding: 5px;
-    margin: 12px;
+    top: 20px;
+    right: 40px;
+    width: 350px;
+    padding: 0;
     z-index: 100;
     background: #eeeeee;
+    box-shadow: 0 0 20px steelblue;
     border-style: solid;
-    border-color: black;
+    border-color: #888888;
     border-width: 1px;
+    font-family: 'Helvetica', sans-serif;
+    font-weight: normal;
+    font-size: 13px;
 }
 
+div.commands:hover div.command-contents {
+    display: block;
+}
+
+div.command-contents ul {
+    margin: 0;
+    padding: 0;
+}
+
+div.command-contents li {
+    padding: 8px;
+    background: #e5e5e5;
+    list-style-type: none;
+}
+
+div.command-contents li:nth-child(odd) {
+    background: #eeeeee;
+}
+
+div.command-shortcut {
+    padding-top: 5px;
+    font-family: 'lucida console', sans-serif;
+    font-size: 11px;
+    color: #555555;
+}
 
 h1 {
     margin-bottom: 0.3em;
