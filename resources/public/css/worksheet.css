@@ -15,6 +15,7 @@ div#contents {
 
 div.commands {
     position: fixed;
+    z-index: 100;
     top: 10px;
     right: 10px;
     font-family: 'Arvo', serif;
@@ -34,7 +35,6 @@ div.commands div.command-contents {
     right: 40px;
     width: 350px;
     padding: 0;
-    z-index: 100;
     background: #eeeeee;
     box-shadow: 0 0 20px steelblue;
     border-style: solid;
