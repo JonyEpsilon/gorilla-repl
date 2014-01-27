@@ -13,6 +13,43 @@ div#contents {
     margin-right: 10%;
 }
 
+div.help {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    font-family: 'Arvo', serif;
+    font-weight: bold;
+    font-size: 25px;
+    opacity: 0.1;
+}
+
+div.help:hover {
+    opacity: 1;
+}
+
+div.help div.help-contents {
+    display: none;
+    font-family: 'Lora', serif;
+    font-weight: normal;
+    font-size: 12px;
+}
+
+div.help:hover div.help-contents {
+    display: block;
+    position: fixed;
+    top: 35px;
+    right: 0;
+    width: 200px;
+    padding: 5px;
+    margin: 12px;
+    z-index: 100;
+    background: #eeeeee;
+    border-style: solid;
+    border-color: black;
+    border-width: 1px;
+}
+
+
 h1 {
     margin-bottom: 0.3em;
 }
