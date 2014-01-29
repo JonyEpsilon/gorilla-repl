@@ -40,6 +40,7 @@
 ;; the client can post a request to have the worksheet saved, handled by the following
 (defn save
   [req]
+  (println "Saved!")
   (res/response {:status "Not implemented!"}))
 
 ;; the combined routes - we serve up everything in the "public" directory of resources under "/".
@@ -56,17 +57,17 @@
   ;; first we look at the configuration, and if requested, load the worksheet
   (when-let [ws (:worksheet conf)]
     ;; if we load a file, we store its filename in the config
-    (swap! config-info #(assoc % :worksheet-file ws))
+    (swap! config-info #(assoc % :worksheet-filename ws))
     ;; load the file itself and put that in the config
     (swap! config-info #(assoc % :worksheet-data (slurp ws))))
   ;; start the app
   (let [p (:port @config-info)
         s (jetty/run-jetty app-routes {:port p :join? false})]
     (println (str "Ready. Running at http://localhost:" p "/worksheet.html ."))
-             (println "Ctrl+C to exit.")
-             ;; block this thread by joining the server (which should run until killed)
-             (.join s)))
+    (println "Ctrl+C to exit.")
+    ;; block this thread by joining the server (which should run until killed)
+    (.join s)))
 
 
-  (defn -main []
-    (run-gorilla-server {:worksheet "ws/example_ws.clj"}))
+(defn -main []
+  (run-gorilla-server {:worksheet "ws/example.clj"}))

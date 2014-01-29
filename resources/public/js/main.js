@@ -8,29 +8,42 @@ var app = (function () {
 
     var self = {};
 
-    // start the app with a default worksheet
-    self.start = function (initialWorksheetString) {
-        // start the REPL
-        repl.connect();
+    // start the app. First of all, the client will call an HTML endpoint on the server to get configuration
+    // information. Then the worksheet object is constructed, either from data in the configuration reply, or using
+    // default content, and bound to the UI.
+    self.start = function () {
 
-        var ws;
-        if (initialWorksheetString) {
-            var segments = worksheetParser.parse(initialWorksheetString);
-            ws = worksheet();
-            ws.segments = ko.observableArray(segments);
-            self.wrapper.worksheet(ws);
-        }
-        else {
-            // prepare a skeleton worksheet
-            ws = worksheet();
-            ws.segments().push(freeSegment("# Gorilla REPL\n\nWelcome to gorilla ..."));
-            ws.segments().push(codeSegment(""));
-        }
-        var wsWrapper = worksheetWrapper(ws);
-        self.wrapper = wsWrapper;
+        // load the configuration from the server
+        $.get("/config", function (data) {
 
-        ko.applyBindings(wsWrapper);
+            // start the REPL
+            repl.connect();
+
+            var ws;
+            if (data["worksheet-data"]) {
+                var segments = worksheetParser.parse(data["worksheet-data"]);
+                ws = worksheet();
+                ws.segments = ko.observableArray(segments);
+            }
+            else {
+                // prepare a skeleton worksheet
+                ws = worksheet();
+                ws.segments().push(freeSegment("# Gorilla REPL\n\nWelcome to gorilla ..."));
+                ws.segments().push(codeSegment(""));
+            }
+            var wsWrapper = worksheetWrapper(ws);
+            self.wrapper = wsWrapper;
+
+            if (data["worksheet-filename"]) wsWrapper.filename = data["worksheet-filename"];
+
+            ko.applyBindings(wsWrapper);
+        });
     };
+
+    // respond to save events
+    eventBus.on("app:save", function () {
+        $.post("/save");
+    });
 
     return self;
 })();

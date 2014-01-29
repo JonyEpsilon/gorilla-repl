@@ -12,10 +12,10 @@
   (let [q (* 2 x)
         p (* 3 y)]
     (+ p q)))
+;; @@
 ;; =>
 ;;; #'user/f
 ;; <=
-;; @@
 
 ;; **
 ;;; Some notes could go here.
@@ -23,13 +23,14 @@
 
 ;; @@
 (f 20 30)
+;; @@
 ;; =>
 ;;; 130
 ;; <=
-;; @@
 
 ;; @@
 (doall (map println (range 10)))
+;; @@
 ;; ->
 ;;; 0
 ;;; 1
@@ -46,7 +47,7 @@
 ;; =>
 ;;; (nil nil nil nil nil nil nil nil nil nil)
 ;; <=
-;; @@
 
 ;; @@
+
 ;; @@

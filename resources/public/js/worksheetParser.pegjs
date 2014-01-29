@@ -14,29 +14,35 @@ segmentWithBlankLine = seg:segment "\n"? {return seg;}
 
 segment = freeSegment / codeSegment
 
-freeSegment = freeSegmentTag content:stringNoDelim? freeSegmentTag {return freeSegment(unmakeClojureComment(content));}
+freeSegment = freeSegmentOpenTag content:stringNoDelim? freeSegmentCloseTag
+                {return freeSegment(unmakeClojureComment(content));}
 
-freeSegmentTag = ";; **\n"
+freeSegmentOpenTag = ";; **\n"
 
-codeSegment = codeSegmentTag content:stringNoDelim? cs:consoleSection? out:outputSection? codeSegmentTag
+freeSegmentCloseTag = "\n;; **\n"
+
+codeSegment = codeSegmentOpenTag content:stringNoDelim? codeSegmentCloseTag cs:consoleSection? out:outputSection?
                 {return codeSegment(content, unmakeClojureComment(cs), unmakeClojureComment(out));}
 
-codeSegmentTag = ";; @@\n"
+codeSegmentOpenTag = ";; @@\n"
+
+codeSegmentCloseTag = "\n;; @@\n"
 
 outputSection = outputOpenTag output:stringNoDelim outputCloseTag {return output;}
 
 outputOpenTag = ";; =>\n"
 
-outputCloseTag = ";; <=\n"
+outputCloseTag = "\n;; <=\n"
 
 consoleSection = consoleOpenTag cs:stringNoDelim consoleCloseTag {return cs;}
 
 consoleOpenTag = ";; ->\n"
 
-consoleCloseTag = ";; <-\n"
+consoleCloseTag = "\n;; <-\n"
 
 stringNoDelim = cs:noDelimChar+ {return cs.join("");}
 
-delimiter = freeSegmentTag / codeSegmentTag / outputOpenTag / outputCloseTag / consoleOpenTag / consoleCloseTag
+delimiter = freeSegmentOpenTag / freeSegmentCloseTag /codeSegmentOpenTag / codeSegmentCloseTag / outputOpenTag /
+                outputCloseTag / consoleOpenTag / consoleCloseTag
 
 noDelimChar = !delimiter c:. {return c;}

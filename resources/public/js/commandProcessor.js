@@ -21,6 +21,7 @@ var commandProcessor = (function () {
         eventBus.on(command.name, command.action);
         if (command.kb) Mousetrap.bind(command.kb, function () {
             eventBus.trigger(command.name);
+            return false;
         });
     };
 
@@ -93,6 +94,15 @@ commandList = [
         kb: "ctrl+g ctrl+c",
         action: function () {
             eventBus.trigger("worksheet:changeToCode");
+        }
+    },
+    {
+        name: "command:app:save",
+        desc: "Save the worksheet.",
+        showInMenu: true,
+        kb: "mod+s",
+        action: function () {
+            eventBus.trigger("app:save");
         }
     }
 ];

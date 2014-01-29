@@ -5,7 +5,7 @@
  */
 
 // a code segment contains code, and shows the results of running that code.
-var codeSegment = function (contents, output, consoleText) {
+var codeSegment = function (contents, consoleText, output) {
     var self = {};
     self.renderTemplate = "code-segment-template";
     self.worksheet = worksheet;
@@ -18,7 +18,7 @@ var codeSegment = function (contents, output, consoleText) {
     // Segment UI state
     self.active = ko.observable(false);
     self.errorText = ko.observable("");
-    if (consoleText) self.consoleText(consoleText);
+    if (consoleText) self.consoleText = ko.observable(consoleText);
     else self.consoleText = ko.observable("");
     if (output) self.output = ko.observable(output);
     else self.output = ko.observable("");
@@ -27,6 +27,8 @@ var codeSegment = function (contents, output, consoleText) {
     self.outputVisible = ko.observable(true);
 
     // The code
+    // handle null contents
+    if (contents === null) contents = "";
     self.content = codemirrorVM(
         self.id,
         contents,
@@ -61,16 +63,17 @@ var codeSegment = function (contents, output, consoleText) {
 
     // serialises the segment for saving. The result is valid clojure code, marked up with some magic comments.
     self.toClojure = function () {
-        var tag = ";; @@\n";
-        var outputStart = "\n;; =>\n";
+        var startTag = ";; @@\n";
+        var endTag = "\n;; @@\n";
+        var outputStart = ";; =>\n";
         var outputEnd = "\n;; <=\n";
-        var consoleStart = "\n;; ->\n";
-        var consoleEnd = "\n;; <-";
+        var consoleStart = ";; ->\n";
+        var consoleEnd = "\n;; <-\n";
         var cText = "";
         var oText = "";
         if (self.consoleText() !== "") cText = consoleStart + makeClojureComment(self.consoleText()) + consoleEnd;
         if (self.output() !== "") oText = outputStart + makeClojureComment(self.output()) + outputEnd;
-        return tag + self.getContents() + "\n" + cText + oText + tag;
+        return startTag + self.getContents() + endTag + cText + oText;
     };
 
     return self;
@@ -89,6 +92,8 @@ var freeSegment = function (contents) {
     self.markupVisible = ko.observable(false);
 
     // The markup
+    // handle null contents
+    if (contents === null) contents = "";
     self.content = codemirrorVM(
         self.id,
         contents,
