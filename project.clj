@@ -8,10 +8,13 @@
   :license {:name "MIT"}
   :dependencies [[org.clojure/clojure "1.5.1"]
                  [ring/ring-jetty-adapter "1.2.1"]
+                 [ring/ring-json "0.2.0"]
                  [compojure "1.1.6"]
                  [com.cemerick/drawbridge "0.0.6"]
                  [org.slf4j/slf4j-api "1.7.5"]
                  [ch.qos.logback/logback-classic "1.0.13"]]
   :main ^:skip-aot gorilla-repl.core
   :target-path "target/%s"
+  :plugins [[lein-ring "0.8.7"]]
+  :ring {:handler gorilla-repl.core/app-routes}
   :profiles {:uberjar {:aot :all}})

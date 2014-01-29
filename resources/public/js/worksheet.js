@@ -7,12 +7,16 @@
 // ** The worksheet wrapper **
 
 // The main view model is wrapped in a wrapper. It exists mainly for historical reasons. It handles the UI elements that
-// aren't really part of the worksheet (menu, status etc).
+// aren't really part of the worksheet (status etc), and contains info related to the server-side (like filename
 
 var worksheetWrapper = function (worksheet) {
     var self = {};
 
     self.worksheet = ko.observable(worksheet);
+
+    // the filename that the worksheet corresponds to, if the worksheet was not loaded, or has never been saved,
+    // this will be the empty string.
+    self.filename = "";
 
     return self;
 };
