@@ -9,6 +9,8 @@
 
 var repl = (function () {
 
+    var sessionID = null;
+
     var sendREPLCommand = function (message) {
         $.ajax({
                 type: 'POST',
@@ -17,7 +19,14 @@ var repl = (function () {
                 success: function (data) {
                     if (data) {
                         data.map(function (d) {
+                            // try and snuffle the session ID from the message, this should only happen on the first
+                            // message
+                            if (!sessionID && d.session) {
+//                                console.log("Captured session: " + d.session);
+                                sessionID = d.session;
+                            }
                             // responses are sent out asynchronously as messages on the eventBus
+//                            console.log(JSON.stringify(d));
                             eventBus.trigger("repl:response", d);
                         });
                     }
@@ -40,7 +49,10 @@ var repl = (function () {
         connect: connect,
         // evaluate some clojure code
         execute: (function (command, id) {
-            sendREPLCommand({'op': 'eval', 'code': command, id: id});
+            var message = {'op': 'eval', 'code': command, id: id};
+//            if (sessionID) message.session = sessionID;
+//            console.log(JSON.stringify(message));
+            sendREPLCommand(message);
         })
     }
 })();
