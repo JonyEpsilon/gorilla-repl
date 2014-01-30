@@ -16,9 +16,17 @@
             [cemerick.drawbridge :as drawbridge])
   (:gen-class))
 
+;; useful for debugging the nREPL requests
+(defn print-req
+  [handler]
+  (fn [request]
+    (println (:params request))
+    (handler request)))
+
 ;; the handler function for repl requests
 (def ^:private drawbridge
   (-> (drawbridge/ring-handler)
+      #_(print-req)
       (keyword-params/wrap-keyword-params)
       (nested-params/wrap-nested-params)
       (params/wrap-params)
@@ -53,17 +61,20 @@
 
 (defn run-gorilla-server
   [conf]
-  (println "Gorilla-REPL starting ...")
+  (println "Gorilla-REPL.")
   ;; first we look at the configuration, and if requested, load the worksheet
   (when-let [ws (:worksheet conf)]
+    (print (str "Loading " ws " ... "))
     ;; if we load a file, we store its filename in the config
     (swap! config-info #(assoc % :worksheet-filename ws))
     ;; load the file itself and put that in the config
-    (swap! config-info #(assoc % :worksheet-data (slurp ws))))
+    ;; TODO: S'pose some error handling here wouldn't be such a bad thing
+    (swap! config-info #(assoc % :worksheet-data (slurp ws)))
+    (println "done."))
   ;; start the app
   (let [p (:port @config-info)
         s (jetty/run-jetty app-routes {:port p :join? false})]
-    (println (str "Ready. Running at http://localhost:" p "/worksheet.html ."))
+    (println (str "Running at http://localhost:" p "/worksheet.html ."))
     (println "Ctrl+C to exit.")
     ;; block this thread by joining the server (which should run until killed)
     (.join s)))
