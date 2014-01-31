@@ -48,7 +48,7 @@ var app = (function () {
 
     // respond to save events
     eventBus.on("app:save", function () {
-        $.post("/save");
+        $.post("/save", {"worksheet-data": self.wrapper.worksheet().toClojure()});
     });
 
     return self;

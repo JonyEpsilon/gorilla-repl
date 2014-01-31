@@ -37,40 +37,68 @@
 ;; so as to play nicely with ring, in particular "lein ring server" (which expects the routes for the app to be
 ;; contained in a var, not made by a function).
 (def ^:private config-info
-  (atom {:port 8080
-         }))
+  (atom {
+          :port          8080
+          :worksheet-dir "ws/"
+          }))
 
 ;; the config handler
 (defn config
   [req]
+  ;; load the worksheet whenever config is requested, this ensures that if the page is reloaded, the latest copy of the
+  ;; worksheet is returned.
+  ;; TODO: S'pose some error handling here wouldn't be such a bad thing
+  ;; TODO: maybe better for this to be its own API endpoint
+  (when-let [ws (:worksheet-filename @config-info)]
+    (print (str "Loading: " ws " ... "))
+    (swap! config-info #(assoc % :worksheet-data (slurp (str (:worksheet-dir @config-info) ws))))
+    (println "done."))
   (res/response @config-info))
 
 ;; the client can post a request to have the worksheet saved, handled by the following
 (defn save
   [req]
-  (println "Saved!")
-  (res/response {:status "Not implemented!"}))
+  (let [ws-data (:worksheet-data (:params req))]
+    ;; do we have a file for this worksheet already?
+    (if-let [ws (:worksheet-filename @config-info)]
+      ;; if so, save to that file
+      (do
+        (print (str "Saving: " ws " ... "))
+        (spit (str (:worksheet-dir @config-info) ws) ws-data)
+        (println "done.")
+        (res/response {:status "ok"}))
+      ;; else, create a new file and save in to that
+      (do
+        (println "Creating new worksheet.")
+        ;; slightly cheezy use of createTempFile - makes the code a bit ugly, but works ok
+        (let [f (java.io.File/createTempFile "tmp" ".clj" (java.io.File. (:worksheet-dir @config-info)))
+              tmp-filename (.getName f)]
+          (print (str "Saving: " tmp-filename " ... "))
+          (spit (str (:worksheet-dir @config-info) tmp-filename) ws-data)
+          (println "done.")
+          (swap! config-info #(assoc % :worksheet-filename tmp-filename))
+          (res/response {:status "ok" :filename tmp-filename}))))))
+
+(def ^:private save-handler
+  (-> save
+      (keyword-params/wrap-keyword-params)
+      (params/wrap-params)))
 
 ;; the combined routes - we serve up everything in the "public" directory of resources under "/".
 (defroutes app-routes
            (ANY "/repl" {:as req} (drawbridge req))
            (GET "/config" [] (json/wrap-json-response config))
-           (POST "/save" [] (json/wrap-json-response save))
+           (POST "/save" [] (json/wrap-json-response save-handler))
            (route/resources "/"))
 
 
 (defn run-gorilla-server
   [conf]
   (println "Gorilla-REPL.")
-  ;; first we look at the configuration, and if requested, load the worksheet
+  ;; if a worksheet was specified in the options ...
   (when-let [ws (:worksheet conf)]
-    (print (str "Loading " ws " ... "))
-    ;; if we load a file, we store its filename in the config
-    (swap! config-info #(assoc % :worksheet-filename ws))
-    ;; load the file itself and put that in the config
-    ;; TODO: S'pose some error handling here wouldn't be such a bad thing
-    (swap! config-info #(assoc % :worksheet-data (slurp ws)))
-    (println "done."))
+    ;; ... we store its filename in the config. We don't load it until the config information is requested.
+    (swap! config-info #(assoc % :worksheet-filename ws)))
   ;; start the app
   (let [p (:port @config-info)
         s (jetty/run-jetty app-routes {:port p :join? false})]
@@ -81,4 +109,4 @@
 
 
 (defn -main []
-  (run-gorilla-server {:worksheet "ws/example.clj"}))
+  (run-gorilla-server {} #_{:worksheet "example.clj"}))
