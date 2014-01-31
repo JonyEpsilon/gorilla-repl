@@ -66,7 +66,7 @@
       (do
         (print (str "Saving: " ws " ... "))
         (spit (str (:worksheet-dir @config-info) ws) ws-data)
-        (println "done.")
+        (println (str "done. [" (java.util.Date.) "]"))
         (res/response {:status "ok"}))
       ;; else, create a new file and save in to that
       (do
