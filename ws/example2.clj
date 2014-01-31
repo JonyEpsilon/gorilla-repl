@@ -9,7 +9,9 @@
 ;; @@
 (defn f
   [x y]
-  (* 5 x y))
+  (let [q (* 2 x)
+        p (* 3 y)]
+    (+ p q)))
 ;; @@
 ;; =>
 ;;; #'user/f
@@ -23,11 +25,11 @@
 (f 20 30)
 ;; @@
 ;; =>
-;;; 1200
+;;; 130
 ;; <=
 
 ;; @@
-(doall (map println (range 5)))
+(doall (map println (range 10)))
 ;; @@
 ;; ->
 ;;; 0
@@ -35,10 +37,15 @@
 ;;; 2
 ;;; 3
 ;;; 4
+;;; 5
+;;; 6
+;;; 7
+;;; 8
+;;; 9
 ;;; 
 ;; <-
 ;; =>
-;;; (nil nil nil nil nil)
+;;; (nil nil nil nil nil nil nil nil nil nil)
 ;; <=
 
 ;; @@

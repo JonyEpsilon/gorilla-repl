@@ -13,7 +13,8 @@
             [ring.middleware.session :as session]
             [ring.middleware.json :as json]
             [ring.util.response :as res]
-            [cemerick.drawbridge :as drawbridge])
+            [cemerick.drawbridge :as drawbridge]
+            [clojure.tools.cli :refer [parse-opts]])
   (:gen-class))
 
 ;; useful for debugging the nREPL requests
@@ -107,6 +108,9 @@
     ;; block this thread by joining the server (which should run until killed)
     (.join s)))
 
+(def cli-options
+  [["-w" "--worksheet WORKSHEET" "Worksheet name"]])
 
-(defn -main []
-  (run-gorilla-server {} #_{:worksheet "example.clj"}))
+(defn -main
+  [& args]
+  (run-gorilla-server (:options (parse-opts args cli-options)) #_{:worksheet "example.clj"}))
