@@ -87,10 +87,22 @@ var worksheet = function () {
 
     // ** Event handlers **
 
+    // We store a list of added event types, by using this helper function to add events. This allows us to cleanly
+    // deregister all the event handlers if the worksheet is to be replaced.
+    var eventList = [];
+    var addEventHandler = function (event, callback) {
+        eventList.push(event);
+        eventBus.on(event, callback);
+    };
+    // remove all worksheet event handlers from the bus
+    self.removeEventHandlers = function () {
+        eventList.foreach(function (e) {eventBus.off(e);});
+    };
+
     // * Activation cursor / focus handling *
 
     // activation/deactivation and focusing of segments.
-    eventBus.on("worksheet:leaveForward", function () {
+    addEventHandler("worksheet:leaveForward", function () {
         var leavingIndex = self.activeSegmentIndex;
         // can't leave the bottom segment forwards
         if (leavingIndex == self.segments().length - 1) return;
@@ -98,7 +110,7 @@ var worksheet = function () {
         self.activateSegment(leavingIndex + 1, true);
     });
 
-    eventBus.on("worksheet:leaveBack", function () {
+    addEventHandler("worksheet:leaveBack", function () {
         var leavingIndex = self.activeSegmentIndex;
         // can't leave the top segment upwards
         if (leavingIndex == 0) return;
@@ -106,14 +118,14 @@ var worksheet = function () {
         self.activateSegment(leavingIndex - 1, false);
     });
 
-    eventBus.on("worksheet:delete", function () {
+    addEventHandler("worksheet:delete", function () {
         // if there's only one segment, don't delete it
         if (self.segments().length == 1) return;
         var deleteIndex = self.activeSegmentIndex;
         self.deleteSegment(deleteIndex);
     });
 
-    eventBus.on("worksheet:newBelow", function () {
+    addEventHandler("worksheet:newBelow", function () {
         // do nothing if no segment is active
         if (self.activeSegmentIndex == null) return;
         var seg = codeSegment("");
@@ -124,7 +136,7 @@ var worksheet = function () {
     });
 
     // the event for this action contains the segment id
-    eventBus.on("worksheet:segment-clicked", function (e, d) {
+    addEventHandler("worksheet:segment-clicked", function (e, d) {
         if (self.activeSegmentIndex != null) self.deactivateSegment(self.activeSegmentIndex);
         var focusIndex = self.segmentIndexForID(d.id);
         self.activateSegment(focusIndex, true);
@@ -146,11 +158,11 @@ var worksheet = function () {
         self.activateSegment(index, true);
     };
 
-    eventBus.on("worksheet:changeToFree", function () {
+    addEventHandler("worksheet:changeToFree", function () {
         changeActiveSegmentType("free", freeSegment);
     });
 
-    eventBus.on("worksheet:changeToCode", function () {
+    addEventHandler("worksheet:changeToCode", function () {
         changeActiveSegmentType("code", codeSegment);
     });
 
@@ -158,7 +170,7 @@ var worksheet = function () {
 
     // The evaluation command will fire this event. The worksheet will then send a message to the evaluator
     // to do the evaluation itself.
-    eventBus.on("worksheet:evaluate", function () {
+    addEventHandler("worksheet:evaluate", function () {
         // check that a segment is active
         var seg = self.getActiveSegment();
         if (seg == null) return;
@@ -181,13 +193,13 @@ var worksheet = function () {
 
     // messages from the evaluator
 
-    eventBus.on("evaluator:value-response", function (e, d) {
+    addEventHandler("evaluator:value-response", function (e, d) {
         var segID = d.segmentID;
         var seg = self.getSegmentForID(segID);
         seg.output(d.value);
     });
 
-    eventBus.on("evaluator:console-response", function (e, d) {
+    addEventHandler("evaluator:console-response", function (e, d) {
         var segID = d.segmentID;
         var seg = self.getSegmentForID(segID);
         var oldText = seg.consoleText();
@@ -196,17 +208,18 @@ var worksheet = function () {
         seg.consoleText(oldText + d.out);
     });
 
-    eventBus.on("evaluator:done-response", function (e, d) {
+    addEventHandler("evaluator:done-response", function (e, d) {
         var segID = d.segmentID;
         var seg = self.getSegmentForID(segID);
         seg.runningIndicator(false);
     });
 
-    eventBus.on("evaluator:error-response output:output-error", function (e, d) {
+    addEventHandler("evaluator:error-response output:output-error", function (e, d) {
         var segID = d.segmentID;
         var seg = self.getSegmentForID(segID);
         seg.errorText(d.error);
     });
+
 
     return self;
 };

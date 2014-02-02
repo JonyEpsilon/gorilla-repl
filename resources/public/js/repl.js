@@ -64,13 +64,12 @@ var repl = (function () {
 
     self.startPolling = function () {
         setInterval(function () {
-            self.sendREPLCommand({})
+            self.sendREPLCommand({session: self.sessionID})
         }, 500);
     };
 
     self.execute = function (command, id) {
-        var message = {'op': 'eval', 'code': command, id: id};
-        if (self.sessionID) message.session = self.sessionID;
+        var message = {'op': 'eval', 'code': command, id: id, session: self.sessionID};
         //console.log(JSON.stringify(message));
         self.sendREPLCommand(message);
     };

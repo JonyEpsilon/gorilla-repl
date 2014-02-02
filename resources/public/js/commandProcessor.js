@@ -97,6 +97,15 @@ commandList = [
         }
     },
     {
+        name: "command:app:open",
+        desc: "Load a worksheet.",
+        showInMenu: true,
+        kb: "ctrl+g ctrl+l",
+        action: function () {
+            eventBus.trigger("app:load");
+        }
+    },
+    {
         name: "command:app:save",
         desc: "Save the worksheet.",
         showInMenu: true,
