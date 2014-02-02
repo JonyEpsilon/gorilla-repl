@@ -25,6 +25,10 @@ var app = (function () {
                 self.wrapper = wsWrapper;
 
                 ko.applyBindings(wsWrapper);
+
+                // make it easier for the user to get started by highlighting the empty code segment
+                var codeID = ws.segments()[1].id;
+                eventBus.trigger("worksheet:segment-clicked", {id: codeID});
             },
             // this function is called if we failed to make a REPL connection. We can't really go any further.
             function () {
