@@ -20,7 +20,8 @@ var app = (function () {
                 // prepare a skeleton worksheet
                 var ws = worksheet();
                 ws.segments().push(
-                    freeSegment("# Gorilla REPL\n\nWelcome to gorilla. Shift + enter evaluates code.")
+                    freeSegment("# Gorilla REPL\n\nWelcome to gorilla :-) Shift + enter evaluates code. " +
+                        "Poke the question mark (top right) to learn more ...")
                 );
                 ws.segments().push(codeSegment(""));
                 var wsWrapper = worksheetWrapper(ws);

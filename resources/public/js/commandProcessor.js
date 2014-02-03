@@ -113,7 +113,7 @@ commandList = [
         name: "command:app:save",
         desc: "Save the worksheet.",
         showInMenu: true,
-        kb: "mod+s",
+        kb: "ctrl+g ctrl+s",
         action: function () {
             eventBus.trigger("app:save");
         }
