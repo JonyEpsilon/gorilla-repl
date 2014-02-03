@@ -54,6 +54,7 @@
 ;; the client can post a request to have the worksheet saved, handled by the following
 (defn save
   [req]
+  ;; TODO: error handling!
   (when-let [ws-data (:worksheet-data (:params req))]
     (when-let [ws-file (:worksheet-filename (:params req))]
       (do

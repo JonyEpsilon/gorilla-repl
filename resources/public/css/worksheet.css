@@ -13,6 +13,23 @@ div#contents {
     margin-right: 10%;
 }
 
+div.status {
+    font-family: 'Arvo', serif;
+    font-size: 15px;
+    position: fixed;
+    top: 10px;
+    left: 50%;
+    width: 600px;
+    margin-left: -300px;
+    padding: 10px;
+    text-align: center;
+    box-shadow: 0 0 10px steelblue;
+    border-style: solid;
+    border-color: #888888;
+    border-width: 1px;
+    background-color: #F1F1F1;
+}
+
 div.commands {
     position: fixed;
     z-index: 100;

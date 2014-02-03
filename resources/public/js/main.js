@@ -76,12 +76,11 @@ var app = (function () {
 
                                 // and bind the UI to the new worksheet
                                 self.wrapper.worksheet(ws);
-
                             }
                         })
                         .fail(function () {
                             // TODO: use status indicator
-                            console.log("Failed to load worksheet: " + filename);
+                            self.wrapper.flashStatusMessage("Failed to load worksheet: " + filename, 1500);
                         });
                 }
             }
@@ -95,13 +94,13 @@ var app = (function () {
                 "worksheet-filename": filename,
                 "worksheet-data": self.wrapper.worksheet().toClojure()
             }).done(function () {
-                console.log("Saved: " + filename);
+                self.wrapper.flashStatusMessage("Saved: " + filename);
 
             }).fail(function () {
-                console.log("Failed to save worksheet: " + filename);
+                self.wrapper.flashStatusMessage("Failed to save worksheet: " + filename, 1500);
             });
         } else {
-            console.log("No filename");
+            self.wrapper.flashStatusMessage("No filename", 1000);
         }
     });
 
