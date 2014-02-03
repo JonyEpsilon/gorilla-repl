@@ -57,11 +57,10 @@
   ;; TODO: error handling!
   (when-let [ws-data (:worksheet-data (:params req))]
     (when-let [ws-file (:worksheet-filename (:params req))]
-      (do
-        (print (str "Saving: " ws-file " ... "))
-        (spit ws-file ws-data)
-        (println (str "done. [" (java.util.Date.) "]"))
-        (res/response {:status "ok"})))))
+      (print (str "Saving: " ws-file " ... "))
+      (spit ws-file ws-data)
+      (println (str "done. [" (java.util.Date.) "]"))
+      (res/response {:status "ok"}))))
 
 (def ^:private save-handler
   (-> save
