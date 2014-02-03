@@ -5,13 +5,14 @@
   ~ gorilla-repl is licenced to you under the MIT licence. See the file LICENCE.txt for full details.
   -->
 
-<html>
+<html id="document">
 <head>
     <link href='css/fonts.css' rel='stylesheet' type='text/css'/>
     <link rel="stylesheet" href="jslib/codemirror-3.20/lib/codemirror.css"/>
     <link rel="stylesheet" href="jslib/vex/vex.css" />
     <link rel="stylesheet" href="css/vex-theme-gorilla.css" />
     <link rel="stylesheet" href="css/worksheet.css"/>
+
     <script type="text/javascript"
             src="jslib/mathjax/MathJax.js?config=TeX-AMS-MML_SVG-full.js&delayStartupUntil=configured"></script>
     <script type="text/javascript" src="jslib/markdown/Markdown.Converter.js"></script>
@@ -42,7 +43,8 @@
     <script type="text/javascript" src="js/segment.js"></script>
     <script type="text/javascript" src="js/worksheet.js"></script>
     <script type="text/javascript" src="js/main.js"></script>
-    <title>Gorilla REPL</title>
+
+    <title data-bind="text: title">Gorilla REPL</title>
 </head>
 <body>
 

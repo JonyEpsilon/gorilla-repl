@@ -28,6 +28,7 @@ div.status {
     border-color: #888888;
     border-width: 1px;
     background-color: #F1F1F1;
+    z-index: 100;
 }
 
 div.commands {

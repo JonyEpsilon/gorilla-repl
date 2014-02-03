@@ -28,7 +28,7 @@ var app = (function () {
                 self.wrapper = wsWrapper;
 
                 // wire up the UI
-                ko.applyBindings(wsWrapper);
+                ko.applyBindings(wsWrapper, document.getElementById("document"));
 
                 // make it easier for the user to get started by highlighting the empty code segment
                 eventBus.trigger("worksheet:segment-clicked", {id: ws.segments()[1].id});
@@ -73,7 +73,7 @@ var app = (function () {
                                 ws.segments = ko.observableArray(segments);
 
                                 // store the filename for subsequent saving
-                                self.wrapper.filename = filename;
+                                self.wrapper.filename(filename);
 
                                 // and bind the UI to the new worksheet
                                 self.wrapper.worksheet(ws);
@@ -88,7 +88,7 @@ var app = (function () {
     });
 
     eventBus.on("app:save", function () {
-        var filename = self.wrapper.filename;
+        var filename = self.wrapper.filename();
         if (filename !== "") {
             $.post("/save", {
                 "worksheet-filename": filename,
@@ -103,7 +103,7 @@ var app = (function () {
             prompt('Filename (relative to project directory):',
             function (filename) {
                 if (filename) {
-                    self.wrapper.filename = filename;
+                    self.wrapper.filename(filename);
                     eventBus.trigger("app:save");
                 }
             })
