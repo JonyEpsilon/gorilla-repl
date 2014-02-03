@@ -86,17 +86,20 @@ var worksheet = function () {
     };
 
     // ** Event handlers **
-
+    // TODO: this is slightly nasty. The event handlers close over worksheet properties, so need to be removed and re-
+    // TODO: added whenever the worksheet is changed. Maybe they shouldn't live here?
+    
     // We store a list of added event types, by using this helper function to add events. This allows us to cleanly
     // deregister all the event handlers if the worksheet is to be replaced.
-    var eventList = [];
+    var eventTypeList = [];
     var addEventHandler = function (event, callback) {
-        eventList.push(event);
+        eventTypeList.push(event);
         eventBus.on(event, callback);
     };
-    // remove all worksheet event handlers from the bus
+    // remove all worksheet event handlers from the bus - note that this will remove event handlers for _all_ worksheets
+    // that exist, not just this one!
     self.removeEventHandlers = function () {
-        eventList.foreach(function (e) {eventBus.off(e);});
+        eventTypeList.map(function (e) {eventBus.off(e);});
     };
 
     // * Activation cursor / focus handling *

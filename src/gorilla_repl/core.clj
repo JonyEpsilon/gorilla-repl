@@ -33,31 +33,25 @@
       (params/wrap-params)
       (session/wrap-session)))
 
-;; the client side will make an HTTP request at startup to get configuration information. It would be nicer to
-;; parameterise the routes as a function of this config. But instead, the configuration information is stored in an atom
-;; so as to play nicely with ring, in particular "lein ring server" (which expects the routes for the app to be
-;; contained in a var, not made by a function).
-(def ^:private config-info
-  (atom {
-          :port          8080
-          :worksheet-dir "ws/"
-          }))
 
-;; the config handler
-(defn config
+;; the worksheet load handler
+(defn load-worksheet
   [req]
-  ;; load the worksheet whenever config is requested, this ensures that if the page is reloaded, the latest copy of the
-  ;; worksheet is returned.
   ;; TODO: S'pose some error handling here wouldn't be such a bad thing
-  ;; TODO: maybe better for this to be its own API endpoint
-  (when-let [ws (:worksheet-filename @config-info)]
-    (print (str "Loading: " ws " ... "))
-    (swap! config-info #(assoc % :worksheet-data (slurp (str (:worksheet-dir @config-info) ws))))
-    (println "done."))
-  (res/response @config-info))
+  (when-let [ws-file (:worksheet-filename (:params req))]
+    (let [_ (print (str "Loading: " ws-file " ... "))
+          ws-data (slurp (str ws-file))
+          _ (println "done.")]
+      (res/response {:worksheet-data ws-data}))))
+
+(def ^:private load-handler
+  (-> load-worksheet
+      (keyword-params/wrap-keyword-params)
+      (params/wrap-params)
+      (json/wrap-json-response)))
 
 ;; the client can post a request to have the worksheet saved, handled by the following
-(defn save
+#_(defn save
   [req]
   (let [ws-data (:worksheet-data (:params req))]
     ;; do we have a file for this worksheet already?
@@ -80,7 +74,7 @@
           (swap! config-info #(assoc % :worksheet-filename tmp-filename))
           (res/response {:status "ok" :filename tmp-filename}))))))
 
-(def ^:private save-handler
+#_(def ^:private save-handler
   (-> save
       (keyword-params/wrap-keyword-params)
       (params/wrap-params)))
@@ -88,20 +82,16 @@
 ;; the combined routes - we serve up everything in the "public" directory of resources under "/".
 (defroutes app-routes
            (ANY "/repl" {:as req} (drawbridge req))
-           (GET "/config" [] (json/wrap-json-response config))
-           (POST "/save" [] (json/wrap-json-response save-handler))
+           (GET "/load" [] load-handler)
+           #_(POST "/save" [] (json/wrap-json-response save-handler))
            (route/resources "/"))
 
 
 (defn run-gorilla-server
   [conf]
   (println "Gorilla-REPL.")
-  ;; if a worksheet was specified in the options ...
-  (when-let [ws (:worksheet conf)]
-    ;; ... we store its filename in the config. We don't load it until the config information is requested.
-    (swap! config-info #(assoc % :worksheet-filename ws)))
   ;; start the app
-  (let [p (:port @config-info)
+  (let [p 8080
         s (jetty/run-jetty app-routes {:port p :join? false})]
     (println (str "Running at http://localhost:" p "/worksheet.html ."))
     (println "Ctrl+C to exit.")
@@ -109,7 +99,7 @@
     (.join s)))
 
 (def cli-options
-  [["-w" "--worksheet WORKSHEET" "Worksheet name"]])
+  [["-p" "--port PORT" "Run on a given port."]])
 
 (defn -main
   [& args]

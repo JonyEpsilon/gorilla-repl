@@ -18,7 +18,7 @@ var app = (function () {
         repl.connect(
             function () {
                 // prepare a skeleton worksheet
-                ws = worksheet();
+                var ws = worksheet();
                 ws.segments().push(
                     freeSegment("# Gorilla REPL\n\nWelcome to gorilla. Shift + enter evaluates code.")
                 );
@@ -38,29 +38,45 @@ var app = (function () {
             });
     };
 
-    // ** Application event handlers
-
-    eventBus.on("app:load", function () {
+    // A helper function for prompting with a modal dialog
+    var prompt = function (message, cb) {
         Mousetrap.enable(false);
         vex.dialog.prompt({
-            message: 'Worksheet to load (relative to worksheet directory)?',
+            message: message,
             className: 'vex-theme-plain', // yuck
             callback: function (filename) {
                 Mousetrap.enable(true);
+                cb(filename);
+            }
+        });
+    };
+
+    // ** Application event handlers
+
+    eventBus.on("app:load", function () {
+        prompt(
+            'Worksheet to load (relative to worksheet directory)?',
+            function (filename) {
                 // if the user selected a worksheet
                 if (filename) {
                     // ask the backend to load the data from disk
-                    $.post("/load", {file: filename}, function (data) {
+                    $.get("/load", {"worksheet-filename": filename}, function (data) {
                         if (data['worksheet-data']) {
+                            // disconnect the old worksheet
+                            self.wrapper.worksheet().removeEventHandlers();
+
+                            // parse the new worksheet
+                            var segments = worksheetParser.parse(data["worksheet-data"]);
+                            var ws = worksheet();
+                            ws.segments = ko.observableArray(segments);
+
                             // and bind the UI to the new worksheet
-                            // var segments = worksheetParser.parse(data["worksheet-data"]);
-                            // ws = worksheet();
-                            // ws.segments = ko.observableArray(segments);
+                            self.wrapper.worksheet(ws);
                         }
                     });
                 }
             }
-        });
+        );
     });
 
     eventBus.on("app:save", function () {
