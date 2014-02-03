@@ -60,27 +60,49 @@ var app = (function () {
                 // if the user selected a worksheet
                 if (filename) {
                     // ask the backend to load the data from disk
-                    $.get("/load", {"worksheet-filename": filename}, function (data) {
-                        if (data['worksheet-data']) {
-                            // disconnect the old worksheet
-                            self.wrapper.worksheet().removeEventHandlers();
+                    $.get("/load", {"worksheet-filename": filename})
+                        .done(function (data) {
+                            if (data['worksheet-data']) {
+                                // disconnect the worksheet event handlers
+                                self.wrapper.worksheet().removeEventHandlers();
 
-                            // parse the new worksheet
-                            var segments = worksheetParser.parse(data["worksheet-data"]);
-                            var ws = worksheet();
-                            ws.segments = ko.observableArray(segments);
+                                // parse the new worksheet
+                                var segments = worksheetParser.parse(data["worksheet-data"]);
+                                var ws = worksheet();
+                                ws.segments = ko.observableArray(segments);
 
-                            // and bind the UI to the new worksheet
-                            self.wrapper.worksheet(ws);
-                        }
-                    });
+                                // store the filename for subsequent saving
+                                self.wrapper.filename = filename;
+
+                                // and bind the UI to the new worksheet
+                                self.wrapper.worksheet(ws);
+
+                            }
+                        })
+                        .fail(function () {
+                            // TODO: use status indicator
+                            console.log("Failed to load worksheet: " + filename);
+                        });
                 }
             }
         );
     });
 
     eventBus.on("app:save", function () {
-        $.post("/save", {"worksheet-data": self.wrapper.worksheet().toClojure()});
+        var filename = self.wrapper.filename;
+        if (filename !== "") {
+            $.post("/save", {
+                "worksheet-filename": filename,
+                "worksheet-data": self.wrapper.worksheet().toClojure()
+            }).done(function () {
+                console.log("Saved: " + filename);
+
+            }).fail(function () {
+                console.log("Failed to save worksheet: " + filename);
+            });
+        } else {
+            console.log("No filename");
+        }
     });
 
     return self;

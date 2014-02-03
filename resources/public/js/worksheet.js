@@ -88,7 +88,7 @@ var worksheet = function () {
     // ** Event handlers **
     // TODO: this is slightly nasty. The event handlers close over worksheet properties, so need to be removed and re-
     // TODO: added whenever the worksheet is changed. Maybe they shouldn't live here?
-    
+
     // We store a list of added event types, by using this helper function to add events. This allows us to cleanly
     // deregister all the event handlers if the worksheet is to be replaced.
     var eventTypeList = [];

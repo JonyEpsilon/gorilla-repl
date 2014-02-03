@@ -50,40 +50,30 @@
       (params/wrap-params)
       (json/wrap-json-response)))
 
-;; the client can post a request to have the worksheet saved, handled by the following
-#_(defn save
-  [req]
-  (let [ws-data (:worksheet-data (:params req))]
-    ;; do we have a file for this worksheet already?
-    (if-let [ws (:worksheet-filename @config-info)]
-      ;; if so, save to that file
-      (do
-        (print (str "Saving: " ws " ... "))
-        (spit (str (:worksheet-dir @config-info) ws) ws-data)
-        (println (str "done. [" (java.util.Date.) "]"))
-        (res/response {:status "ok"}))
-      ;; else, create a new file and save in to that
-      (do
-        (println "Creating new worksheet.")
-        ;; slightly cheezy use of createTempFile - makes the code a bit ugly, but works ok
-        (let [f (java.io.File/createTempFile "tmp" ".clj" (java.io.File. (:worksheet-dir @config-info)))
-              tmp-filename (.getName f)]
-          (print (str "Saving: " tmp-filename " ... "))
-          (spit (str (:worksheet-dir @config-info) tmp-filename) ws-data)
-          (println "done.")
-          (swap! config-info #(assoc % :worksheet-filename tmp-filename))
-          (res/response {:status "ok" :filename tmp-filename}))))))
 
-#_(def ^:private save-handler
+;; the client can post a request to have the worksheet saved, handled by the following
+(defn save
+  [req]
+  (when-let [ws-data (:worksheet-data (:params req))]
+    (when-let [ws-file (:worksheet-filename (:params req))]
+      (do
+        (print (str "Saving: " ws-file " ... "))
+        (spit ws-file ws-data)
+        (println (str "done. [" (java.util.Date.) "]"))
+        (res/response {:status "ok"})))))
+
+(def ^:private save-handler
   (-> save
       (keyword-params/wrap-keyword-params)
-      (params/wrap-params)))
+      (params/wrap-params)
+      (json/wrap-json-response)))
+
 
 ;; the combined routes - we serve up everything in the "public" directory of resources under "/".
 (defroutes app-routes
            (ANY "/repl" {:as req} (drawbridge req))
            (GET "/load" [] load-handler)
-           #_(POST "/save" [] (json/wrap-json-response save-handler))
+           (POST "/save" [] save-handler)
            (route/resources "/"))
 
 
