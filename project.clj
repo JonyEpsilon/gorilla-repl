@@ -12,8 +12,7 @@
                  [compojure "1.1.6"]
                  [com.cemerick/drawbridge "0.0.6"]
                  [org.slf4j/slf4j-api "1.7.5"]
-                 [ch.qos.logback/logback-classic "1.0.13"]
-                 [org.clojure/tools.cli "0.3.1"]]
+                 [ch.qos.logback/logback-classic "1.0.13"]]
   :main ^:skip-aot gorilla-repl.core
   :target-path "target/%s"
   :plugins [[lein-ring "0.8.7"]]
