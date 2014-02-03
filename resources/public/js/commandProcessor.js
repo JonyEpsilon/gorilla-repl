@@ -11,10 +11,14 @@ var commandProcessor = (function () {
 
     var self = {};
 
-
-    // so that our keyboard shortcuts work in the codeMirror textareas.
+    // ** Patch Mousetrap **
+    // Install a custom stopCallback so that our keyboard shortcuts work in the codeMirror textareas.
+    // This also lets us disable mousetrap processing when we show dialogs (this idea shamelessly stolen from the
+    // Mousetrap 'pause' plugin).
+    Mousetrap.enabled = true;
+    Mousetrap.enable = function (enabled) {Mousetrap.enabled = enabled;};
     Mousetrap.stopCallback = function () {
-        return false
+        return !Mousetrap.enabled;
     };
 
     self.addCommand = function (command) {

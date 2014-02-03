@@ -19,16 +19,18 @@ var app = (function () {
             function () {
                 // prepare a skeleton worksheet
                 ws = worksheet();
-                ws.segments().push(freeSegment("# Gorilla REPL\n\nWelcome to gorilla ..."));
+                ws.segments().push(
+                    freeSegment("# Gorilla REPL\n\nWelcome to gorilla. Shift + enter evaluates code.")
+                );
                 ws.segments().push(codeSegment(""));
                 var wsWrapper = worksheetWrapper(ws);
                 self.wrapper = wsWrapper;
 
+                // wire up the UI
                 ko.applyBindings(wsWrapper);
 
                 // make it easier for the user to get started by highlighting the empty code segment
-                var codeID = ws.segments()[1].id;
-                eventBus.trigger("worksheet:segment-clicked", {id: codeID});
+                eventBus.trigger("worksheet:segment-clicked", {id: ws.segments()[1].id});
             },
             // this function is called if we failed to make a REPL connection. We can't really go any further.
             function () {
@@ -39,10 +41,26 @@ var app = (function () {
     // ** Application event handlers
 
     eventBus.on("app:load", function () {
-        console.log("load!");
-//        var segments = worksheetParser.parse(data["worksheet-data"]);
-//        ws = worksheet();
-//        ws.segments = ko.observableArray(segments);
+        Mousetrap.enable(false);
+        vex.dialog.prompt({
+            message: 'Worksheet to load (relative to worksheet directory)?',
+            className: 'vex-theme-plain', // yuck
+            callback: function (filename) {
+                Mousetrap.enable(true);
+                // if the user selected a worksheet
+                if (filename) {
+                    // ask the backend to load the data from disk
+                    $.post("/load", {file: filename}, function (data) {
+                        if (data['worksheet-data']) {
+                            // and bind the UI to the new worksheet
+                            // var segments = worksheetParser.parse(data["worksheet-data"]);
+                            // ws = worksheet();
+                            // ws.segments = ko.observableArray(segments);
+                        }
+                    });
+                }
+            }
+        });
     });
 
     eventBus.on("app:save", function () {
@@ -50,8 +68,7 @@ var app = (function () {
     });
 
     return self;
-})
-    ();
+})();
 
 // The application entry point
 $(function () {
