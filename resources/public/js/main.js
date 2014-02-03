@@ -56,7 +56,7 @@ var app = (function () {
 
     eventBus.on("app:load", function () {
         prompt(
-            'Worksheet to load (relative to worksheet directory)?',
+            'Worksheet to load (relative to project directory):',
             function (filename) {
                 // if the user selected a worksheet
                 if (filename) {
@@ -80,7 +80,6 @@ var app = (function () {
                             }
                         })
                         .fail(function () {
-                            // TODO: use status indicator
                             self.wrapper.flashStatusMessage("Failed to load worksheet: " + filename, 1500);
                         });
                 }
@@ -101,7 +100,13 @@ var app = (function () {
                 self.wrapper.flashStatusMessage("Failed to save worksheet: " + filename, 1500);
             });
         } else {
-            self.wrapper.flashStatusMessage("No filename", 1000);
+            prompt('Filename (relative to project directory):',
+            function (filename) {
+                if (filename) {
+                    self.wrapper.filename = filename;
+                    eventBus.trigger("app:save");
+                }
+            })
         }
     });
 

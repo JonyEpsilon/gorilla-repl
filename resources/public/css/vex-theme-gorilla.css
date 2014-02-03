@@ -120,7 +120,7 @@
 }
 /* line 15, ../sass/vex-theme-plain.sass */
 .vex.vex-theme-plain .vex-content {
-  font-family: "Helvetica Neue", sans-serif;
+  font-family: "Arvo", sans-serif;
   background: white;
   color: #444444;
   padding: 1em;
@@ -128,7 +128,7 @@
   margin: 0 auto;
   max-width: 100%;
   width: 450px;
-  font-size: 1.1em;
+  font-size: 1em;
   line-height: 1.5em;
 }
 /* line 27, ../sass/vex-theme-plain.sass */
@@ -238,7 +238,7 @@
 }
 /* line 103, ../sass/vex-theme-plain.sass */
 .vex.vex-theme-plain .vex-dialog-button.vex-dialog-button-primary {
-  background: #3288e6;
+  background: steelblue;
   color: white;
 }
 /* line 107, ../sass/vex-theme-plain.sass */
