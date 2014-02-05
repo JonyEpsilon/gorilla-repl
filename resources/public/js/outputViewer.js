@@ -19,10 +19,15 @@ ko.bindingHandlers.outputViewer = {
 
         // get the value to display
         var value = ko.utils.unwrapObservable(valueAccessor()());
-        // the default is just to show the value as plain HTML in a pre/code block. We define a function to do that
-        // here.
+        // the default is just to show the value as is in a pre/code block. We colorize it for readability.
+        // We define a function to do that here.
         var outputPlain = function () {
-            $(element).html('<pre><code>' + value + '</code></pre>');
+            // escape HTML in the output
+            var escapedOutput = _.escape(value);
+            // a unique ID for the pre so we can colorize it
+            var preID = UUID.generate();
+            $(element).html('<pre id="' + preID + '"><code>' + escapedOutput + '</code></pre>');
+            CodeMirror.colorize($("#" + preID), "text/x-clojure");
         };
         // to handle any errors, we need to know the ID of the segment that this output belongs to
         var segID = allBindingsAccessor.get('segmentID');
