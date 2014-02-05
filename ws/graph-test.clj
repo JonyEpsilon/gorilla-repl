@@ -7,7 +7,7 @@
 ;; **
 
 ;; @@
-(use 'gorilla-repl.plot)
+(use 'gorilla-plot.core)
 (use 'clojure.pprint)
 ;; @@
 ;; =>
