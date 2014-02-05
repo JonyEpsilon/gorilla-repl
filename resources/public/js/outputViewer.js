@@ -50,8 +50,8 @@ ko.bindingHandlers.outputViewer = {
         }
 
         // if the object has a key called :gorilla-vega at the top level, then we treat it as a Vega graphics spec
-        if (jsValue && jsValue[":gorilla-vega"]) {
-            viewVega(jsValue[":gorilla-vega"], element, errorHandler);
+        if (jsValue && jsValue[":gorilla-repl.types/vega"]) {
+            viewVega(jsValue[":gorilla-repl.types/vega"], element, errorHandler);
             return;
         }
 
