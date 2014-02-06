@@ -237,5 +237,17 @@ var worksheet = function () {
     });
 
 
+    // * Auto-completion *
+
+    addEventHandler("worksheet:completions", function (e, d) {
+        // check that a segment is active
+        var seg = self.getActiveSegment();
+        if (seg == null) return;
+        if (seg.type == "code") {
+            seg.content.complete(clojureCompleter);
+        }
+     });
+
+
     return self;
 };

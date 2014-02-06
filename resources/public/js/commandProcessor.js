@@ -41,7 +41,7 @@ commandList = [
         name: "command:worksheet:leaveBack",
         desc: "Move to the previous segment.",
         showInMenu: false,
-        kb: "up",
+ //       kb: "up",
         action: function () {
             eventBus.trigger("worksheet:leaveBack");
         }
@@ -50,7 +50,7 @@ commandList = [
         name: "command:worksheet:leaveForward",
         desc: "Move to the next segment.",
         showInMenu: false,
-        kb: "down",
+//        kb: "down",
         action: function () {
             eventBus.trigger("worksheet:leaveForward");
         }
@@ -62,6 +62,15 @@ commandList = [
         kb: "shift+enter",
         action: function () {
             eventBus.trigger("worksheet:evaluate");
+        }
+    },
+    {
+        name: "command:worksheet:completions",
+        desc: "Show possible completions.",
+        showInMenu: true,
+        kb: "ctrl+space",
+        action: function () {
+            eventBus.trigger("worksheet:completions");
         }
     },
     {

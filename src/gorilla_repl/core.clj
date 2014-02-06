@@ -13,7 +13,8 @@
             [ring.middleware.session :as session]
             [ring.middleware.json :as json]
             [ring.util.response :as res]
-            [cemerick.drawbridge :as drawbridge])
+            [cemerick.drawbridge :as drawbridge]
+            [complete.core :as complete])
   (:gen-class))
 
 ;; useful for debugging the nREPL requests
@@ -22,6 +23,14 @@
   (fn [request]
     (println (:params request))
     (handler request)))
+
+;; a wrapper for JSON API calls
+(defn wrap-api-handler
+  [handler]
+  (-> handler
+      (keyword-params/wrap-keyword-params)
+      (params/wrap-params)
+      (json/wrap-json-response)))
 
 ;; the handler function for repl requests
 (def ^:private drawbridge
@@ -43,12 +52,6 @@
           _ (println "done.")]
       (res/response {:worksheet-data ws-data}))))
 
-(def ^:private load-handler
-  (-> load-worksheet
-      (keyword-params/wrap-keyword-params)
-      (params/wrap-params)
-      (json/wrap-json-response)))
-
 
 ;; the client can post a request to have the worksheet saved, handled by the following
 (defn save
@@ -61,18 +64,19 @@
       (println (str "done. [" (java.util.Date.) "]"))
       (res/response {:status "ok"}))))
 
-(def ^:private save-handler
-  (-> save
-      (keyword-params/wrap-keyword-params)
-      (params/wrap-params)
-      (json/wrap-json-response)))
 
+;; API endpoint for getting completions
+(defn completions
+  [req]
+  (when-let [stub (:stub (:params req))]
+    (res/response {:completions (complete/completions stub)})))
 
 ;; the combined routes - we serve up everything in the "public" directory of resources under "/".
 (defroutes app-routes
            (ANY "/repl" {:as req} (drawbridge req))
-           (GET "/load" [] load-handler)
-           (POST "/save" [] save-handler)
+           (GET "/load" [] (wrap-api-handler load-worksheet))
+           (POST "/save" [] (wrap-api-handler save))
+           (GET "/completions" [] (wrap-api-handler completions))
            (route/resources "/"))
 
 

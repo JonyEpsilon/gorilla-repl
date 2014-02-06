@@ -30,6 +30,10 @@ var codemirrorVM = function (id, initialContents, contentType) {
         self.codeMirror.getInputField().blur();
     };
 
+    self.complete = function (completionFunc) {
+        CodeMirror.showHint(self.codeMirror, completionFunc);
+    };
+
     // These can be called to position the CodeMirror cursor appropriately. They are used when the cell is receiving
     // focus from another cell.
     self.positionCursorAtContentStart = function () {
