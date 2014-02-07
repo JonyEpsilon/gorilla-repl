@@ -98,7 +98,7 @@ ko.bindingHandlers.codemirror = {
             {
                 lineNumbers: false,
                 matchBrackets: true,
-                autoCloseBrackets: true,
+                autoCloseBrackets: '()[]{}""',
                 lineWrapping: true,
                 keyMap: 'gorilla',
                 mode: valueAccessor().contentType,
