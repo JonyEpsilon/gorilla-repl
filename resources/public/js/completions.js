@@ -12,13 +12,16 @@ var clojureCompleter = function (cm, options) {
     var start = token.start;
     var end = token.end;
 
+    // we need to know what namespace the user is currently working in, which we get from the evaluator module
+    var ns = evaluator.currentNamespace;
+
     // This call must be synchronous as CodeMirror expects a reply right now. This stops us from just sending an
     // nREPL message, which is always async, hence the HTTP API endpoint.
     var completions = [];
     $.ajax({
         type: "GET",
         url: "/completions",
-        data: {stub: word},
+        data: {stub: word, ns: ns},
         async: false,
         success: function (data) {
             completions = data.completions;

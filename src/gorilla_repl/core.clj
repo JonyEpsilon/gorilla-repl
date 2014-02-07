@@ -69,7 +69,8 @@
 (defn completions
   [req]
   (when-let [stub (:stub (:params req))]
-    (res/response {:completions (complete/completions stub)})))
+    (when-let [ns (:ns (:params req))]
+      (res/response {:completions (complete/completions stub (symbol ns))}))))
 
 ;; the combined routes - we serve up everything in the "public" directory of resources under "/".
 (defroutes app-routes
