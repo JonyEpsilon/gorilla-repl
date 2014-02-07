@@ -113,7 +113,9 @@ ko.bindingHandlers.codemirror = {
                             // get the current cursor position
                             curs = editor.getCursor();
                             // check for first line
-                            if (curs.line === 0) valueAccessor().notifyMoveCursorBack();
+                            // TODO: I'm not sure whether the completionActive state is part of the public API
+                            if ((curs.line === 0) && !editor.state.completionActive)
+                                valueAccessor().notifyMoveCursorBack();
                             event.stop();
                         }
                         // left
@@ -129,7 +131,8 @@ ko.bindingHandlers.codemirror = {
                             // get the current cursor position
                             curs = editor.getCursor();
                             // check for last line
-                            if (curs.line === (editor.lineCount() - 1)) valueAccessor().notifyMoveCursorForward();
+                            if ((curs.line === (editor.lineCount() - 1)) && !editor.state.completionActive)
+                                valueAccessor().notifyMoveCursorForward();
                             event.stop();
                         }
                         // right
