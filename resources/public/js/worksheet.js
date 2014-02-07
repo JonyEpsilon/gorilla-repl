@@ -91,11 +91,11 @@ var worksheet = function () {
 
     self.deleteSegment = function (index) {
         self.segments.splice(index, 1);
-        // after deletion, should activate segment before, unless it was the first segment, or there are no segments
+        // after deletion, should activate segment after, unless it was the last segment, or there are no segments
         // remaining.
         if (self.segments().length == 0) return;
-        if (index == 0) self.activateSegment(0, true);
-        else self.activateSegment(index - 1, false);
+        if (index == self.segments().length) self.activateSegment(self.segments().length - 1, true);
+        else self.activateSegment(index, false);
     };
 
     // ** Event handlers **
