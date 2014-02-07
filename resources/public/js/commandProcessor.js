@@ -66,7 +66,7 @@ commandList = [
     },
     {
         name: "command:worksheet:completions",
-        desc: "Show possible completions.",
+        desc: "Show possible auto-completions.",
         showInMenu: true,
         kb: "ctrl+space",
         action: function () {

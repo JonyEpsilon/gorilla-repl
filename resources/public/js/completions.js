@@ -12,6 +12,8 @@ var clojureCompleter = function (cm, options) {
     var start = token.start;
     var end = token.end;
 
+    // This call must be synchronous as CodeMirror expects a reply right now. This stops us from just sending an
+    // nREPL message, which is always async, hence the HTTP API endpoint.
     var completions = [];
     $.ajax({
         type: "GET",
