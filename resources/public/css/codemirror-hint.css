@@ -13,7 +13,7 @@
     list-style: none;
     margin: 0;
     padding: 2px;
-    background: #555555;
+    background: #cccccc;
     font-size: 100%;
     font-family: monospace;
     max-height: 20em;
@@ -26,7 +26,7 @@
     max-width: 19em;
     overflow: hidden;
     white-space: pre;
-    color: white;
+    color: #333333;
     cursor: pointer;
 }
 

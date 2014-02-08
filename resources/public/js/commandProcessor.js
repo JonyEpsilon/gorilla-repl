@@ -68,7 +68,8 @@ commandList = [
         name: "command:worksheet:completions",
         desc: "Show possible auto-completions.",
         showInMenu: true,
-        kb: "ctrl+space",
+        // alternative provided to workaround Firefox's idiotic unstoppable binding of ctrl+space
+        kb: ["ctrl+space", "ctrl+g ctrl+a"],
         action: function () {
             eventBus.trigger("worksheet:completions");
         }
