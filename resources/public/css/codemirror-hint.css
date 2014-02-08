@@ -1,0 +1,36 @@
+/*
+ * This file is part of gorilla-repl. Copyright (C) 2014, Jony Hudson.
+ *
+ * gorilla-repl is licenced to you under the MIT licence. See the file LICENCE.txt for full details.
+ */
+
+/* This is a modified version of CodeMirror/addon/hint/show-hint.css, which is published under the MIT licence. */
+
+.CodeMirror-hints {
+    position: absolute;
+    z-index: 10;
+    overflow: hidden;
+    list-style: none;
+    margin: 0;
+    padding: 2px;
+    background: #555555;
+    font-size: 100%;
+    font-family: monospace;
+    max-height: 20em;
+    overflow-y: auto;
+}
+
+.CodeMirror-hint {
+    margin: 0;
+    padding: 0 4px;
+    max-width: 19em;
+    overflow: hidden;
+    white-space: pre;
+    color: white;
+    cursor: pointer;
+}
+
+.CodeMirror-hint-active {
+    background: #FF29D2;
+    color: white;
+}
