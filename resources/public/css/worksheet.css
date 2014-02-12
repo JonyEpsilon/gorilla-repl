@@ -137,14 +137,19 @@ div.code .segment-main {
 
 div.output {
     padding: 0.5em 1em 0.5em 1em;
-    font-family: monospace;
     border-style: solid;
     background-color: white;
     border-width: 1px;
     border-color: #cccccc;
 }
 
+div.html-output {
+    padding-top: 1em;
+    padding-bottom: 1em;
+}
+
 div.output pre {
+    font-family: monospace;
     white-space: pre-wrap;
 }
 

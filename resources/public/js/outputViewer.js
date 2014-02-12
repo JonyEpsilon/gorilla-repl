@@ -49,9 +49,15 @@ ko.bindingHandlers.outputViewer = {
             // not a lot we can do if anything goes wrong - and it's expected to happen often, so just ignore!
         }
 
-        // if the object has a key called :gorilla-vega at the top level, then we treat it as a Vega graphics spec
+        // if the object has a key called :gorilla-repl.types/vega at the top level, then we treat it as a Vega graphics spec
         if (jsValue && jsValue[":gorilla-repl.types/vega"]) {
             viewVega(jsValue[":gorilla-repl.types/vega"], element, errorHandler);
+            return;
+        }
+
+        // if the object has a key called :gorilla-repl.types/html at the top level, then we show the HTML
+        if (jsValue && jsValue[":gorilla-repl.types/html"]) {
+            viewHTML(jsValue[":gorilla-repl.types/html"], element, errorHandler);
             return;
         }
 
