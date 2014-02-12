@@ -1,3 +1,11 @@
+/*
+ * This file is part of gorilla-repl. Copyright (C) 2014-, Jony Hudson.
+ *
+ * gorilla-repl is licenced to you under the MIT licence. See the file LICENCE.txt for full details.
+ */
+
+/* This is a lightly modified version of the default vex theme style file, released under the MIT licence.*/
+
 @keyframes vex-pulse {
   /* line 104, ../sass/_keyframes.sass */
   0% {
