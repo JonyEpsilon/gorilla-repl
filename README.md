@@ -23,7 +23,7 @@ The rest of these docs assume that you're familiar with the basics of Clojure, a
 easy!
 
 Gorilla is packaged as a Leiningen plugin. To use Gorilla you can do one of two things. If you just want to use Gorilla
-in a particular project, then add the following to the :plugins section of that project's `project.clj` file:
+in a particular project, then add the following to the `:plugins` section of that project's `project.clj` file:
 ```
 [lein-gorilla "0.1.0-SNAPSHOT"]
 ```
@@ -41,12 +41,11 @@ The other way to use Gorilla is to add it to your Leiningen user profile - this 
 outside of Leiningen projects. Your `~/.lein/project.clj` might look like:
 ```
 { :user {
-    :plugins [[lein-gorilla "0.1.0-SNAPSHOT"]]
-  }
-}
+    :plugins [[lein-gorilla "0.1.0-SNAPSHOT"]]}}
 ```
 
-That's it. You should now be able to run `lein gorilla` and get started.
+That's it. You should now be able to run `lein gorilla` - from within the project directory, if you installed it as a
+project plugin, or anywhere if you specified it in your user profile - and get started.
 
 
 # Usage
@@ -58,9 +57,9 @@ windows as you like with this link, each will get its own nREPL session to work 
 window will separately keep track of which namespace you're working in - try it, you'll see it's quite natural).
 
 Once you've got a web-browser pointed at Gorilla you can use it just like a REPL. Type some clojure code in, and hit
-shift+Enter to evaluate it. The results are displayed below the code, along with any console output or errors that were
-generated. Gorilla offers nREPL's autocomplete function, hit `ctrl+space` to see what nREPL has to suggest (or, you can use
-`ctrl+g ctrl+a` if you're using Firefox, which steals `ctrl+space` for its own use,
+`shift+enter` to evaluate it. The results are displayed below the code, along with any console output or errors that
+were generated. Gorilla offers nREPL's autocomplete function, hit `ctrl+space` to see what nREPL has to suggest (or, you
+can use `ctrl+g ctrl+a` if you're using Firefox, which steals `ctrl+space` for its own use,
 [somewhat controversially](https://bugzilla.mozilla.org/show_bug.cgi?id=435164).)
 
 ## Plotting graphs
@@ -72,11 +71,11 @@ explicitly including it as a dependency in your `project.clj`. Full documentatio
 
 There are five functions that should cover many plotting needs. These are:
 
-- `(list-plot data)` where data can either be a sequence of y-values, or a sequence of `(x y)` pairs.
+- `(list-plot data)` where `data` can either be a sequence of y-values, or a sequence of `(x y)` pairs.
 - `(plot func [start end])` which will evaluate and plot `func` over the given range.
 - `(histogram data)` where `data` is a list of values.
-- `(bar-chart categories values)` where `categories` are the category names, and `values` their value.
-- `(compose plot1 plot2 & more)` which tries to compose together the given plots. Note that composing a barchart with
+- `(bar-chart categories values)` where `categories` are the category names, and `values` their values.
+- `(compose plot1 plot2 & more)` which tries to compose together the given plots. Note that composing a bar-chart with
 other plots will give odd results, as it's not obvious how to compose category-scales.
 
 These functions take many options, look at the [gorilla-plot](https://github.com/JonyEpsilon/gorilla-plot) page for more
@@ -89,7 +88,8 @@ Video here.
 
 ## Making notes
 
-As well as including snippets of Clojure code, you can add snippets of notes to a Gorilla worksheet. These are added in
+So far we've used Gorilla as a fancy REPL, but we can also think of it as a tool for making documents, which we call
+'worksheets'. As well as including snippets of Clojure code, a Gorilla worksheet can include notes, which are written in
 Markdown format. To add notes you need to first tell Gorilla that it should interpret a snippet of text as notes, rather
 than Clojure code. To do this place the cursor in the segment (a segment being one of the boxes containing a snippet of
 code/notes) that you want to use for notes and hit, `ctrl+g ctrl+m` (g for Gorilla, m for Markdown). You can then feel
@@ -103,8 +103,8 @@ $$\int_0^{2\pi}\sin^2(x) \textrm{d}x$$
 
 ## Worksheet files
 
-You can save the contents of a window to a 'worksheet' file. This will include everything you see, the code, the output,
-notes and mathematics, the lot. To save a file just hit `ctrl+g ctrl+s`. If you haven't already saved the file it will
+You can save the contents of a window to a worksheet file. This will include everything you see, the code, the output,
+graphs, notes and mathematics, the lot. To save a file just hit `ctrl+g ctrl+s`. If you haven't already saved the file it will
 prompt for a filename, which is given relative to the project/where you invoked `lein gorilla`. To load a file, use
 `ctrl+g ctrl+l`. By convention, I often find it convenient to store my worksheets in a directory called `ws` at the root
 of the project (alongside `src` etc) but you, of course, can store them wherever you want. A neat feature is that these
@@ -122,8 +122,12 @@ You might be used to using `doc` and `source` at the command-line REPL. By defau
 `user` namespace when Gorilla starts, but if you'd like to use them then you just need to run `(use 'clojure.repl)` to
 bring them into scope.
 
-Gorilla provides a few repl commands of its own. Again, these are not imported by default ... TODO.
+# Getting help
 
-## Content types
+At the moment your best bet is to ping me on email. If there's demand then I'll get a discussion list set up.
+
+# Contributing
+
+Contributions, in the form of comments, criticism, bug reports, or code are all very welcome :-)
 
 Copyright © 2014- Jony Hudson
