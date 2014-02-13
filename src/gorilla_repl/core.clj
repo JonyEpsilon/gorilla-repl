@@ -85,7 +85,7 @@
   [conf]
   (println "Gorilla-REPL.")
   ;; start the app
-  (let [p 8080
+  (let [p (or (:port conf) 8990)
         s (jetty/run-jetty app-routes {:port p :join? false})]
     (println (str "Running at http://localhost:" p "/worksheet.html ."))
     (println "Ctrl+C to exit.")

@@ -45,7 +45,8 @@ outside of Leiningen projects. Your `~/.lein/project.clj` might look like:
 ```
 
 That's it. You should now be able to run `lein gorilla` - from within the project directory, if you installed it as a
-project plugin, or anywhere if you specified it in your user profile - and get started.
+project plugin, or anywhere if you specified it in your user profile - and get started. If you want to run Gorilla on a
+different port than the default (8990) you can run `lein gorilla :port 8999` or similar.
 
 
 # Usage
