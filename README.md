@@ -124,7 +124,8 @@ bring them into scope.
 
 # Getting help
 
-At the moment your best bet is to ping me on email. If there's demand then I'll get a discussion list set up.
+At the moment your best bet is to ping me on email. If there's demand then I'll get a discussion list set up. There may
+or may not be some useful information on the Github wiki pages!
 
 # Contributing
 
