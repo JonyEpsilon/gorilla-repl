@@ -7,7 +7,7 @@
   :url "https://github.com/JonyEpsilon/gorilla-repl"
   :license {:name "MIT"}
   :dependencies [[org.clojure/clojure "1.5.1"]
-                 [ring/ring-jetty-adapter "1.2.1"]
+                 [http-kit "2.1.16"]
                  [ring/ring-json "0.2.0"]
                  [compojure "1.1.6"]
                  [com.cemerick/drawbridge "0.0.6"]

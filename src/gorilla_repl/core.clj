@@ -6,7 +6,7 @@
   (:use compojure.core)
   (:require [compojure.handler :as handler]
             [compojure.route :as route]
-            [ring.adapter.jetty :as jetty]
+            [org.httpkit.server :as server]
             [ring.middleware.keyword-params :as keyword-params]
             [ring.middleware.nested-params :as nested-params]
             [ring.middleware.params :as params]
@@ -86,11 +86,11 @@
   (println "Gorilla-REPL.")
   ;; start the app
   (let [p (or (:port conf) 8990)
-        s (jetty/run-jetty app-routes {:port p :join? false})]
+        s (server/run-server app-routes {:port p :join? false})]
     (println (str "Running at http://localhost:" p "/worksheet.html ."))
     (println "Ctrl+C to exit.")
     ;; block this thread by joining the server (which should run until killed)
-    (.join s)))
+    #_(.join s)))
 
 (defn -main
   [& args]
