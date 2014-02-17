@@ -10,7 +10,6 @@
                  [http-kit "2.1.16"]
                  [ring/ring-json "0.2.0"]
                  [compojure "1.1.6"]
-                 [com.cemerick/drawbridge "0.0.6"]
                  [org.slf4j/slf4j-api "1.7.5"]
                  [ch.qos.logback/logback-classic "1.0.13"]
                  [clojure-complete "0.2.3"]

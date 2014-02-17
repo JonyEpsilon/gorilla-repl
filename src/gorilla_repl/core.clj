@@ -8,12 +8,10 @@
             [compojure.route :as route]
             [org.httpkit.server :as server]
             [ring.middleware.keyword-params :as keyword-params]
-            [ring.middleware.nested-params :as nested-params]
             [ring.middleware.params :as params]
-            [ring.middleware.session :as session]
             [ring.middleware.json :as json]
             [ring.util.response :as res]
-            [cemerick.drawbridge :as drawbridge]
+            [gorilla-repl.websocket-transport :as ws-transport]
             [complete.core :as complete])
   (:gen-class))
 
@@ -31,16 +29,6 @@
       (keyword-params/wrap-keyword-params)
       (params/wrap-params)
       (json/wrap-json-response)))
-
-;; the handler function for repl requests
-(def ^:private drawbridge
-  (-> (drawbridge/ring-handler)
-      #_(print-req)
-      (keyword-params/wrap-keyword-params)
-      (nested-params/wrap-nested-params)
-      (params/wrap-params)
-      (session/wrap-session)))
-
 
 ;; the worksheet load handler
 (defn load-worksheet
@@ -72,12 +60,14 @@
     (when-let [ns (:ns (:params req))]
       (res/response {:completions (complete/completions stub (symbol ns))}))))
 
+
 ;; the combined routes - we serve up everything in the "public" directory of resources under "/".
+;; The REPL traffic is handled in the websocket-transport ns.
 (defroutes app-routes
-           (ANY "/repl" {:as req} (drawbridge req))
            (GET "/load" [] (wrap-api-handler load-worksheet))
            (POST "/save" [] (wrap-api-handler save))
            (GET "/completions" [] (wrap-api-handler completions))
+           (GET "/repl" [] ws-transport/ring-handler)
            (route/resources "/"))
 
 
