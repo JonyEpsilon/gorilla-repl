@@ -9,6 +9,7 @@
   :dependencies [[org.clojure/clojure "1.5.1"]
                  [http-kit "2.1.16"]
                  [ring/ring-json "0.2.0"]
+                 [cheshire "5.0.2"]
                  [compojure "1.1.6"]
                  [org.slf4j/slf4j-api "1.7.5"]
                  [ch.qos.logback/logback-classic "1.0.13"]
