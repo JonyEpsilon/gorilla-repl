@@ -8,37 +8,39 @@
 
 worksheet = worksheetHeader seg:segmentWithBlankLine* {return seg;}
 
-worksheetHeader = ";; gorilla-repl.fileformat = 1\n\n"
+lineEnd = "\n" / "\r\n"
 
-segmentWithBlankLine = seg:segment "\n"? {return seg;}
+worksheetHeader = ";; gorilla-repl.fileformat = 1" lineEnd lineEnd
+
+segmentWithBlankLine = seg:segment lineEnd? {return seg;}
 
 segment = freeSegment / codeSegment
 
 freeSegment = freeSegmentOpenTag content:stringNoDelim? freeSegmentCloseTag
                 {return freeSegment(unmakeClojureComment(content));}
 
-freeSegmentOpenTag = ";; **\n"
+freeSegmentOpenTag = ";; **" lineEnd
 
-freeSegmentCloseTag = "\n;; **\n"
+freeSegmentCloseTag = lineEnd ";; **" lineEnd
 
 codeSegment = codeSegmentOpenTag content:stringNoDelim? codeSegmentCloseTag cs:consoleSection? out:outputSection?
                 {return codeSegment(content, unmakeClojureComment(cs), unmakeClojureComment(out));}
 
-codeSegmentOpenTag = ";; @@\n"
+codeSegmentOpenTag = ";; @@" lineEnd
 
-codeSegmentCloseTag = "\n;; @@\n"
+codeSegmentCloseTag = lineEnd ";; @@" lineEnd
 
 outputSection = outputOpenTag output:stringNoDelim outputCloseTag {return output;}
 
-outputOpenTag = ";; =>\n"
+outputOpenTag = ";; =>" lineEnd
 
-outputCloseTag = "\n;; <=\n"
+outputCloseTag = lineEnd ";; <=" lineEnd
 
 consoleSection = consoleOpenTag cs:stringNoDelim consoleCloseTag {return cs;}
 
-consoleOpenTag = ";; ->\n"
+consoleOpenTag = ";; ->" lineEnd
 
-consoleCloseTag = "\n;; <-\n"
+consoleCloseTag = lineEnd ";; <-" lineEnd
 
 stringNoDelim = cs:noDelimChar+ {return cs.join("");}
 
