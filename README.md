@@ -1,9 +1,7 @@
 # Gorilla REPL
 
 Gorilla is a rich REPL for Clojure in the notebook style. What on earth does that mean, you say? Well, maybe it's best
-to take a look at a short video showing you what it can do:
-
-Video here.
+to take a look at a [short video](https://vimeo.com/87118206) showing you what it can do.
 
 You can think of it like a pretty REPL that can plot graphs, or you can think of it as an editor for rich documents that
 can contain interactive Clojure code, graphs, table, notes, LaTeX formulae. Whatever works for you! One of the main
@@ -84,10 +82,9 @@ other plots will give odd results, as it's not obvious how to compose category-s
 These functions take many options, look at the [gorilla-plot](https://github.com/JonyEpsilon/gorilla-plot) page for more
 help.
 
-There's a short video talking a little more about how the plots work, and how they try and fit nicely with the Clojure
+There's a short video (coming soon) talking a little more about how the plots work, and how they try and fit nicely with the Clojure
 way of thinking (plots are values) which might interest you.
 
-Video here.
 
 ### Editor commands
 
