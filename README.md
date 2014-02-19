@@ -12,7 +12,7 @@ the power to perform and document complex data analysis and modelling tasks. Abo
 dictate your workflow, but rather to fit in to the way you like to work, hopefully putting a bit more power to your
 elbow.
 
-Screenshots here.
+![Screenshot](screenshot.png)
 
 
 ## Installation
