@@ -110,7 +110,7 @@ commandList = [
         name: "command:worksheet:changeToCode",
         desc: "Convert the highlighted segment to a clojure segment.",
         showInMenu: true,
-        kb: combo('g', 'c'),
+        kb: combo('g', 'j'),
         action: function () {
             eventBus.trigger("worksheet:changeToCode");
         }
