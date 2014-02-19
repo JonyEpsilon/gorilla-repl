@@ -83,7 +83,7 @@ commandList = [
         name: "command:worksheet:delete",
         desc: "Delete the highlighted segment.",
         showInMenu: true,
-        kb: combo('g', 'd'),
+        kb: combo('g', 'x'),
         action: function () {
             eventBus.trigger("worksheet:delete");
         }
