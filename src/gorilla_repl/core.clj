@@ -48,7 +48,7 @@
   ;; TODO: S'pose some error handling here wouldn't be such a bad thing
   (when-let [ws-file (:worksheet-filename (:params req))]
     (let [_ (print (str "Loading: " ws-file " ... "))
-          ws-data (slurp (str ws-file))
+          ws-data (slurp (str ws-file) :encoding "UTF-8")
           _ (println "done.")]
       (res/response {:worksheet-data ws-data}))))
 
