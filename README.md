@@ -135,4 +135,8 @@ or may not be some useful information on the Github wiki pages!
 
 Contributions, in the form of comments, criticism, bug reports, or code are all very welcome :-)
 
+# Licence
+
+Gorilla is licensed to you under the MIT licence. See LICENCE.txt for details.
+
 Copyright © 2014- Jony Hudson
