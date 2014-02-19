@@ -25,7 +25,7 @@ easy!
 Gorilla is packaged as a Leiningen plugin. To use Gorilla you can do one of two things. If you just want to use Gorilla
 in a particular project, then add the following to the `:plugins` section of that project's `project.clj` file:
 ```
-[lein-gorilla "0.1.0"]
+[lein-gorilla "0.1.1"]
 ```
 Your completed `project.clj` file might look something like this:
 ```
@@ -41,7 +41,7 @@ The other way to use Gorilla is to add it to your Leiningen user profile - this 
 outside of Leiningen projects. Your `~/.lein/project.clj` might look like:
 ```
 { :user {
-    :plugins [[lein-gorilla "0.1.0-SNAPSHOT"]]}}
+    :plugins [[lein-gorilla "0.1.1"]]}}
 ```
 
 That's it. You should now be able to run `lein gorilla` - from within the project directory, if you installed it as a
