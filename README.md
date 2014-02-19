@@ -15,7 +15,7 @@ elbow.
 Screenshots here.
 
 
-# Installation
+## Installation
 
 The rest of these docs assume that you're familiar with the basics of Clojure, and have a working copy of Leiningen
 (version >= 2) installed. If you're not yet familiar with Leiningen then you should head over to
@@ -49,7 +49,7 @@ project plugin, or anywhere if you specified it in your user profile - and get s
 different port than the default (8990) you can run `lein gorilla :port 8999` or similar.
 
 
-# Usage
+## Usage
 
 When you run `lein gorilla` it will start up the REPL server, and print a web-link to the console. Point your
 web-browser at this link to get going (hint for Mac users: try ctrl-clicking the link). **At the moment
@@ -62,11 +62,10 @@ window will separately keep track of which namespace you're working in - try it,
 
 Once you've got a web-browser pointed at Gorilla you can use it just like a REPL. Type some clojure code in, and hit
 `shift+enter` to evaluate it. The results are displayed below the code, along with any console output or errors that
-were generated. Gorilla offers nREPL's autocomplete function, hit `ctrl+space` to see what nREPL has to suggest (or, you
-can use `ctrl+g ctrl+a` if you're using Firefox, which steals `ctrl+space` for its own use,
-[somewhat controversially](https://bugzilla.mozilla.org/show_bug.cgi?id=435164).)
+were generated. Gorilla offers nREPL's autocomplete function, hit `ctrl+space` to see what nREPL has to suggest (unless
+ you're using Firefox on Mac - see the commands section below for more info.)
 
-## Plotting graphs
+### Plotting graphs
 
 One of the most handy features of Gorilla is the ability to plot graphs. The library
 [gorilla-plot](https://github.com/JonyEpsilon/gorilla-plot) is integrated into Gorilla and is always available without
@@ -90,7 +89,21 @@ way of thinking (plots are values) which might interest you.
 
 Video here.
 
-## Making notes
+### Editor commands
+
+Before we can go much further we will need to introduce *editor commands*. Editor commands are usually a sequence of two
+keypresses. On Windows these are of the form `alt+a alt+b` and on other platforms they are of the form `ctrl+a ctrl+b`.
+This document writes them in the format suitable for Mac - if you're on Windows replace the `ctrl`s with `alt`s.
+
+You don't need them right now, but you can see all of the editor commands by hovering over the feint question mark in
+the top right hand corner of the
+Gorilla window. Hopefully they are all self-explanatory, or at least you can figure them out easily enough. An attempt
+has been made to make sure the commands work across popular browsers and operating systems (which is not as easy as you
+might think). The one exception is the autocomplete command which doesn't work on Firefox on the Mac, as it
+steals `ctrl+space` for its own use, [somewhat controversially](https://bugzilla.mozilla.org/show_bug.cgi?id=435164).
+You can instead use `ctrl+g ctrl+a` if you're using Firefox.
+
+### Making notes
 
 So far we've used Gorilla as a fancy REPL, but we can also think of it as a tool for making documents, which we call
 'worksheets'. As well as including snippets of Clojure code, a Gorilla worksheet can include notes, which are written in
@@ -105,7 +118,7 @@ This is an inline formula, @@\sin(x)@@, and this is on its own line:
 $$\int_0^{2\pi}\sin^2(x) \textrm{d}x$$
 ```
 
-## Worksheet files
+### Worksheet files
 
 You can save the contents of a window to a worksheet file. This will include everything you see, the code, the output,
 graphs, notes and mathematics, the lot. To save a file just hit `ctrl+g ctrl+s`. If you haven't already saved the file it will
@@ -115,27 +128,24 @@ of the project (alongside `src` etc) but you, of course, can store them wherever
 worksheet files are just plain Clojure files with some magic comments. This means it's really easy to interactively
 develop your code in Gorilla, and then turn it into a library when it stabilises.
 
-## Other editor commands
 
-You can see all of the editor commands by hovering over the feint question mark in the top right hand corner of the
-Gorilla window. Hopefully they are all self-explanatory, or at least you can figure them out easily enough.
-
-## doc, source and other REPL commands
+### doc, source and other REPL commands
 
 You might be used to using `doc` and `source` at the command-line REPL. By default these are not imported into the
 `user` namespace when Gorilla starts, but if you'd like to use them then you just need to run `(use 'clojure.repl)` to
 bring them into scope.
 
-# Getting help
+## Getting help
 
 At the moment your best bet is to ping me on email. If there's demand then I'll get a discussion list set up. There may
 or may not be some useful information on the Github wiki pages!
 
-# Contributing
+## Contributing
 
-Contributions, in the form of comments, criticism, bug reports, or code are all very welcome :-)
+Contributions, in the form of comments, criticism, bug reports, or code are all very welcome :-) If you've got an idea
+for a big change drop me an email so we can coordinate work.
 
-# Licence
+## Licence
 
 Gorilla is licensed to you under the MIT licence. See LICENCE.txt for details.
 
