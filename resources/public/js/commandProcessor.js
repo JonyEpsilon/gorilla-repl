@@ -36,6 +36,11 @@ var commandProcessor = (function () {
 // The list of commands. These could be located with the components they belong too if the list gets too unwieldy,
 // but for now they're fine together here.
 
+// On Windows "alt" is used as the command key, on Mac and Linux "ctrl"
+var ck = /Win/.test(navigator.platform) ? "alt" : "ctrl";
+// helper for two key combos
+var combo = function (k1, k2) { return ck + "+" + k1 + " " + ck + "+" + k2};
+
 commandList = [
     {
         name: "command:worksheet:leaveBack",
@@ -69,7 +74,7 @@ commandList = [
         desc: "Show possible auto-completions.",
         showInMenu: true,
         // alternative provided to workaround Firefox's idiotic unstoppable binding of ctrl+space
-        kb: ["ctrl+space", "ctrl+g ctrl+a"],
+        kb: ["ctrl+space", combo('g', 'a')],
         action: function () {
             eventBus.trigger("worksheet:completions");
         }
@@ -78,7 +83,7 @@ commandList = [
         name: "command:worksheet:delete",
         desc: "Delete the highlighted segment.",
         showInMenu: true,
-        kb: "ctrl+g ctrl+x",
+        kb: combo('g', 'x'),
         action: function () {
             eventBus.trigger("worksheet:delete");
         }
@@ -87,7 +92,7 @@ commandList = [
         name: "command:worksheet:newBelow",
         desc: "Create a new segment below the highlighted segment.",
         showInMenu: true,
-        kb: "ctrl+g ctrl+n",
+        kb: combo('g', 'n'),
         action: function () {
             eventBus.trigger("worksheet:newBelow");
         }
@@ -96,7 +101,7 @@ commandList = [
         name: "command:worksheet:changeToFree",
         desc: "Convert the highlighted segment to a markdown segment.",
         showInMenu: true,
-        kb: "ctrl+g ctrl+m",
+        kb: combo('g', 'm'),
         action: function () {
             eventBus.trigger("worksheet:changeToFree");
         }
@@ -105,7 +110,7 @@ commandList = [
         name: "command:worksheet:changeToCode",
         desc: "Convert the highlighted segment to a clojure segment.",
         showInMenu: true,
-        kb: "ctrl+g ctrl+c",
+        kb: combo('g', 'c'),
         action: function () {
             eventBus.trigger("worksheet:changeToCode");
         }
@@ -114,7 +119,7 @@ commandList = [
         name: "command:app:open",
         desc: "Load a worksheet.",
         showInMenu: true,
-        kb: "ctrl+g ctrl+l",
+        kb: combo('g', 'l'),
         action: function () {
             eventBus.trigger("app:load");
         }
@@ -123,7 +128,7 @@ commandList = [
         name: "command:app:save",
         desc: "Save the worksheet.",
         showInMenu: true,
-        kb: "ctrl+g ctrl+s",
+        kb: combo('g', 's'),
         action: function () {
             eventBus.trigger("app:save");
         }
