@@ -118,6 +118,9 @@ This is an inline formula, @@\sin(x)@@, and this is on its own line:
 $$\int_0^{2\pi}\sin^2(x) \textrm{d}x$$
 ```
 
+**Note:** currently you will need to be online in order for LaTeX to render properly. Hopefully this will be resolved soon.
+See issue #45 for more details.
+
 ### Worksheet files
 
 You can save the contents of a window to a worksheet file. This will include everything you see, the code, the output,
