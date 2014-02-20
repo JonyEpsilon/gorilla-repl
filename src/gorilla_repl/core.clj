@@ -80,14 +80,21 @@
            (GET "/completions" [] (wrap-api-handler completions))
            (route/resources "/"))
 
+(defn browse!
+  "Open a URL string in a desktop web browser."
+  [s]
+  (.browse (java.awt.Desktop/getDesktop)
+           (java.net.URI. s)))
 
 (defn run-gorilla-server
   [conf]
   (println "Gorilla-REPL.")
   ;; start the app
   (let [p (or (:port conf) 8990)
-        s (jetty/run-jetty app-routes {:port p :join? false})]
-    (println (str "Running at http://localhost:" p "/worksheet.html ."))
+        s (jetty/run-jetty app-routes {:port p :join? false})
+        url (str "http://localhost:" p "/worksheet.html")]
+    (browse! url)
+    (println "Running at" url)
     (println "Ctrl+C to exit.")
     ;; block this thread by joining the server (which should run until killed)
     (.join s)))
