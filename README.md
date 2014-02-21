@@ -36,10 +36,9 @@ Your completed `project.clj` file might look something like this:
   :profiles {:uberjar {:aot :all}})
 ```
 The other way to use Gorilla is to add it to your Leiningen user profile - this will make it available everywhere, even
-outside of Leiningen projects. Your `~/.lein/project.clj` might look like:
+outside of Leiningen projects. Your `~/.lein/profiles.clj` might look like:
 ```
-{ :user {
-    :plugins [[lein-gorilla "0.1.2"]]}}
+{:user {:plugins [[lein-gorilla "0.1.2"]]}}
 ```
 
 That's it. You should now be able to run `lein gorilla` - from within the project directory, if you installed it as a
