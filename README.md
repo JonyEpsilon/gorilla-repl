@@ -69,7 +69,7 @@ One of the most handy features of Gorilla is the ability to plot graphs. The lib
 explicitly including it as a dependency in your `project.clj`. Full documentation for gorilla-plot is available on
 [its Github page](https://github.com/JonyEpsilon/gorilla-plot), but to get you started, let's give a short summary.
 
-There are five functions that should cover many plotting needs. These are:
+There are five functions that should cover many plotting needs. These functions are in the `gorilla-plot.core` namespace, so you will need to `use` or `require` it before starting. The functions are:
 
 - `(list-plot data)` where `data` can either be a sequence of y-values, or a sequence of `(x y)` pairs.
 - `(plot func [start end])` which will evaluate and plot `func` over the given range.
