@@ -81,7 +81,7 @@ other plots will give odd results, as it's not obvious how to compose category-s
 These functions take many options, look at the [gorilla-plot](https://github.com/JonyEpsilon/gorilla-plot) page for more
 help.
 
-There's a short video (coming soon) talking a little more about how the plots work, and how they try and fit nicely with the Clojure
+There's a [short video](https://vimeo.com/87139900) talking a little more about how the plots work, and how they try and fit nicely with the Clojure
 way of thinking (plots are values) which might interest you.
 
 
