@@ -64,12 +64,13 @@ were generated. Gorilla offers nREPL's autocomplete function, hit `ctrl+space` t
 
 ### Plotting graphs
 
-One of the most handy features of Gorilla is the ability to plot graphs. The library
-[gorilla-plot](https://github.com/JonyEpsilon/gorilla-plot) is integrated into Gorilla and is always available without
-explicitly including it as a dependency in your `project.clj`. Full documentation for gorilla-plot is available on
-[its Github page](https://github.com/JonyEpsilon/gorilla-plot), but to get you started, let's give a short summary.
+One of the most handy features of Gorilla is the ability to plot graphs. The plotting library
+gorilla-plot is integrated into Gorilla and is always available without
+explicitly including it as a dependency in your `project.clj`. Full documentation for gorilla-plot is available in the
+doc directory (coming soon!), but to get you started, let's give a short summary.
 
-There are five functions that should cover many plotting needs. These functions are in the `gorilla-plot.core` namespace, so you will need to `use` or `require` it before starting. The functions are:
+There are five functions that should cover many plotting needs. These functions are in the `gorilla-plot.core`
+namespace, so you will need to `use` or `require` it before starting. The functions are:
 
 - `(list-plot data)` where `data` can either be a sequence of y-values, or a sequence of `(x y)` pairs.
 - `(plot func [start end])` which will evaluate and plot `func` over the given range.
@@ -78,11 +79,10 @@ There are five functions that should cover many plotting needs. These functions 
 - `(compose plot1 plot2 & more)` which tries to compose together the given plots. Note that composing a bar-chart with
 other plots will give odd results, as it's not obvious how to compose category-scales.
 
-These functions take many options, look at the [gorilla-plot](https://github.com/JonyEpsilon/gorilla-plot) page for more
-help.
+These functions take many options, look at the detailed docs for more help.
 
-There's a [short video](https://vimeo.com/87139900) talking a little more about how the plots work, and how they try and fit nicely with the Clojure
-way of thinking (plots are values) which might interest you.
+There's a [short video](https://vimeo.com/87139900) talking a little more about how the plots work, and how they try and
+fit nicely with the Clojure way of thinking (plots are values) which might interest you.
 
 
 ### Editor commands
