@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/../gorilla-plot/gorilla_plot.iml" filepath="$PROJECT_DIR$/../gorilla-plot/gorilla_plot.iml" />
       <module fileurl="file://$PROJECT_DIR$/gorilla_repl.iml" filepath="$PROJECT_DIR$/gorilla_repl.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../lein-gorilla/lein_gorilla.iml" filepath="$PROJECT_DIR$/../lein-gorilla/lein_gorilla.iml" />
     </modules>
   </component>
 </project>
