@@ -15,7 +15,6 @@
     <orderEntry type="library" name="Leiningen: cheshire:5.0.2" level="project" />
     <orderEntry type="library" name="Leiningen: clojure-complete:0.2.3" level="project" />
     <orderEntry type="library" name="Leiningen: compojure:1.1.6" level="project" />
-    <orderEntry type="library" name="Leiningen: gorilla-plot:0.1.0-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Leiningen: http-kit:2.1.16" level="project" />
     <orderEntry type="library" name="Leiningen: org.clojure/clojure:1.5.1" level="project" />
     <orderEntry type="library" name="Leiningen: org.clojure/tools.nrepl:0.2.3" level="project" />
@@ -34,7 +33,6 @@
     <orderEntry type="library" name="Leiningen: commons-io:2.1" level="project" />
     <orderEntry type="library" name="Leiningen: javax.servlet/servlet-api:2.5" level="project" />
     <orderEntry type="library" name="Leiningen: joda-time:2.0" level="project" />
-    <orderEntry type="module" module-name="gorilla_plot" />
   </component>
 </module>
 
