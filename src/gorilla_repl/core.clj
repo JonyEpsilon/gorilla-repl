@@ -11,7 +11,8 @@
             [ring.middleware.params :as params]
             [ring.middleware.json :as json]
             [ring.util.response :as res]
-            [gorilla-repl.websocket-transport :as ws-transport]
+            [clojure.tools.nrepl.server :as nrepl-server]
+            [gorilla-repl.websocket-relay :as ws-relay]
             [complete.core :as complete])
   (:gen-class))
 
@@ -67,17 +68,22 @@
            (GET "/load" [] (wrap-api-handler load-worksheet))
            (POST "/save" [] (wrap-api-handler save))
            (GET "/completions" [] (wrap-api-handler completions))
-           (GET "/repl" [] ws-transport/ring-handler)
+           (GET "/repl" [] ws-relay/ring-handler)
            (route/resources "/"))
 
 
 (defn run-gorilla-server
   [conf]
   (println "Gorilla-REPL.")
-  ;; start the app
-  (let [p (or (:port conf) 8990)
-        s (server/run-server app-routes {:port p :join? false})]
-    (println (str "Running at http://localhost:" p "/worksheet.html ."))
+  ;; start the app - first start the nREPL server, and then the http server.
+  (let [nrepl-requested-port (or (:nrepl-port conf) 0) ;; auto-select port if none requested
+        nrepl (nrepl-server/start-server :port nrepl-requested-port)
+        nrepl-port (:port nrepl)
+        _ (println "Started nREPL server on port" nrepl-port)
+        _ (ws-relay/connect-to-nrepl nrepl-port)
+        webapp-port (or (:port conf) 8990)
+        s (server/run-server app-routes {:port webapp-port :join? false})]
+    (println (str "Running at http://localhost:" webapp-port "/worksheet.html ."))
     (println "Ctrl+C to exit.")
     ;; block this thread by joining the server (which should run until killed)
     #_(.join s)))
