@@ -7,13 +7,16 @@ to maintainers.
 ## Git branches
 
 The `master` branch is the public-facing stable branch. It should always be in a sensible state, ideally sitting at a
-release tag.
+release tag. The README, and the code people browse are on this branch, so it's better if it makes sense in the context
+of the latest released version.
 
 The `develop` branch is the main line of development. Features should be merged in to this branch, and pull-requests
 should be based on this branch. It's ok to fix small bugs and the like on this branch, but anything larger should happen
 on ...
 
 The `feature/*` branches are for features. Ideally they will have meaningful names!
+
+If you're messing around with an idea, maybe an `experiment/*` branch would be appropriate.
 
 An attempt is made to keep the branches in the repository clean, so merged feature branches will be deleted, and old,
 unmerged branches that will definitely no longer be used should also be deleted.
