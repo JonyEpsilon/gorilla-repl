@@ -207,6 +207,20 @@ var worksheet = function () {
         else eventBus.trigger("worksheet:newBelow")
     });
 
+    addEventHandler("worksheet:live-evaluate", function () {
+        // check that a segment is active
+        var seg = self.getActiveSegment();
+        if (seg == null) return;
+
+        if (seg.type == "code") {
+            // if this is a code segment, then evaluate the contents
+            var code = seg.getContents();
+            seg.errorText("");
+            seg.consoleText("");
+            eventBus.trigger("evaluator:evaluate", {code: code, segmentID: seg.id});
+        }
+    });
+
     // messages from the evaluator
 
     addEventHandler("evaluator:value-response", function (e, d) {

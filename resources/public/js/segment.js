@@ -35,6 +35,10 @@ var codeSegment = function (contents, consoleText, output) {
         "text/x-clojure"
     );
 
+    self.content.contents.subscribe( function () {
+        eventBus.trigger("worksheet:live-evaluate");
+    });
+
     self.getContents = function() {
         return self.content.contents();
     };
