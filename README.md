@@ -49,10 +49,7 @@ different port than the default (8990) you can run `lein gorilla :port 8999` or 
 ## Usage
 
 When you run `lein gorilla` it will start up the REPL server, and print a web-link to the console. Point your
-web-browser at this link to get going (hint for Mac users: try ctrl-clicking the link). **At the moment
-you must only open one browser window! Help needed with [issue #10](https://github.com/JonyEpsilon/gorilla-repl/issues/10)
-COMING SOON:**
- You can open as many browser
+web-browser at this link to get going (hint for Mac users: try ctrl-clicking the link). You can open as many browser
 windows as you like with this link, each will get its own nREPL session to work in, but share the same nREPL instance
 (in case you're not familiar with nREPL's terminology: this means all windows will share definitions etc, but each
 window will separately keep track of which namespace you're working in - try it, you'll see it's quite natural).
