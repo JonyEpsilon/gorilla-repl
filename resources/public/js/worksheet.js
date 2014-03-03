@@ -182,6 +182,18 @@ var worksheet = function () {
         changeActiveSegmentType("code", codeSegment);
     });
 
+    // * Toggling live mode *
+
+    addEventHandler("worksheet:toggle-live", function () {
+        var seg = self.getActiveSegment();
+        if (seg == null) return;
+
+        if (seg.type == "code") {
+            var oldVal = seg.liveEvaluationMode();
+            seg.liveEvaluationMode(!oldVal);
+        }
+    });
+
     // * Evaluation *
 
     // The evaluation command will fire this event. The worksheet will then send a message to the evaluator
@@ -196,6 +208,7 @@ var worksheet = function () {
             var code = seg.getContents();
             // clear the output
             seg.clearOutput();
+            seg.clearErrorAndConsole();
             seg.runningIndicator(true);
 
             eventBus.trigger("evaluator:evaluate", {code: code, segmentID: seg.id});
@@ -207,6 +220,7 @@ var worksheet = function () {
         else eventBus.trigger("worksheet:newBelow")
     });
 
+    // A minimal evaluation handler that is called when in live mode. The output is not cleared each time.
     addEventHandler("worksheet:live-evaluate", function () {
         // check that a segment is active
         var seg = self.getActiveSegment();
@@ -215,8 +229,7 @@ var worksheet = function () {
         if (seg.type == "code") {
             // if this is a code segment, then evaluate the contents
             var code = seg.getContents();
-            seg.errorText("");
-            seg.consoleText("");
+            seg.clearErrorAndConsole();
             eventBus.trigger("evaluator:evaluate", {code: code, segmentID: seg.id});
         }
     });

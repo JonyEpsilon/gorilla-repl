@@ -88,7 +88,7 @@
 
 <script type="text/html" id="code-segment-template">
     <div class="segment code running"
-         data-bind="css: {selected: active(), 'code-warning': warningIndicator() && active(), running: runningIndicator}, attr: {id: id}">
+         data-bind="css: {selected: active(), 'code-warning': warningIndicator() && active(), running: runningIndicator, live: liveEvaluationMode() && active()}, attr: {id: id}">
 
         <div class="segment-main">
             <textarea class="codeTextArea mousetrap" data-bind="codemirror: content"></textarea>

@@ -35,19 +35,24 @@ var codeSegment = function (contents, consoleText, output) {
         "text/x-clojure"
     );
 
+    // This listener watches for any kind of content change, and if in live mode triggers an immediate re-evaluation.
     self.content.contents.subscribe( function () {
-        eventBus.trigger("worksheet:live-evaluate");
+        if (self.liveEvaluationMode()) eventBus.trigger("worksheet:live-evaluate");
     });
 
     self.getContents = function() {
         return self.content.contents();
     };
 
-    self.clearOutput = function () {
-        self.output("");
+    self.clearErrorAndConsole = function () {
         self.errorText("");
         self.consoleText("");
     };
+
+    self.clearOutput = function () {
+        self.output("");
+    };
+
 
     // activation and deactivation - these control whether the segment has the "cursor" outline, and focus
     // the content component.

@@ -80,6 +80,15 @@ commandList = [
         }
     },
     {
+        name: "command:worksheet:toggle-live",
+        desc: "Toggle interactive mode.",
+        showInMenu: true,
+        kb: [combo('g', 'i')],
+        action: function () {
+            eventBus.trigger("worksheet:toggle-live");
+        }
+    },
+    {
         name: "command:worksheet:delete",
         desc: "Delete the highlighted segment.",
         showInMenu: true,
