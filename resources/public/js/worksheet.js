@@ -31,6 +31,10 @@ var worksheetWrapper = function (worksheet) {
         setTimeout(function () {self.status("");}, millis);
     };
 
+    self.showStatusMessage = function (message) {
+        self.status(message);
+    };
+
     return self;
 };
 
