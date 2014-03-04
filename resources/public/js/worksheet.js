@@ -138,6 +138,15 @@ var worksheet = function () {
         self.activateSegment(leavingIndex - 1, false);
     });
 
+    // the event for this action contains the segment id
+    addEventHandler("worksheet:segment-clicked", function (e, d) {
+        if (self.activeSegmentIndex != null) self.deactivateSegment(self.activeSegmentIndex);
+        var focusIndex = self.segmentIndexForID(d.id);
+        self.activateSegment(focusIndex, true);
+    });
+
+    // * Manipulating segments *
+
     addEventHandler("worksheet:delete", function () {
         // if there's only one segment, don't delete it
         if (self.segments().length == 1) return;
@@ -153,13 +162,6 @@ var worksheet = function () {
         self.deactivateSegment(currentIndex);
         self.segments.splice(currentIndex + 1, 0, seg);
         self.activateSegment(currentIndex + 1);
-    });
-
-    // the event for this action contains the segment id
-    addEventHandler("worksheet:segment-clicked", function (e, d) {
-        if (self.activeSegmentIndex != null) self.deactivateSegment(self.activeSegmentIndex);
-        var focusIndex = self.segmentIndexForID(d.id);
-        self.activateSegment(focusIndex, true);
     });
 
     // * Changing segment types *
