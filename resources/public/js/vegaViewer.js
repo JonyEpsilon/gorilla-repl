@@ -14,6 +14,9 @@ viewVega = function (spec, element, errorCallback) {
     vg.error = function (msg) {
         errorCallback("Vega error (js): " + msg);
     };
+    // Hack to work around a Vega problem (that it doesn't fully clear it's element) - this will disappear with the
+    // new renderer (#60).
+    $(element).children("pre").html("");
     vg.parse.spec(spec, function (chart) {
         try {
             chart({el: element, renderer: 'svg'}).update();
