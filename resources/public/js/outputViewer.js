@@ -19,49 +19,10 @@ ko.bindingHandlers.outputViewer = {
 
         // get the value to display
         var value = ko.utils.unwrapObservable(valueAccessor()());
-        // the default is just to show the value as is in a pre/code block. We colorize it for readability.
-        // We define a function to do that here.
-        var outputPlain = function () {
-            // escape HTML in the output
-            var escapedOutput = _.escape(value);
-            // a unique ID for the pre so we can colorize it
-            var preID = UUID.generate();
-            $(element).html('<pre id="' + preID + '"><code>' + escapedOutput + '</code></pre>');
-            CodeMirror.colorize($("#" + preID), "text/x-clojure");
-        };
-        // to handle any errors, we need to know the ID of the segment that this output belongs to
-        var segID = allBindingsAccessor.get('segmentID');
-        // this function will be passed to custom renderers (which can fail, say if their data is valid EDN, but not in
-        // the right format for them to render) to signal there was a problem.
-        var errorHandler = function (msg) {
-            eventBus.trigger("output:output-error", {segmentID: segID, error: msg});
-            // set the output to plain text
-            outputPlain();
-        };
-
-
-        // first try and parse the output as EDN. It might not be valid EDN, so this can and will fail.
-        var jsValue = {};
-        try {
-            var edn = jsedn.parse(value);
-            jsValue = jsedn.toJS(edn);
-        } catch (e) {
-            // not a lot we can do if anything goes wrong - and it's expected to happen often, so just ignore!
+        if (value !== "") {
+            var parsedValue = JSON.parse(value);
+            console.log(parsedValue);
         }
-
-        // if the object has a key called :gorilla-repl.types/vega at the top level, then we treat it as a Vega graphics spec
-        if (jsValue && jsValue[":gorilla-repl.types/vega"]) {
-            viewVega(jsValue[":gorilla-repl.types/vega"], element, errorHandler);
-            return;
-        }
-
-        // if the object has a key called :gorilla-repl.types/html at the top level, then we show the HTML
-        if (jsValue && jsValue[":gorilla-repl.types/html"]) {
-            viewHTML(jsValue[":gorilla-repl.types/html"], element, errorHandler);
-            return;
-        }
-
-        // default is just to show plain html
-        outputPlain();
+        $(element).text(value);
     }
 };

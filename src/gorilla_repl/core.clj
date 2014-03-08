@@ -13,6 +13,7 @@
             [ring.util.response :as res]
             [clojure.tools.nrepl.server :as nrepl-server]
             [gorilla-repl.websocket-relay :as ws-relay]
+            [gorilla-repl.render-values-mw :as render-mw]
             [complete.core :as complete])
   (:gen-class))
 
@@ -77,7 +78,8 @@
   (println "Gorilla-REPL.")
   ;; start the app - first start the nREPL server, and then the http server.
   (let [nrepl-requested-port (or (:nrepl-port conf) 0) ;; auto-select port if none requested
-        nrepl (nrepl-server/start-server :port nrepl-requested-port)
+        nrepl (nrepl-server/start-server :port nrepl-requested-port
+                                         :handler (nrepl-server/default-handler #'render-mw/render-values))
         nrepl-port (:port nrepl)
         _ (println "Started nREPL server on port" nrepl-port)
         _ (ws-relay/connect-to-nrepl nrepl-port)
