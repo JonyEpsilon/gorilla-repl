@@ -17,15 +17,20 @@
 (extend-type Object
   Renderable
   (render [self]
-    {:type :raw :content (with-out-str (pr self)) :value self}))
+    {:type :html :content (with-out-str (pr self)) :value (with-out-str (pr self))}))
 
 ;; nil values are a distinct thing of their own
 (extend-type nil
   Renderable
   (render [self]
-    {:type :raw :content "nil" :value nil}))
+    {:type :html :content "<span>nil</span>" :value "nil"}))
 
 (extend-type clojure.lang.PersistentVector
   Renderable
   (render [self]
-    {:type :html-template :markup "[{{#each children}}]" :children (map render self) :value self}))
+    {:type :list-like
+     :open "["
+     :close "]"
+     :separator " "
+     :items (map render self)
+     :value (with-out-str (pr self))}))

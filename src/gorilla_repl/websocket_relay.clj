@@ -18,11 +18,13 @@
   "Connect to the nREPL server and store the connection."
   [port]
   (let [new-conn (nrepl/connect :port port)]
-  (swap! conn (fn [x] new-conn))))
+    (swap! conn (fn [x] new-conn))))
 
 (defn- send-json-over-ws
   [channel data]
-  (server/send! channel (json/generate-string data)))
+  (let [json-data (json/generate-string data)]
+    #_(println json-data)
+    (server/send! channel json-data)))
 
 (defn- process-message
   [channel data]
