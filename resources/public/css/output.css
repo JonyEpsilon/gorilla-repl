@@ -1,0 +1,35 @@
+/*
+ * This file is part of gorilla-repl. Copyright (C) 2014-, Jony Hudson.
+ *
+ * gorilla-repl is licenced to you under the MIT licence. See the file LICENCE.txt for full details.
+ */
+
+.clj-vector {color: blue}
+.clj-raw {color: red}
+.clj-nil {color: grey}
+.clj-lazy-seq {color: lightgreen}
+.clj-list {color: green}
+.clj-symbol {color: orange}
+
+.output table {
+    border-width: 1px;
+    border-color: #666;
+    border-collapse: collapse;
+}
+.output th {
+    font-family: 'Arvo', serif;
+    color: #4682b4;
+    border-width: 1px;
+    padding: 0.5em;
+    border-style: solid;
+    border-color: #666;
+    background-color: #ddd;
+}
+
+.output td {
+    border-width: 1px;
+    padding: 1em;
+    border-style: solid;
+    border-color: #666;
+    background-color: white;
+}

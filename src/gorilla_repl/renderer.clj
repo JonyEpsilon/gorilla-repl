@@ -10,6 +10,15 @@
 (defprotocol Renderable
   (render [self]))
 
+;; Helper functions
+(defn list-like
+  [data open close separator]
+  {:type :list-like
+   :open open
+   :close close
+   :separator separator
+   :items data
+   :value (with-out-str (pr data))})
 
 ;; ** Renderers for basic Clojure forms **
 
@@ -25,12 +34,39 @@
   (render [self]
     {:type :html :content "<span class='clj-nil'>nil</span>" :value "nil"}))
 
+(extend-type clojure.lang.Symbol
+  Renderable
+  (render [self]
+    {:type :html
+     :content (str "<span class='clj-symbol'>" (with-out-str (pr self)) "</span>")
+     :value (with-out-str (pr self))}))
+
 (extend-type clojure.lang.PersistentVector
   Renderable
   (render [self]
     {:type :list-like
      :open "<span class='clj-vector'>[<span>"
      :close "<span class='clj-vector'>]</span>"
+     :separator " "
+     :items (map render self)
+     :value (with-out-str (pr self))}))
+
+(extend-type clojure.lang.LazySeq
+  Renderable
+  (render [self]
+    {:type :list-like
+     :open "<span class='clj-lazy-seq'>(<span>"
+     :close "<span class='clj-lazy-seq'>)</span>"
+     :separator " "
+     :items (map render self)
+     :value (with-out-str (pr self))}))
+
+(extend-type clojure.lang.PersistentList
+  Renderable
+  (render [self]
+    {:type :list-like
+     :open "<span class='clj-list'>(<span>"
+     :close "<span class='clj-list'>)</span>"
      :separator " "
      :items (map render self)
      :value (with-out-str (pr self))}))

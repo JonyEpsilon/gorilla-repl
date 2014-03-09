@@ -4,7 +4,8 @@
  * gorilla-repl is licenced to you under the MIT licence. See the file LICENCE.txt for full details.
  */
 
-// Takes the REPL output and views it.
+// Takes the REPL output and views it. The real work is handed over to the renderer, the outputViewer handles parsing
+// the data, errors etc.
 
 ko.bindingHandlers.outputViewer = {
     init: function (element, valueAccessor, allBindingsAccessor, viewModel) {
@@ -25,6 +26,7 @@ ko.bindingHandlers.outputViewer = {
             // TODO: would be better not to have to do this!
             var parsedValue = JSON.parse(JSON.parse(value));
             console.log(parsedValue);
+            // The renderer does all of the real work
             render(parsedValue, element, errorHandler);
         }
         else $(element).html("");

@@ -9,7 +9,7 @@
 var render = function (data, element, errorCallback) {
     var callbackQueue = [];
     var htmlString = renderPart(data, callbackQueue, errorCallback);
-    $(element).html(htmlString);
+    $(element).html("<pre>" + htmlString + "</pre>");
     _.each(callbackQueue, function (callback) {callback()});
 };
 
@@ -38,9 +38,7 @@ var renderListLike = function (data, callbackQueue, errorCallback) {
     // first of all render the items
     var renderedItems = data.items.map(function (x) {return renderPart(x, callbackQueue, errorCallback)});
     // and then assemble the list
-    var html = data.open;
-    _.map(renderedItems, function (item) {html = html + item + data.separator});
-    return html + data.close;
+    return data.open + renderedItems.join(data.separator) + data.close;
 };
 
 var renderVega = function (data, callbackQueue, errorCallback) {
@@ -67,7 +65,7 @@ var renderVega = function (data, callbackQueue, errorCallback) {
         });
     });
 
-    return "<span id='" + uuid + "'></span>";
+    return "<span class='vega-span' id='" + uuid + "'></span>";
 };
 
 var renderLatex = function (data, callbackQueue, errorCallback) {
@@ -78,5 +76,5 @@ var renderLatex = function (data, callbackQueue, errorCallback) {
         MathJax.Hub.Queue(["Typeset", MathJax.Hub, uuid]);
     });
 
-    return "<span id='" + uuid + "'>@@" + data.content + "@@</span>";
+    return "<span class='latex-span' id='" + uuid + "'>@@" + data.content + "@@</span>";
 };

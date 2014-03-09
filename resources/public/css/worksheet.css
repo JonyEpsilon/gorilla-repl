@@ -182,8 +182,8 @@ div.console-text pre {
 }
 
 div.vega {
-    width: 100%;
-    text-align: center;
+    vertical-align: middle;
+    display: inline-block;
 }
 
 canvas.marks {
