@@ -6,59 +6,77 @@
 
 
 /* Takes a data structure representing the output data and renders it in to the given element. */
-var render = function (data, element) {
+var render = function (data, element, errorCallback) {
     var callbackQueue = [];
-    var htmlString = renderPart(data, callbackQueue);
+    var htmlString = renderPart(data, callbackQueue, errorCallback);
     $(element).html(htmlString);
-    setTimeout(function () {
-      _.each(callbackQueue, function (callback) {callback()});
-    }, 1000);
+    _.each(callbackQueue, function (callback) {callback()});
 };
 
 
-var renderPart = function (data, callbackQueue) {
+var renderPart = function (data, callbackQueue, errorCallback) {
 
     switch (data.type) {
         case "html":
-            return renderHTML(data);
+            return renderHTML(data, callbackQueue, errorCallback);
         case "list-like":
-            return renderListLike(data);
+            return renderListLike(data, callbackQueue, errorCallback);
         case "vega":
-            return renderVega(data, callbackQueue);
+            return renderVega(data, callbackQueue, errorCallback);
+        case "latex":
+            return renderLatex(data, callbackQueue, errorCallback);
     }
 
     return "Unknown render type";
 };
 
-var renderHTML = function (data) {
+var renderHTML = function (data, callbackQueue, errorCallback) {
     return data.content;
 };
 
-var renderListLike = function (data) {
+var renderListLike = function (data, callbackQueue, errorCallback) {
     // first of all render the items
-    var renderedItems = data.items.map(renderPart);
+    var renderedItems = data.items.map(function (x) {return renderPart(x, callbackQueue, errorCallback)});
     // and then assemble the list
     var html = data.open;
     _.map(renderedItems, function (item) {html = html + item + data.separator});
     return html + data.close;
 };
 
-var renderVega = function (data, callbackQueue) {
+var renderVega = function (data, callbackQueue, errorCallback) {
 
     var uuid = UUID.generate();
+
+    // for some reason, Vega will sometimes try and pop up an alert if there's an error, which is not a
+    // great user experience. Here we patch the error handling function to re-route any generated message
+    // to the segment.
+    vg.error = function (msg) {
+        errorCallback("Vega error (js): " + msg);
+    };
 
     callbackQueue.push(function () {
         vg.parse.spec(data.content, function (chart) {
             try {
-                var element = $("#" + uuid).get();
+                var element = $("#" + uuid).get()[0];
                 chart({el: element, renderer: 'svg'}).update();
             } catch (e) {
                 // we'll end up here if vega throws an error. We try and route this error back to the
                 // segment so the user has an idea of what's going on.
-                console.log("Vega error (js): " + e.message);
+                errorCallback("Vega error (js): " + e.message);
             }
         });
     });
 
-    return "<div id='" + uuid + "'></div>";
+    return "<span id='" + uuid + "'></span>";
+};
+
+var renderLatex = function (data, callbackQueue, errorCallback) {
+
+    var uuid = UUID.generate();
+
+    callbackQueue.push(function () {
+        MathJax.Hub.Queue(["Typeset", MathJax.Hub, uuid]);
+    });
+
+    return "<span id='" + uuid + "'>@@" + data.content + "@@</span>";
 };

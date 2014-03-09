@@ -5,7 +5,7 @@
 ;;; Functions for constructing vega specs. Many of the defaults are adapted from the vega examples.
 
 (ns gorilla-plot.vega
-  (:require [gorilla-repl.renderer :as rend]))
+  (:require [gorilla-repl.vega :as vega]))
 
 (defn container
   [plot-size aspect-ratio]
@@ -121,7 +121,7 @@
 
 (defn show-vega
   [g]
-  (rend/vega g))
+  (vega/vega g))
 
 (defn strip-vega
   [g]

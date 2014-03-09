@@ -13,11 +13,20 @@ ko.bindingHandlers.outputViewer = {
 
         // get the value to display
         var value = ko.utils.unwrapObservable(valueAccessor()());
+
+        // to handle any errors, we need to know the ID of the segment that this output belongs to
+        var segID = allBindingsAccessor.get('segmentID');
+        // the errorHandler will route error messages to the segment's error div
+        var errorHandler = function (msg) {
+            eventBus.trigger("output:output-error", {segmentID: segID, error: msg});
+        };
+
         if (value !== "") {
             // TODO: would be better not to have to do this!
             var parsedValue = JSON.parse(JSON.parse(value));
             console.log(parsedValue);
-            render(parsedValue, element);
+            render(parsedValue, element, errorHandler);
         }
+        else $(element).html("");
     }
 };

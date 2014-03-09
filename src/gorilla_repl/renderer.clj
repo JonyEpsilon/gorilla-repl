@@ -23,23 +23,14 @@
 (extend-type nil
   Renderable
   (render [self]
-    {:type :html :content "<span>nil</span>" :value "nil"}))
+    {:type :html :content "<span class='clj-nil'>nil</span>" :value "nil"}))
 
 (extend-type clojure.lang.PersistentVector
   Renderable
   (render [self]
     {:type :list-like
-     :open "["
-     :close "]"
+     :open "<span class='clj-vector'>[<span>"
+     :close "<span class='clj-vector'>]</span>"
      :separator " "
      :items (map render self)
      :value (with-out-str (pr self))}))
-
-(defrecord Vega [content])
-
-(defn vega [content] (Vega. content))
-
-(extend-type Vega
-  Renderable
-  (render [self]
-    {:type :vega :content (:content self)}))
