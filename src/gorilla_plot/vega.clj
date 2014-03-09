@@ -4,7 +4,8 @@
 
 ;;; Functions for constructing vega specs. Many of the defaults are adapted from the vega examples.
 
-(ns gorilla-plot.vega)
+(ns gorilla-plot.vega
+  (:require [gorilla-repl.renderer :as rend]))
 
 (defn container
   [plot-size aspect-ratio]
@@ -117,12 +118,11 @@
                                     "strokeOpacity" {"value" opacity}
                                     }}}]})
 
+
 (defn show-vega
-  "Wraps the given data with the magic vega content-type tag."
   [g]
-  {:gorilla-repl.types/vega g})
+  (rend/vega g))
 
 (defn strip-vega
-  "Removes the vega content-type tag"
   [g]
-  (:gorilla-repl.types/vega g))
+  (:content g))

@@ -34,3 +34,12 @@
      :separator " "
      :items (map render self)
      :value (with-out-str (pr self))}))
+
+(defrecord Vega [content])
+
+(defn vega [content] (Vega. content))
+
+(extend-type Vega
+  Renderable
+  (render [self]
+    {:type :vega :content (:content self)}))
