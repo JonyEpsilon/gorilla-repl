@@ -10,6 +10,7 @@
 .clj-lazy-seq {color: lightgreen}
 .clj-list {color: green}
 .clj-symbol {color: orange}
+.clj-long {color: blue}
 
 .output table {
     border-width: 1px;
