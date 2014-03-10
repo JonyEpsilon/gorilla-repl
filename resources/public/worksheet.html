@@ -95,7 +95,7 @@
         </div>
         <div class="error-text" data-bind="text: errorText, visible: errorText() !== ''"></div>
         <div class="console-text" data-bind="visible: consoleText() !== ''">
-            <pre><code data-bind="html: consoleText"></code></pre>
+            <pre><code data-bind="text: consoleText"></code></pre>
         </div>
         <div class="output"
              data-bind="visible: (output() != ''), outputViewer: output, segmentID: id, css: {'browser-muted': warningIndicator}">
