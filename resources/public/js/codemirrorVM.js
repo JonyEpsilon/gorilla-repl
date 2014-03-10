@@ -106,7 +106,7 @@ ko.bindingHandlers.codemirror = {
                     // only check on cursor key keydowns
                     // we stop() the cursor events, as we don't want them reaching the worksheet. We explicity
                     // generate events when the cursor should leave the segment.
-                    if (event.type === 'keydown') {
+                    if (event.type === 'keydown' && !event.shiftKey) {
                         // up
                         var curs;
                         if (event.keyCode === 38) {
@@ -119,7 +119,7 @@ ko.bindingHandlers.codemirror = {
                             event.stop();
                         }
                         // left
-                        if (event.keyCode === 37) {
+                        if (event.keyCode === 37 && !event.shiftKey) {
                             // get the current cursor position
                             curs = editor.getCursor();
                             // check for first line, start position
@@ -127,7 +127,7 @@ ko.bindingHandlers.codemirror = {
                             event.stop();
                         }
                         // down
-                        if (event.keyCode === 40) {
+                        if (event.keyCode === 40 && !event.shiftKey) {
                             // get the current cursor position
                             curs = editor.getCursor();
                             // check for last line
@@ -136,7 +136,7 @@ ko.bindingHandlers.codemirror = {
                             event.stop();
                         }
                         // right
-                        if (event.keyCode === 39) {
+                        if (event.keyCode === 39 && !event.shiftKey) {
                             // get the current cursor position
                             curs = editor.getCursor();
                             // check for last line, last position

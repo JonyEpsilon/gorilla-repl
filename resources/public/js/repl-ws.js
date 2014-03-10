@@ -44,7 +44,12 @@ var repl = (function () {
         };
         self.ws.onopen = function () {
             self.ws.send(JSON.stringify({"op": "clone"}));
-        }
+        };
+
+        // If the websocket connection dies we're done for, message the app to tell it so.
+        self.ws.onclose = function () {
+            eventBus.trigger("app:connection-lost");
+        };
     };
 
 
