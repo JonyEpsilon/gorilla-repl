@@ -24,10 +24,16 @@ ko.bindingHandlers.outputViewer = {
 
         if (value !== "") {
             // TODO: would be better not to have to do this!
-            var parsedValue = JSON.parse(JSON.parse(value));
-            console.log(parsedValue);
-            // The renderer does all of the real work
-            render(parsedValue, element, errorHandler);
+            try {
+                var parsedValue = JSON.parse(JSON.parse(value));
+                console.log(parsedValue);
+                // The renderer does all of the real work
+                render(parsedValue, element, errorHandler);
+            } catch (e) {
+                // as a fallback, we display the value directly if we can't parse it as json. This also at least
+                // allows worksheets that pre-date the new renderer to load, even if they look ugly!
+                $(element).text(value);
+            }
         }
         else $(element).html("");
     }
