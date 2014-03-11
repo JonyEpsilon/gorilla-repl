@@ -23,9 +23,8 @@ ko.bindingHandlers.outputViewer = {
         };
 
         if (value !== "") {
-            // TODO: would be better not to have to do this!
             try {
-                var parsedValue = JSON.parse(JSON.parse(value));
+                var parsedValue = JSON.parse(value);
                 console.log(parsedValue);
                 // The renderer does all of the real work
                 render(parsedValue, element, errorHandler);

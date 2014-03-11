@@ -24,6 +24,11 @@
                                      (send [this resp]
                                        (.send transport
                                               (if-let [[_ v] (find resp :value)]
+                                                ;; we have to transform the rendered value to JSON here, as otherwise
+                                                ;; it will be pr'ed by the pr-values middleware (which comes with the
+                                                ;; eval middleware), meaning that it won't be mapped to JSON when the
+                                                ;; whole message is mapped to JSON later. This has the unfortunate side
+                                                ;; effect that the string will end up double-escaped.
                                                 (assoc resp :value (json/generate-string (renderer/render v)))
                                                 resp))
                                        this))))))

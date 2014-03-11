@@ -245,7 +245,18 @@ var worksheet = function () {
     addEventHandler("evaluator:value-response", function (e, d) {
         var segID = d.segmentID;
         var seg = self.getSegmentForID(segID);
-        seg.output(d.value);
+        try {
+            // If you're paying attention, you'll notice that the value gets JSON.parse'd twice: once here, and again
+            // in the output viewer. This is a workaround for a problem in the rendering nREPL middleware that results
+            // in the string begin double escaped. This round of parsing should just unescape the string, leaving a
+            // string that will JSON.parse to the object. This round of unescaping is done here in order that the
+            // value associated with the segment (and hence saved in the worksheet) is not double escaped.
+            var parsedValue = JSON.parse(d.value);
+            seg.output(parsedValue);
+        } catch (e) {
+            // if anything goes wrong, fall back to displaying the raw response.
+            seg.output(d.value);
+        }
     });
 
     addEventHandler("evaluator:console-response", function (e, d) {
