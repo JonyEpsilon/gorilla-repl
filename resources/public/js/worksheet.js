@@ -106,11 +106,6 @@ var worksheet = function () {
 
     self.deleteSegment = function (index) {
         self.segments.splice(index, 1);
-        // after deletion, should activate segment after, unless it was the last segment, or there are no segments
-        // remaining.
-        if (self.segments().length == 0) return;
-        if (index == self.segments().length) self.activateSegment(self.segments().length - 1, true);
-        else self.activateSegment(index, false);
     };
 
     // an offset of 1 inserts below the active segment, 0 above.
@@ -186,11 +181,27 @@ var worksheet = function () {
 
     // * Manipulating segments *
 
+    // this is called if the delete command is issued ...
     addEventHandler("worksheet:delete", function () {
         // if there's only one segment, don't delete it
         if (self.segments().length == 1) return;
-        var deleteIndex = self.activeSegmentIndex;
-        self.deleteSegment(deleteIndex);
+        var index = self.activeSegmentIndex;
+        self.deleteSegment(index);
+        // if we deleted the last segment, select the one above.
+        if (index == self.segments().length) self.activateSegment(self.segments().length - 1, false);
+        // otherwise, select the one below.
+        else self.activateSegment(index, true);
+    });
+
+    // ... whereas this one is called if backspace is pressed in an empty segment.
+    addEventHandler("worksheet:deleteBackspace", function () {
+        var index = self.activeSegmentIndex;
+        // backspace on empty does nothing to the first segment.
+        if (index == 0) return;
+        self.deleteSegment(index);
+        // select the end of the previous segment
+        self.activateSegment(index - 1, false);
+
     });
 
     addEventHandler("worksheet:newBelow", function () {

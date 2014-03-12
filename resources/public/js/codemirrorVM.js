@@ -72,7 +72,7 @@ var codemirrorVM = function (id, initialContents, contentType) {
     };
 
     self.notifyBackspaceOnEmpty = function () {
-        eventBus.trigger("command:worksheet:delete")
+        eventBus.trigger("worksheet:deleteBackspace")
     };
 
     self.notifyClicked = function () {
