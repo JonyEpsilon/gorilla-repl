@@ -19,6 +19,8 @@ var renderPart = function (data, callbackQueue, errorCallback) {
     switch (data.type) {
         case "html":
             return renderHTML(data, callbackQueue, errorCallback);
+        case "text":
+            return renderText(data, callbackQueue, errorCallback);
         case "list-like":
             return renderListLike(data, callbackQueue, errorCallback);
         case "vega":
@@ -32,6 +34,10 @@ var renderPart = function (data, callbackQueue, errorCallback) {
 
 var renderHTML = function (data, callbackQueue, errorCallback) {
     return data.content;
+};
+
+var renderText = function (data, callbackQueue, errorCallback) {
+    return _.escape(data.content);
 };
 
 var renderListLike = function (data, callbackQueue, errorCallback) {

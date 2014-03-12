@@ -41,6 +41,13 @@
      :content (str "<span class='clj-symbol'>" (with-out-str (pr self)) "</span>")
      :value (with-out-str (pr self))}))
 
+(extend-type java.lang.String
+  Renderable
+  (render [self]
+    {:type :text
+     :content self
+     :value self}))
+
 (extend-type java.lang.Long
   Renderable
   (render [self]
