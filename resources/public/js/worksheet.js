@@ -69,7 +69,7 @@ var worksheet = function () {
             }).join('\n');
     };
 
-    // ** Segment management **
+    // ** Segment management helpers **
 
     self.segmentIndexForID = function (id) {
         // so, this is not perhaps the most efficient way you could think of doing this, but for reasonable conditions
@@ -112,6 +112,18 @@ var worksheet = function () {
         if (index == self.segments().length) self.activateSegment(self.segments().length - 1, true);
         else self.activateSegment(index, false);
     };
+
+    // an offset of 1 inserts below the active segment, 0 above.
+    self.insertNewSegment = function (offset) {
+        // do nothing if no segment is active
+        if (self.activeSegmentIndex == null) return;
+        var seg = codeSegment("");
+        var currentIndex = self.activeSegmentIndex;
+        self.deactivateSegment(currentIndex);
+        self.segments.splice(currentIndex + offset, 0, seg);
+        self.activateSegment(currentIndex + offset);
+    };
+
 
     // ** Event handlers **
     // TODO: this is slightly nasty. The event handlers close over worksheet properties, so need to be removed and re-
@@ -166,13 +178,11 @@ var worksheet = function () {
     });
 
     addEventHandler("worksheet:newBelow", function () {
-        // do nothing if no segment is active
-        if (self.activeSegmentIndex == null) return;
-        var seg = codeSegment("");
-        var currentIndex = self.activeSegmentIndex;
-        self.deactivateSegment(currentIndex);
-        self.segments.splice(currentIndex + 1, 0, seg);
-        self.activateSegment(currentIndex + 1);
+        self.insertNewSegment(1);
+    });
+
+    addEventHandler("worksheet:newAbove", function () {
+        self.insertNewSegment(0);
     });
 
     // * Changing segment types *

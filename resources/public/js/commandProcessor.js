@@ -107,6 +107,14 @@ commandList = [
         }
     },
     {
+        name: "command:worksheet:newAbove",
+        desc: "Create a new segment above the highlighted segment.",
+        showInMenu: true,
+        kb: combo('g', 'b'),
+        action: function () {
+            eventBus.trigger("worksheet:newAbove");
+        }
+    },    {
         name: "command:worksheet:changeToFree",
         desc: "Convert the highlighted segment to a markdown segment.",
         showInMenu: true,
