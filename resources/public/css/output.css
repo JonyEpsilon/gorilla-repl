@@ -4,19 +4,19 @@
  * gorilla-repl is licenced to you under the MIT licence. See the file LICENCE.txt for full details.
  */
 
-.clj-vector {color: blue}
+.clj-vector {color: #1C005A}
 .clj-raw {color: red}
 .clj-nil {color: grey}
 .clj-lazy-seq {color: lightgreen}
 .clj-list {color: green}
 .clj-map {color: purple}
 .clj-set {color: brown}
-.clj-symbol {color: orange}
+.clj-symbol {color: steelblue}
 .clj-keyword {color: blue}
 .clj-var {color: deeppink}
-.clj-atom {color: #4682b4}
-.clj-agent {color: #4682b4}
-.clj-ref {color: #4682b4}
+.clj-atom {color: darkorange}
+.clj-agent {color: darkorange}
+.clj-ref {color: darkorange}
 .clj-string {color: grey}
 .clj-char {color: dimgrey}
 .clj-long {color: blue}
