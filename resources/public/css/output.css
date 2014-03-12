@@ -10,7 +10,16 @@
 .clj-lazy-seq {color: lightgreen}
 .clj-list {color: green}
 .clj-symbol {color: orange}
+.clj-keyword {color: blue}
+.clj-var {color: deeppink}
+.clj-atom {color: #4682b4}
+.clj-agent {color: #4682b4}
+.clj-ref {color: #4682b4}
+.clj-string {color: grey}
 .clj-long {color: blue}
+.clj-double {color: darkgreen}
+.clj-bigint {color: blue; font-weight: bold}
+.clj-bigdecimal {color: darkgreen; font-weight: bold}
 
 .output table {
     border-width: 1px;

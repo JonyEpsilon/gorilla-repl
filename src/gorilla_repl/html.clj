@@ -13,4 +13,4 @@
 (extend-type Html
   renderer/Renderable
   (render [self]
-    {:type :html :content (:content self) :value (with-out-str (pr self))}))
+    {:type :html :content (:content self) :value (pr-str self)}))

@@ -12,4 +12,4 @@
 (extend-type Vega
   renderer/Renderable
   (render [self]
-    {:type :vega :content (:content self)}))
+    {:type :vega :content (:content self) :value (pr-str self)}))

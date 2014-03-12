@@ -12,4 +12,4 @@
 (extend-type Latex
   renderer/Renderable
   (render [self]
-    {:type :latex :content (:content self)}))
+    {:type :latex :content (:content self) :value (pr-str self)}))

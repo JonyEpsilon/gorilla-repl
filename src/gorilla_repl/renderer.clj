@@ -2,58 +2,101 @@
 ;;;;
 ;;;; gorilla-repl is licenced to you under the MIT licence. See the file LICENCE.txt for full details.
 
-(ns gorilla-repl.renderer)
+(ns gorilla-repl.renderer
+  (:require [clojure.string :as string]))
 
-;; This is the protocol that a type must implement if it wants to customise its rendering in Gorilla. It defines a
-;; single function, render, that should transform the value into a value that the front-end's renderer can display.
+;;; This is the protocol that a type must implement if it wants to customise its rendering in Gorilla. It defines a
+;;; single function, render, that should transform the value into a value that the front-end's renderer can display.
 ;; TODO: move this out to its own project?
 (defprotocol Renderable
   (render [self]))
 
-;; Helper functions
-(defn list-like
-  [data open close separator]
-  {:type :list-like
-   :open open
-   :close close
-   :separator separator
-   :items data
-   :value (with-out-str (pr data))})
+;;; Helper functions
 
-;; ** Renderers for basic Clojure forms **
+;; Make a string safe to display as HTML
+(defn- escape-html
+  [str]
+  ;; this list of HTML replacements taken from underscore.js
+  ;; https://github.com/jashkenas/underscore
+  (string/escape str {\& "&amp;", \< "&lt;", \> "&gt;", \" "&quot;", \' "&#x27;"}))
+
+;; A lot of things render to an HTML span, with a class to mark the type of thing. This helper constructs the rendered
+;; value in that case.
+(defn- span-render
+  [thing class]
+  {:type :html
+   :content (str "<span class='" class "'>" (escape-html (pr-str thing)) "</span>")
+   :value (pr-str thing)})
+
+
+;;; ** Renderers for basic Clojure forms **
 
 ;; A default, catch-all renderer that takes anything we don't know what to do with and calls str on it.
 (extend-type Object
   Renderable
   (render [self]
-    {:type :html :content (with-out-str (pr self)) :value (with-out-str (pr self))}))
+    (span-render self "clj-unkown")))
 
 ;; nil values are a distinct thing of their own
 (extend-type nil
   Renderable
   (render [self]
-    {:type :html :content "<span class='clj-nil'>nil</span>" :value "nil"}))
+    (span-render self "clj-nil")))
 
 (extend-type clojure.lang.Symbol
   Renderable
   (render [self]
-    {:type :html
-     :content (str "<span class='clj-symbol'>" (with-out-str (pr self)) "</span>")
-     :value (with-out-str (pr self))}))
+    (span-render self "clj-symbol")))
+
+(extend-type clojure.lang.Keyword
+  Renderable
+  (render [self]
+    (span-render self "clj-keyword")))
+
+(extend-type clojure.lang.Var
+  Renderable
+  (render [self]
+    (span-render self "clj-var")))
+
+(extend-type clojure.lang.Atom
+  Renderable
+  (render [self]
+    (span-render self "clj-atom")))
+
+(extend-type clojure.lang.Agent
+  Renderable
+  (render [self]
+    (span-render self "clj-agent")))
+
+(extend-type clojure.lang.Ref
+  Renderable
+  (render [self]
+    (span-render self "clj-ref")))
 
 (extend-type java.lang.String
   Renderable
   (render [self]
-    {:type :text
-     :content self
-     :value self}))
+    (span-render self "clj-string")))
 
 (extend-type java.lang.Long
   Renderable
   (render [self]
-    {:type :html
-     :content (str "<span class='clj-long'>" (with-out-str (pr self)) "</span>")
-     :value (with-out-str (pr self))}))
+    (span-render self "clj-long")))
+
+(extend-type java.lang.Double
+  Renderable
+  (render [self]
+    (span-render self "clj-double")))
+
+(extend-type clojure.lang.BigInt
+  Renderable
+  (render [self]
+    (span-render self "clj-bigint")))
+
+(extend-type java.math.BigDecimal
+  Renderable
+  (render [self]
+    (span-render self "clj-bigdecimal")))
 
 
 (extend-type clojure.lang.PersistentVector
@@ -64,7 +107,7 @@
      :close "<span class='clj-vector'>]</span>"
      :separator " "
      :items (map render self)
-     :value (with-out-str (pr self))}))
+     :value (pr-str self)}))
 
 (extend-type clojure.lang.LazySeq
   Renderable
@@ -74,7 +117,7 @@
      :close "<span class='clj-lazy-seq'>)</span>"
      :separator " "
      :items (map render self)
-     :value (with-out-str (pr self))}))
+     :value (pr-str self)}))
 
 (extend-type clojure.lang.PersistentList
   Renderable
@@ -84,4 +127,4 @@
      :close "<span class='clj-list'>)</span>"
      :separator " "
      :items (map render self)
-     :value (with-out-str (pr self))}))
+     :value (pr-str self)}))
