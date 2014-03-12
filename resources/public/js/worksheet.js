@@ -31,8 +31,19 @@ var worksheetWrapper = function (worksheet) {
         setTimeout(function () {self.status("");}, millis);
     };
 
-    self.showStatusMessage = function (message) {
-        self.status(message);
+    self.showDisconnectionAlert = function () {
+        vex.dialog.alert({
+            message: "<p>The connection to the server has been lost. This window is now dead! Hit OK to reload the " +
+                "browser window once the server is running again.</p>" +
+                "<p>In case you didn't manage to save the worksheet, " +
+                "the contents are below for your convenience :-)</p>" +
+                "<div class='last-chance'><textarea class='last-chance'>" + self.worksheet().toClojure()
+                + "</textarea></div>",
+            className: 'vex-theme-plain',
+            callback: function () {
+                location.reload();
+            }
+        });
     };
 
     return self;

@@ -111,7 +111,7 @@ var app = (function () {
     });
 
     eventBus.on("app:connection-lost", function () {
-        self.wrapper.showStatusMessage("Connection to REPL lost. This session is dead!");
+        self.wrapper.showDisconnectionAlert();
     });
 
     return self;
