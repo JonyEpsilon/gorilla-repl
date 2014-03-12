@@ -263,9 +263,7 @@ var worksheet = function () {
         var segID = d.segmentID;
         var seg = self.getSegmentForID(segID);
         var oldText = seg.consoleText();
-        // note that no escaping is done to console strings - you could cause havoc by returning inappropriate HTML
-        // if you were so minded.
-        seg.consoleText(oldText + d.out);
+        seg.consoleText(oldText + _.escape(d.out));
     });
 
     addEventHandler("evaluator:done-response", function (e, d) {
