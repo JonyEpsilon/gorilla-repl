@@ -65,7 +65,7 @@ var renderVega = function (data, callbackQueue, errorCallback) {
         });
     });
 
-    return "<center><span class='vega-span' id='" + uuid + "'></span></center>";
+    return "<span class='vega-span' id='" + uuid + "'></span>";
 };
 
 var renderLatex = function (data, callbackQueue, errorCallback) {
