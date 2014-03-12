@@ -26,24 +26,19 @@
 .clj-ratio {color: darkblue}
 
 .output table {
-    border-width: 1px;
-    border-color: #666;
+    border: 1px #666;
     border-collapse: collapse;
 }
 .output th {
     font-family: 'Arvo', serif;
     color: #4682b4;
-    border-width: 1px;
     padding: 0.5em;
-    border-style: solid;
-    border-color: #666;
+    border: 1px solid #666;
     background-color: #ddd;
 }
 
 .output td {
-    border-width: 1px;
     padding: 1em;
-    border-style: solid;
-    border-color: #666;
+    border: 1px solid #666;
     background-color: white;
 }
