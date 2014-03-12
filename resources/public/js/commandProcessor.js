@@ -133,6 +133,24 @@ commandList = [
         }
     },
     {
+        name: "command:worksheet:moveUp",
+        desc: "Move the highlighted segment up the worksheet.",
+        showInMenu: true,
+        kb: combo('g', 'u'),
+        action: function () {
+            eventBus.trigger("worksheet:moveUp");
+        }
+    },
+    {
+        name: "command:worksheet:moveDown",
+        desc: "Move the highlighted segment down the worksheet.",
+        showInMenu: true,
+        kb: combo('g', 'd'),
+        action: function () {
+            eventBus.trigger("worksheet:moveDown");
+        }
+    },
+    {
         name: "command:app:open",
         desc: "Load a worksheet.",
         showInMenu: true,

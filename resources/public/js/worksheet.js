@@ -124,6 +124,22 @@ var worksheet = function () {
         self.activateSegment(currentIndex + offset);
     };
 
+    self.moveSegment = function (up) {
+        var index = self.activeSegmentIndex;
+        if (index == null) return;
+        if (up) {
+            // can't move top segment up
+            if (index == 0) return;
+        } else {
+            // or bottom segment down
+            if (index == self.segments().length -1) return;
+        }
+        self.deactivateSegment(index);
+        var offset = up ? -1 : 1;
+        self.segments.splice(index + offset, 0, self.segments.splice(index, 1)[0]);
+        self.activateSegment(index + offset);
+    };
+
 
     // ** Event handlers **
     // TODO: this is slightly nasty. The event handlers close over worksheet properties, so need to be removed and re-
@@ -183,6 +199,14 @@ var worksheet = function () {
 
     addEventHandler("worksheet:newAbove", function () {
         self.insertNewSegment(0);
+    });
+
+    addEventHandler("worksheet:moveUp", function () {
+        self.moveSegment(true);
+    });
+
+    addEventHandler("worksheet:moveDown", function () {
+        self.moveSegment(false);
     });
 
     // * Changing segment types *
