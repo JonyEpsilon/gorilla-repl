@@ -3,13 +3,13 @@
 ;;;; gorilla-repl is licenced to you under the MIT licence. See the file LICENCE.txt for full details.
 
 (ns gorilla-repl.latex
-  (:require [gorilla-repl.renderer :as renderer]))
+  (:require [gorilla-renderable.core :as render]))
 
 (defrecord Latex [content])
 
 (defn latex [content] (Latex. content))
 
 (extend-type Latex
-  renderer/Renderable
+  render/Renderable
   (render [self]
     {:type :latex :content (:content self) :value (pr-str self)}))

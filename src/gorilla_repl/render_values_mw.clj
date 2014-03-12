@@ -5,7 +5,7 @@
 (ns gorilla-repl.render-values-mw
   (:require [clojure.tools.nrepl.transport :as transport]
             [clojure.tools.nrepl.middleware :as middleware]
-            [gorilla-repl.renderer :as renderer]
+            [gorilla-renderable.core :as render]
             [cheshire.core :as json])
   (:import clojure.tools.nrepl.transport.Transport))
 
@@ -29,7 +29,7 @@
                                                 ;; eval middleware), meaning that it won't be mapped to JSON when the
                                                 ;; whole message is mapped to JSON later. This has the unfortunate side
                                                 ;; effect that the string will end up double-escaped.
-                                                (assoc resp :value (json/generate-string (renderer/render v)))
+                                                (assoc resp :value (json/generate-string (render/render v)))
                                                 resp))
                                        this))))))
 

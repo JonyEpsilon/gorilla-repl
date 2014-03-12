@@ -3,7 +3,7 @@
 ;;;; gorilla-repl is licenced to you under the MIT licence. See the file LICENCE.txt for full details.
 
 (ns gorilla-repl.table
-  (:require [gorilla-repl.renderer :as renderer]))
+  (:require [gorilla-renderable.core :as render]))
 
 (defrecord Table [contents column-names])
 
@@ -20,11 +20,11 @@
    :value (pr-str data)})
 
 (extend-type Table
-  renderer/Renderable
+  render/Renderable
   (render [self]
     (let [contents (:contents self)
           cols (:column-names self)
-          heading (list-like (map renderer/render cols) "<tr><th>" "</th></tr>" "</th><th>")
-          rows (map (fn [r] (list-like (map renderer/render r) "<tr><td>" "</td></tr>" "</td><td>")) contents)
+          heading (list-like (map render/render cols) "<tr><th>" "</th></tr>" "</th><th>")
+          rows (map (fn [r] (list-like (map render/render r) "<tr><td>" "</td></tr>" "</td><td>")) contents)
           body (list-like (conj rows heading) "<center><table>" "</table></center>" "\n")]
       body)))

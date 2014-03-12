@@ -3,7 +3,7 @@
 ;;;; gorilla-repl is licenced to you under the MIT licence. See the file LICENCE.txt for full details.
 
 (ns gorilla-repl.html
-  (:require [gorilla-repl.renderer :as renderer]))
+  (:require [gorilla-renderable.core :as render]))
 
 (defrecord Html [content])
 
@@ -11,6 +11,6 @@
   (Html. content))
 
 (extend-type Html
-  renderer/Renderable
+  render/Renderable
   (render [self]
     {:type :html :content (:content self) :value (pr-str self)}))

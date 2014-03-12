@@ -3,13 +3,13 @@
 ;;;; gorilla-repl is licenced to you under the MIT licence. See the file LICENCE.txt for full details.
 
 (ns gorilla-repl.vega
-  (:require [gorilla-repl.renderer :as renderer]))
+  (:require [gorilla-renderable.core :as render]))
 
 (defrecord Vega [content])
 
 (defn vega [content] (Vega. content))
 
 (extend-type Vega
-  renderer/Renderable
+  render/Renderable
   (render [self]
     {:type :vega :content (:content self) :value (pr-str self)}))

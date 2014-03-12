@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/../gorilla-renderable/gorilla_renderable.iml" filepath="$PROJECT_DIR$/../gorilla-renderable/gorilla_renderable.iml" />
       <module fileurl="file://$PROJECT_DIR$/gorilla_repl.iml" filepath="$PROJECT_DIR$/gorilla_repl.iml" />
       <module fileurl="file://$PROJECT_DIR$/../lein-gorilla/lein_gorilla.iml" filepath="$PROJECT_DIR$/../lein-gorilla/lein_gorilla.iml" />
     </modules>

@@ -14,6 +14,7 @@
             [clojure.tools.nrepl.server :as nrepl-server]
             [gorilla-repl.websocket-relay :as ws-relay]
             [gorilla-repl.render-values-mw :as render-mw]
+            [gorilla-repl.renderer :as renderer] ;; this is needed to bring the render implementations into scope
             [complete.core :as complete])
   (:gen-class))
 

@@ -9,6 +9,8 @@
 .clj-nil {color: grey}
 .clj-lazy-seq {color: lightgreen}
 .clj-list {color: green}
+.clj-map {color: purple}
+.clj-set {color: brown}
 .clj-symbol {color: orange}
 .clj-keyword {color: blue}
 .clj-var {color: deeppink}
@@ -16,10 +18,12 @@
 .clj-agent {color: #4682b4}
 .clj-ref {color: #4682b4}
 .clj-string {color: grey}
+.clj-char {color: dimgrey}
 .clj-long {color: blue}
 .clj-double {color: darkgreen}
 .clj-bigint {color: blue; font-weight: bold}
 .clj-bigdecimal {color: darkgreen; font-weight: bold}
+.clj-ratio {color: darkblue}
 
 .output table {
     border-width: 1px;

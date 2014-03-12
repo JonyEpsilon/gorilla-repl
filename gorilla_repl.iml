@@ -15,6 +15,7 @@
     <orderEntry type="library" name="Leiningen: cheshire:5.0.2" level="project" />
     <orderEntry type="library" name="Leiningen: clojure-complete:0.2.3" level="project" />
     <orderEntry type="library" name="Leiningen: compojure:1.1.6" level="project" />
+    <orderEntry type="library" name="Leiningen: gorilla-renderable:1.0.0" level="project" />
     <orderEntry type="library" name="Leiningen: http-kit:2.1.16" level="project" />
     <orderEntry type="library" name="Leiningen: org.clojure/clojure:1.5.1" level="project" />
     <orderEntry type="library" name="Leiningen: org.clojure/tools.nrepl:0.2.3" level="project" />

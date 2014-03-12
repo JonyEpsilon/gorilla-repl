@@ -3,13 +3,9 @@
 ;;;; gorilla-repl is licenced to you under the MIT licence. See the file LICENCE.txt for full details.
 
 (ns gorilla-repl.renderer
-  (:require [clojure.string :as string]))
+  (:require [clojure.string :as string]
+            [gorilla-renderable.core :as r]))
 
-;;; This is the protocol that a type must implement if it wants to customise its rendering in Gorilla. It defines a
-;;; single function, render, that should transform the value into a value that the front-end's renderer can display.
-;; TODO: move this out to its own project?
-(defprotocol Renderable
-  (render [self]))
 
 ;;; Helper functions
 
@@ -33,98 +29,141 @@
 
 ;; A default, catch-all renderer that takes anything we don't know what to do with and calls str on it.
 (extend-type Object
-  Renderable
+  r/Renderable
   (render [self]
     (span-render self "clj-unkown")))
 
 ;; nil values are a distinct thing of their own
 (extend-type nil
-  Renderable
+  r/Renderable
   (render [self]
     (span-render self "clj-nil")))
 
 (extend-type clojure.lang.Symbol
-  Renderable
+  r/Renderable
   (render [self]
     (span-render self "clj-symbol")))
 
 (extend-type clojure.lang.Keyword
-  Renderable
+  r/Renderable
   (render [self]
     (span-render self "clj-keyword")))
 
 (extend-type clojure.lang.Var
-  Renderable
+  r/Renderable
   (render [self]
     (span-render self "clj-var")))
 
 (extend-type clojure.lang.Atom
-  Renderable
+  r/Renderable
   (render [self]
     (span-render self "clj-atom")))
 
 (extend-type clojure.lang.Agent
-  Renderable
+  r/Renderable
   (render [self]
     (span-render self "clj-agent")))
 
 (extend-type clojure.lang.Ref
-  Renderable
+  r/Renderable
   (render [self]
     (span-render self "clj-ref")))
 
 (extend-type java.lang.String
-  Renderable
+  r/Renderable
   (render [self]
     (span-render self "clj-string")))
 
+(extend-type java.lang.Character
+  r/Renderable
+  (render [self]
+    (span-render self "clj-char")))
+
 (extend-type java.lang.Long
-  Renderable
+  r/Renderable
   (render [self]
     (span-render self "clj-long")))
 
 (extend-type java.lang.Double
-  Renderable
+  r/Renderable
   (render [self]
     (span-render self "clj-double")))
 
 (extend-type clojure.lang.BigInt
-  Renderable
+  r/Renderable
   (render [self]
     (span-render self "clj-bigint")))
 
 (extend-type java.math.BigDecimal
-  Renderable
+  r/Renderable
   (render [self]
     (span-render self "clj-bigdecimal")))
 
+(extend-type clojure.lang.Ratio
+  r/Renderable
+  (render [self]
+    (span-render self "clj-ratio")))
 
-(extend-type clojure.lang.PersistentVector
-  Renderable
+
+(extend-type clojure.lang.IPersistentVector
+  r/Renderable
   (render [self]
     {:type :list-like
      :open "<span class='clj-vector'>[<span>"
      :close "<span class='clj-vector'>]</span>"
      :separator " "
-     :items (map render self)
+     :items (map r/render self)
      :value (pr-str self)}))
 
 (extend-type clojure.lang.LazySeq
-  Renderable
+  r/Renderable
   (render [self]
     {:type :list-like
      :open "<span class='clj-lazy-seq'>(<span>"
      :close "<span class='clj-lazy-seq'>)</span>"
      :separator " "
-     :items (map render self)
+     :items (map r/render self)
      :value (pr-str self)}))
 
-(extend-type clojure.lang.PersistentList
-  Renderable
+(extend-type clojure.lang.IPersistentList
+  r/Renderable
   (render [self]
     {:type :list-like
      :open "<span class='clj-list'>(<span>"
      :close "<span class='clj-list'>)</span>"
      :separator " "
-     :items (map render self)
+     :items (map r/render self)
+     :value (pr-str self)}))
+
+;; When we render a map we will map over its entries, which will yield key-value pairs represented as vectors. To render
+;; the map we render each of these key-value pairs with this helper function. They are rendered as list-likes with no
+;; bracketing. These will then be assembled in to a list-like for the whole map by the IPersistentMap render function.
+(defn- render-map-entry
+  [entry]
+  {:type :list-like
+   :open ""
+   :close ""
+   :separator " "
+   :items (map r/render entry)
+   :value (pr-str entry)})
+
+(extend-type clojure.lang.IPersistentMap
+  r/Renderable
+  (render [self]
+    {:type :list-like
+     :open "<span class='clj-map'>{<span>"
+     :close "<span class='clj-map'>}</span>"
+     :separator ", "
+     :items (map render-map-entry self)
+     :value (pr-str self)}))
+
+
+(extend-type clojure.lang.IPersistentSet
+  r/Renderable
+  (render [self]
+    {:type :list-like
+     :open "<span class='clj-set'>#{<span>"
+     :close "<span class='clj-set'>}</span>"
+     :separator " "
+     :items (map r/render self)
      :value (pr-str self)}))
