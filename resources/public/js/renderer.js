@@ -43,7 +43,7 @@ var renderPart = function (data, callbackQueue, errorCallback) {
 };
 
 var wrapWithValue = function (data, content) {
-    return "<span class='value' data-value='" + data.value + "'>" + content + "</span>";
+    return "<span class='value' data-value='" + _.escape(data.value) + "'>" + content + "</span>";
 };
 
 var renderHTML = function (data, callbackQueue, errorCallback) {
