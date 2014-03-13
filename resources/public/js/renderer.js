@@ -11,6 +11,18 @@ var render = function (data, element, errorCallback) {
     var htmlString = renderPart(data, callbackQueue, errorCallback);
     $(element).html("<pre>" + htmlString + "</pre>");
     _.each(callbackQueue, function (callback) {callback()});
+    $(".value", element).click(function (ed) {
+        if (ed.altKey) {
+            var value = $(this).attr('data-value');
+            // TODO - don't like these dialogs peppered everywhere!
+            vex.dialog.alert({
+                message: "Clojure value:<div class='last-chance'><textarea class='last-chance'>" + value
+                    + "</textarea></div>",
+                className: 'vex-theme-plain'
+            });
+        }
+        return false;
+    });
 };
 
 
@@ -30,15 +42,19 @@ var renderPart = function (data, callbackQueue, errorCallback) {
     return "Unknown render type";
 };
 
+var wrapWithValue = function (data, content) {
+    return "<span class='value' data-value='" + _.escape(data.value) + "'>" + content + "</span>";
+};
+
 var renderHTML = function (data, callbackQueue, errorCallback) {
-    return data.content;
+    return wrapWithValue(data, data.content);
 };
 
 var renderListLike = function (data, callbackQueue, errorCallback) {
     // first of all render the items
     var renderedItems = data.items.map(function (x) {return renderPart(x, callbackQueue, errorCallback)});
     // and then assemble the list
-    return data.open + renderedItems.join(data.separator) + data.close;
+    return wrapWithValue(data, data.open + renderedItems.join(data.separator) + data.close);
 };
 
 var renderVega = function (data, callbackQueue, errorCallback) {
@@ -65,7 +81,7 @@ var renderVega = function (data, callbackQueue, errorCallback) {
         });
     });
 
-    return "<span class='vega-span' id='" + uuid + "'></span>";
+    return wrapWithValue(data, "<span class='vega-span' id='" + uuid + "'></span>");
 };
 
 var renderLatex = function (data, callbackQueue, errorCallback) {
@@ -76,5 +92,5 @@ var renderLatex = function (data, callbackQueue, errorCallback) {
         MathJax.Hub.Queue(["Typeset", MathJax.Hub, uuid]);
     });
 
-    return "<span class='latex-span' id='" + uuid + "'>@@" + data.content + "@@</span>";
+    return wrapWithValue(data, "<span class='latex-span' id='" + uuid + "'>@@" + data.content + "@@</span>");
 };
