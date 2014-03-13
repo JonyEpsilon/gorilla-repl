@@ -11,6 +11,18 @@ var render = function (data, element, errorCallback) {
     var htmlString = renderPart(data, callbackQueue, errorCallback);
     $(element).html("<pre>" + htmlString + "</pre>");
     _.each(callbackQueue, function (callback) {callback()});
+    $(".value", element).click(function (ed) {
+        if (ed.altKey) {
+            var value = $(this).attr('data-value');
+            // TODO - don't like these dialogs peppered everywhere!
+            vex.dialog.alert({
+                message: "Clojure value:<div class='last-chance'><textarea class='last-chance'>" + value
+                    + "</textarea></div>",
+                className: 'vex-theme-plain'
+            });
+        }
+        return false;
+    });
 };
 
 
@@ -31,7 +43,7 @@ var renderPart = function (data, callbackQueue, errorCallback) {
 };
 
 var wrapWithValue = function (data, content) {
-    return "<span class='value'>" + content + "</span>";
+    return "<span class='value' data-value='" + data.value + "'>" + content + "</span>";
 };
 
 var renderHTML = function (data, callbackQueue, errorCallback) {

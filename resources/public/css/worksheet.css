@@ -153,10 +153,6 @@ div.output pre {
     white-space: pre-wrap;
 }
 
-.value:hover {
-    background-color: lightblue;
-}
-
 div.error-text {
     font-family: monospace;
     border-style: solid;
