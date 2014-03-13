@@ -135,6 +135,18 @@
      :items (map r/render self)
      :value (pr-str self)}))
 
+;; TODO: is this really necessary? Is there some interface I'm missing for lists? Or would just ISeq work?
+(extend-type clojure.lang.ArraySeq
+  r/Renderable
+  (render [self]
+    {:type :list-like
+     :open "<span class='clj-list'>(<span>"
+     :close "<span class='clj-list'>)</span>"
+     :separator " "
+     :items (map r/render self)
+     :value (pr-str self)}))
+
+
 ;; When we render a map we will map over its entries, which will yield key-value pairs represented as vectors. To render
 ;; the map we render each of these key-value pairs with this helper function. They are rendered as list-likes with no
 ;; bracketing. These will then be assembled in to a list-like for the whole map by the IPersistentMap render function.
