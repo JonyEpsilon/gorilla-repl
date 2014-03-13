@@ -5,26 +5,28 @@
 (ns gorilla-repl.table
   (:require [gorilla-renderable.core :as render]))
 
-(defrecord Table [contents column-names])
+(defrecord Table [contents opts])
 
-(defn table [contents column-names]
-  (Table. contents column-names))
+(defn table [contents & opts]
+  (Table. contents opts))
 
 (defn- list-like
-  [data open close separator]
+  [data value open close separator]
   {:type :list-like
    :open open
    :close close
    :separator separator
    :items data
-   :value (pr-str data)})
+   :value value})
 
 (extend-type Table
   render/Renderable
   (render [self]
     (let [contents (:contents self)
-          cols (:column-names self)
-          heading (list-like (map render/render cols) "<tr><th>" "</th></tr>" "</th><th>")
-          rows (map (fn [r] (list-like (map render/render r) "<tr><td>" "</td></tr>" "</td><td>")) contents)
-          body (list-like (conj rows heading) "<center><table>" "</table></center>" "\n")]
+          opts-map (apply hash-map (:opts self))
+          rows (map (fn [r] (list-like (map render/render r) (pr-str r) "<tr><td>" "</td></tr>" "</td><td>")) contents)
+          heading (if-let [cols (:columns opts-map)]
+                    [(list-like (map render/render cols) (pr-str cols) "<tr><th>" "</th></tr>" "</th><th>")]
+                    [])
+          body (list-like (concat heading rows) (pr-str self) "<center><table>" "</table></center>" "\n")]
       body)))
