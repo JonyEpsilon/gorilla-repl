@@ -26,8 +26,8 @@ unmerged branches that will definitely no longer be used should also be deleted.
 - Make sure you're working on the develop branch.
 - Change the version numbers to a SNAPSHOT version in:
   - project.clj of gorilla-repl.
-  - README of gorilla-repl.
-  - project.clj of lein-gorilla.
+  - README of gorilla-repl (three places).
+  - project.clj of lein-gorilla (two places).
   - dependency injection code in core namespace of lein-gorilla.
 
 ## To publish a release
@@ -35,4 +35,4 @@ unmerged branches that will definitely no longer be used should also be deleted.
 - Update the version number to suitable release number, following the steps above.
 - Once you're happy merge into master.
 - Tag the release in git/on github.
-- `lein deploy` to clojars, first gorilla-repl and then lein-gorilla.
+- `lein deploy clojars`, first gorilla-repl and then lein-gorilla, and promote.
