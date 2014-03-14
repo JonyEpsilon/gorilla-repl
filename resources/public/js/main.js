@@ -87,24 +87,31 @@ var app = (function () {
         );
     });
 
+    var saveToFile = function (filename, successCallback) {
+        $.post("/save", {
+            "worksheet-filename": filename,
+            "worksheet-data": self.wrapper.worksheet().toClojure()
+        }).done(function () {
+            self.wrapper.flashStatusMessage("Saved: " + filename);
+            if (successCallback) successCallback();
+        }).fail(function () {
+            self.wrapper.flashStatusMessage("Failed to save worksheet: " + filename, 1500);
+        });
+    };
+
     eventBus.on("app:save", function () {
         var filename = self.wrapper.filename();
+        // if we already have a filename, save to it. Else, prompt for a name.
         if (filename !== "") {
-            $.post("/save", {
-                "worksheet-filename": filename,
-                "worksheet-data": self.wrapper.worksheet().toClojure()
-            }).done(function () {
-                self.wrapper.flashStatusMessage("Saved: " + filename);
-
-            }).fail(function () {
-                self.wrapper.flashStatusMessage("Failed to save worksheet: " + filename, 1500);
-            });
+            saveToFile(filename);
         } else {
             prompt('Filename (relative to project directory):',
             function (filename) {
                 if (filename) {
-                    self.wrapper.filename(filename);
-                    eventBus.trigger("app:save");
+                    saveToFile(filename, function() {
+                        // if the save was successful, hold on to the filename.
+                        self.wrapper.filename(filename);
+                    });
                 }
             })
         }
