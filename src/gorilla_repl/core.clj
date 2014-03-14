@@ -12,6 +12,7 @@
             [ring.middleware.json :as json]
             [ring.util.response :as res]
             [clojure.tools.nrepl.server :as nrepl-server]
+            [clojure.java.io :as io]
             [gorilla-repl.websocket-relay :as ws-relay]
             [gorilla-repl.render-values-mw :as render-mw]
             [gorilla-repl.renderer :as renderer] ;; this is needed to bring the render implementations into scope
@@ -82,10 +83,12 @@
         nrepl (nrepl-server/start-server :port nrepl-requested-port
                                          :handler (nrepl-server/default-handler #'render-mw/render-values))
         nrepl-port (:port nrepl)
+        repl-port-file (io/file ".nrepl-port")
         _ (println "Started nREPL server on port" nrepl-port)
         _ (ws-relay/connect-to-nrepl nrepl-port)
         webapp-port (or (:port conf) 8990)
         s (server/run-server app-routes {:port webapp-port :join? false})]
+    (spit (doto repl-port-file .deleteOnExit) nrepl-port)
     (println (str "Running at http://localhost:" webapp-port "/worksheet.html ."))
     (println "Ctrl+C to exit.")
     ;; block this thread by joining the server (which should run until killed)
