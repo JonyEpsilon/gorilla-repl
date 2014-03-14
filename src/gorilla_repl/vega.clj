@@ -7,7 +7,7 @@
 
 (defrecord Vega [content])
 
-(defn vega [content] (Vega. content))
+(defn as-vega [content] (Vega. content))
 
 (extend-type Vega
   render/Renderable

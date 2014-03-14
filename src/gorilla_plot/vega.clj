@@ -118,11 +118,6 @@
                                     "strokeOpacity" {"value" opacity}
                                     }}}]})
 
-
-(defn show-vega
-  [g]
-  (vega/vega g))
-
-(defn strip-vega
+(defn from-vega
   [g]
   (:content g))

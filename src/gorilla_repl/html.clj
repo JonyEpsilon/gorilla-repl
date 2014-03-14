@@ -7,7 +7,7 @@
 
 (defrecord Html [content])
 
-(defn html [content]
+(defn as-html [content]
   (Html. content))
 
 (extend-type Html

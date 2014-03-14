@@ -4,7 +4,8 @@
 
 (ns gorilla-plot.core
   (:require [gorilla-plot.vega :as vega]
-            [gorilla-plot.util :as util]))
+            [gorilla-plot.util :as util]
+            [gorilla-repl.vega :as v]))
 
 ;; Series' are given random names so that plots can be composed
 ;; Thanks: https://gist.github.com/gorsuch/1418850
@@ -27,7 +28,7 @@
         plot-data (if (sequential? (first data))
                     data
                     (add-indices data))]
-    (vega/show-vega (merge
+    (v/as-vega (merge
                       (vega/container plot-size aspect-ratio)
                       (vega/data-from-list series-name plot-data)
                       (if joined
@@ -56,7 +57,7 @@
                                opacity      1
                                }}]
   (let [series-name (uuid)]
-    (vega/show-vega (merge
+    (v/as-vega (merge
                       (vega/container plot-size aspect-ratio)
                       (vega/data-from-list series-name (map vector categories values))
                       (vega/bar-chart-marks series-name (or colour color) opacity)
@@ -101,7 +102,7 @@
           ;; bookend the y-data with zeroes.
           y-data (concat [0] cat-data [0])
           plot-data (map vector x-data y-data)]
-      (vega/show-vega (merge
+      (v/as-vega (merge
                         (vega/container plot-size aspect-ratio)
                         (vega/data-from-list series-name plot-data)
                         (vega/histogram-marks series-name (or colour color) opacity fillOpacity)
@@ -110,7 +111,7 @@
 
 (defn compose
   [& plots]
-  (let [plot-data (map vega/strip-vega plots)
+  (let [plot-data (map vega/from-vega plots)
         first-plot (first plot-data)
         width (get first-plot "width")
         height (get first-plot "height")
@@ -119,6 +120,6 @@
         axes (get first-plot "axes")
         data (apply concat (map #(get % "data") plot-data))
         marks (apply concat (map #(get % "marks") plot-data))]
-    (vega/show-vega
+    (v/as-vega
       {"width" width "height" height "padding" padding "scales" scales "axes" axes "data" data "marks" marks})))
 

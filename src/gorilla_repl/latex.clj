@@ -7,7 +7,7 @@
 
 (defrecord Latex [content])
 
-(defn latex [content] (Latex. content))
+(defn as-latex [content] (Latex. content))
 
 (extend-type Latex
   render/Renderable
