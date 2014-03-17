@@ -151,6 +151,24 @@ In the following we'll go through some guidelines for how you should approach re
 think of these guidelines as something like a style guide: you don't have to follow them, but if you do your code will
 fit more naturally with other things in Gorilla.
 
+For the first class of things, things that only make sense when rendered specially, it's unlikely that the user is
+particularly interested in the underlying value. So the default should be that the value is rendered specially.
+
+
+The second class of things, where both the raw Clojure value and specially rendered values, are meaningful is more
+interesting. Here the following approach is recommended:
+
+- functions manipulating the values should work with the raw "domain" values. This is probably already the case, as you
+  are likely working with values that come from a library etc.
+- the default should be to render the domain objects as plain Clojure
+- you should provide view functions, following the naming pattern `*-form` to specially render the value
+- these view functions should wrap the domain object in a record type to indicate how it should be rendered
+- you should implement `Renderable` for the record type to do the actual rendering.
+
+This is nice, because it puts the control of the rendering in the hands of the user, allowing them to view the value in
+the way that is most useful to them. You can provide more than one view function for a given type of domain object, and
+these view functions can take options to configure the rendering.
+
 
 # Scribbles
 
