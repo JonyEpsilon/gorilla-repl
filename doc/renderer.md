@@ -115,7 +115,7 @@ This is the simplest, representing a raw HTML fragment that represents the value
 ```clojure
 {:type :vega :content <<vega spec>> :value "pr'ed value"}
 ```
-This represents a Vega visualisation. <<vega spec>> should be a value that, when converted to json, is a valid Vega
+This represents a Vega visualisation. `<<vega spec>>` should be a value that, when converted to json, is a valid Vega
 spec.
 
 ```clojure
@@ -131,7 +131,7 @@ Represents a fragment of LaTeX. Will be displayed inline.
  :items <<seq of items>>,
  :value "pr'ed value"}
 ```
-Represents a general aggregate of values. <<seq of items>> is a sequence of valid rendered representation values.
+Represents a general aggregate of values. `<<seq of items>>` is a sequence of valid rendered representation values.
 List-likes can be nested, which is how nested lists and maps are rendered.
 
 ## Extending the renderer
