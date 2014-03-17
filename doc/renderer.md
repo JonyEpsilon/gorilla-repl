@@ -8,7 +8,7 @@ useful to you. This document will explain what you need to know to do that.
 
 Document summary here.
 
-## Renderer overview
+## The big idea
 
 The essence of Gorilla is: run some Clojure code that evaluates to some value, and then show that value to the user. In
 Gorilla, plotting a graph, or showing a table isn't a side-effect of your code - it's just a nice way of looking at the
@@ -42,7 +42,7 @@ There are three steps to the evaluation and rendering process in Gorilla:
 ### The render protocol
 
 Let's look at the second step of the evaluation-rendering process in more detail. Gorilla carries out this process
-rather simply by calling a single function, `gorilla-renderable.core/render`, on the value. This function is the sole
+rather simply by calling a single function, `gorilla-renderable.core/render`, on the value. This is the sole
 function in the `Renderable` protocol, found in the `gorilla-renderable.core` namespace.
 
 The `render` function takes the value and returns its rendered representation. We'll look at the form of this rendered
@@ -70,8 +70,8 @@ fragment representing the list:
 This is nice and simple, and works well in this case, but it has a number of problems:
 
 - Let's consider rendering a list of plots for instance. To understand the problem here we need to understand how
-plots are rendered on the client: plots are rendered by inserting a placeholder element into the DOM, and then calling
-the javascript plotting library, which transforms that placeholder into DOM representing the plot as a side-effect. This
+plots are rendered on the client: which is by inserting a placeholder element into the DOM, and then calling
+the javascript plotting library, which transforms that placeholder into the plot as a side-effect. This
 is a common pattern with javascript libraries (the LaTeX library works this way too, for instance), so we need to
 support it. For a large output there might be a large number of placeholders, and javascript functions to fire, and we
 need to manage this complexity.
@@ -100,14 +100,39 @@ Rather verbose you might think, but very regular, and quite powerful!
 So, in summary, values are rendered in Gorilla by calling the `render` function of the `Renderable` protocol on them.
 This transforms the value into a "rendered representation" that the front end can process to produce the final output.
 This rendered representation preserves the identity of the various parts of the Clojure value, and supports aggregates
-directly, making it straightforward to render complex values, and enabling copy-and-paste.
+directly, making it straightforward to render complex values, and enabling value copy-and-paste.
 
 ### Rendered representation reference
 
 For reference, here is a specification of the rendered representation. A valid value in the rendered representation is
+one of:
 
-### The final step
+```clojure
+{:type :html :contents "some html" :value "pr'ed value"}
+```
+This is the simplest, representing a raw HTML fragment that represents the value.
 
+```clojure
+{:type :vega :content <<vega spec>> :value "pr'ed value"}
+```
+This represents a Vega visualisation. <<vega spec>> should be a value that, when converted to json, is a valid Vega
+spec.
+
+```clojure
+{:type :latex :contents "some latex" :value "pr'ed value"}
+```
+Represents a fragment of LaTeX. Will be displayed inline.
+
+```clojure
+{:type :list-like,
+ :open "opening string",
+ :close "closing string",
+ :separator "separator string",
+ :items <<seq of items>>,
+ :value "pr'ed value"}
+```
+Represents a general aggregate of values. <<seq of items>> is a sequence of valid rendered representation values.
+List-likes can be nested, which is how nested lists and maps are rendered.
 
 ## Extending the renderer
 
