@@ -33,7 +33,8 @@ There are three steps to the evaluation and rendering process in Gorilla:
   value that represents what should be drawn for the output. This step happens inside a piece of nREPL middleware, and
   is exactly analogous to what terminal-based nREPL does when it calls `pr` on the value before sending it to the
   client. Except that here we're not transforming from a value to a string that represents the value, as `pr` does, but
-  rather transforming into a much richer structure. We'll look at this step in detail below.
+  rather transforming into a much richer structure. We call this richer structure the rendered representation. We'll
+  look at this step in detail below.
 - The value from the second step is sent to the Gorilla client, running in the web-browser, as JSON. The third and final
   step of the process is the web-browser processing this structure to turn it into a DOM fragment that the browser can
   display. It's likely that you won't need to get involved in this step of the process.
@@ -54,25 +55,56 @@ that fragment. Note that it also includes a readable representation of the value
 which is used by the client to implement value copying-and-pasting.
 
 This explains how individual values are rendered, but how about aggregates of values? What if the result of our
-evaluation was `[1 2 3]` or a list of plots? The essence of the answer is that when implementing the `render` function
-for aggregates we recursively call `render` on each of the children. The detail of how the rendered values are combined
-is a bit confusing though, and to appreciate why we need to take a short diversion into how the rendering is done on the
-client side.
+evaluation was `[1 2 3]` or a list of plots? The first part of the answer is easy: when implementing the `render`
+function for aggregates we recursively call `render` on each of the children. But how do we then combine those rendered
+values together to form the final value?
 
 Our first attempt at implementing the render function for aggregates might look like this: we call render on the
 elements of the aggregate, generating HTML fragments as above, and then we assemble these HTML fragments into an HTML
 fragment representing the list:
 ```clojure
 {:type :html
-:contents "<span class='clj-list'>[</span><span class='clj-long'>3</span> ... <span class='clj-list'>]</span>"
-:value "[1 2 3]"}
+ :contents "<span class='clj-list'>[</span><span class='clj-long'>3</span> ... <span class='clj-list'>]</span>"
+ :value "[1 2 3]"}
 ```
-This is nice and simple, and works well in this case, but it breaks down when we try and do something more complicated.
-Let's consider rendering a list of plots for instance. To understand the problem we need to understand how plots are
-rendered on the client. Plots are rendered using the Vega library, and it works
+This is nice and simple, and works well in this case, but it has a number of problems:
+
+- Let's consider rendering a list of plots for instance. To understand the problem here we need to understand how
+plots are rendered on the client: plots are rendered by inserting a placeholder element into the DOM, and then calling
+the javascript plotting library, which transforms that placeholder into DOM representing the plot as a side-effect. This
+is a common pattern with javascript libraries (the LaTeX library works this way too, for instance), so we need to
+support it. For a large output there might be a large number of placeholders, and javascript functions to fire, and we
+need to manage this complexity.
+- We want to support value copy-and-paste, where the user can interact with a rendered object, and copy its Clojure
+value. To implement this the front end needs to know, in some way, the structure of the Clojure expression and how it
+corresponds to the rendered value.
+- We might in the future want to support in-place updates to the rendered output. This means being able to select part
+of the output that corresponds to a part of the original Clojure expression and modify it.
+
+The approach that Gorilla takes to solve these problems is to defer the reassembly of the HTML fragments to the client.
+To support this, the rendered representation needs some notion of an aggregate, and this is captured by the `:list-like`
+render type. So in fact the rendered representation for the value `[1 2 3]` is:
+```clojure
+{:type :list-like,
+ :open "<span class='clj-vector'>[<span>",
+ :close "<span class='clj-vector'>]</span>",
+ :separator " ",
+ :items
+ ({:type :html, :content "<span class='clj-long'>1</span>", :value "1"}
+  {:type :html, :content "<span class='clj-long'>2</span>", :value "2"}
+  {:type :html, :content "<span class='clj-long'>3</span>", :value "3"}),
+ :value "[1 2 3]"}
+```
+Rather verbose you might think, but very regular, and quite powerful!
+
+So, in summary, values are rendered in Gorilla by calling the `render` function of the `Renderable` protocol on them.
+This transforms the value into a "rendered representation" that the front end can process to produce the final output.
+This rendered representation preserves the identity of the various parts of the Clojure value, and supports aggregates
+directly, making it straightforward to render complex values, and enabling copy-and-paste.
 
 ### Rendered representation reference
 
+For reference, here is a specification of the rendered representation. A valid value in the rendered representation is
 
 ### The final step
 
