@@ -83,7 +83,8 @@ of the output that corresponds to a part of the original Clojure expression and 
 
 The approach that Gorilla takes to solve these problems is to defer the reassembly of the HTML fragments to the client.
 To support this, the rendered representation needs some notion of an aggregate, and this is captured by the `:list-like`
-render type. So in fact the rendered representation for the value `[1 2 3]` is:
+render type. In this way, the front-end has some information on how the value is composed out of sub-values, which helps
+solve the above problems. So in fact the rendered representation for the value `[1 2 3]` is:
 ```clojure
 {:type :list-like,
  :open "<span class='clj-vector'>[<span>",
@@ -136,3 +137,25 @@ List-likes can be nested, which is how nested lists and maps are rendered.
 
 ## Extending the renderer
 
+Okay, now you've suffered through that you should have a pretty good idea of how the renderer works. Let's look at how
+you might extend it to support your own types of value. At the risk of sounding facile, how you do that depends on what
+you want achieve. We can divide the sorts of thing you might want to render in to three broad classes:
+
+- things that only really make sense when rendered specially;
+- things that are useful rendered as plain Clojure values, but gain something by being rendered specially;
+- and things that don't need any special rendering.
+
+Examples in these classes might be: a plot, or a bitmap image; a matrix, or a timestamp; a number, or a string.
+
+In the following we'll go through some guidelines for how you should approach rendering in these cases. You should
+think of these guidelines as something like a style guide: you don't have to follow them, but if you do your code will
+fit more naturally with other things in Gorilla.
+
+
+# Scribbles
+
+In general, unless your data primarily represents something that only has meaning to the user when rendered specially,
+like a plot, then the default should be to render it as a readable Clojure value. In most cases the default renderer
+will do a good job of this.
+
+Why not just use HTML? Because the original value is effectively destroyed in evaluation.
