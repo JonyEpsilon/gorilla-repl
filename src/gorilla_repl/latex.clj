@@ -5,11 +5,11 @@
 (ns gorilla-repl.latex
   (:require [gorilla-renderable.core :as render]))
 
-(defrecord Latex [content])
+(defrecord LatexView [content])
 
-(defn as-latex [content] (Latex. content))
+(defn latex-view [content] (LatexView. content))
 
-(extend-type Latex
+(extend-type LatexView
   render/Renderable
   (render [self]
     {:type :latex :content (:content self) :value (pr-str self)}))

@@ -28,7 +28,7 @@
         plot-data (if (sequential? (first data))
                     data
                     (add-indices data))]
-    (v/as-vega (merge
+    (v/vega-view (merge
                       (vega/container plot-size aspect-ratio)
                       (vega/data-from-list series-name plot-data)
                       (if joined
@@ -57,7 +57,7 @@
                                opacity      1
                                }}]
   (let [series-name (uuid)]
-    (v/as-vega (merge
+    (v/vega-view (merge
                       (vega/container plot-size aspect-ratio)
                       (vega/data-from-list series-name (map vector categories values))
                       (vega/bar-chart-marks series-name (or colour color) opacity)
@@ -102,7 +102,7 @@
           ;; bookend the y-data with zeroes.
           y-data (concat [0] cat-data [0])
           plot-data (map vector x-data y-data)]
-      (v/as-vega (merge
+      (v/vega-view (merge
                         (vega/container plot-size aspect-ratio)
                         (vega/data-from-list series-name plot-data)
                         (vega/histogram-marks series-name (or colour color) opacity fillOpacity)
@@ -120,6 +120,6 @@
         axes (get first-plot "axes")
         data (apply concat (map #(get % "data") plot-data))
         marks (apply concat (map #(get % "marks") plot-data))]
-    (v/as-vega
+    (v/vega-view
       {"width" width "height" height "padding" padding "scales" scales "axes" axes "data" data "marks" marks})))
 

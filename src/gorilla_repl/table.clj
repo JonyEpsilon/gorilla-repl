@@ -5,10 +5,10 @@
 (ns gorilla-repl.table
   (:require [gorilla-renderable.core :as render]))
 
-(defrecord Table [contents opts])
+(defrecord TableView [contents opts])
 
-(defn table [contents & opts]
-  (Table. contents opts))
+(defn table-view [contents & opts]
+  (TableView. contents opts))
 
 (defn- list-like
   [data value open close separator]
@@ -19,7 +19,7 @@
    :items data
    :value value})
 
-(extend-type Table
+(extend-type TableView
   render/Renderable
   (render [self]
     (let [contents (:contents self)

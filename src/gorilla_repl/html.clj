@@ -5,12 +5,12 @@
 (ns gorilla-repl.html
   (:require [gorilla-renderable.core :as render]))
 
-(defrecord Html [content])
+(defrecord HtmlView [content])
 
-(defn as-html [content]
-  (Html. content))
+(defn html-view [content]
+  (HtmlView. content))
 
-(extend-type Html
+(extend-type HtmlView
   render/Renderable
   (render [self]
     {:type :html :content (:content self) :value (pr-str self)}))

@@ -5,11 +5,11 @@
 (ns gorilla-repl.vega
   (:require [gorilla-renderable.core :as render]))
 
-(defrecord Vega [content])
+(defrecord VegaView [content])
 
-(defn as-vega [content] (Vega. content))
+(defn vega-view [content] (VegaView. content))
 
-(extend-type Vega
+(extend-type VegaView
   render/Renderable
   (render [self]
     {:type :vega :content (:content self) :value (pr-str self)}))
