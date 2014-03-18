@@ -200,7 +200,7 @@ recommended:
   This is quite likely already the case, as the code you are writing a renderer for is probably not Gorilla specific;
 - these plain, unwrapped Clojure values will be rendered plainly by the default renderer, usually giving a `read`able
   output;
-- you should provide view functions, following the naming pattern `*-form` to specially render the value. These view
+- you should provide view functions, following the naming pattern `*-view` to specially render the value. These view
   function should probably live in a separate namespace from the function for actually working with the raw values.
   Depending on how you want to manage the dependencies for your project, these functions might even live in their own
   project;
@@ -225,23 +225,23 @@ matrices. The rendering code might look like:
   (:require [gorilla-renderable.core :as render]))
 
 ;; The wrapper type for the renderer
-(defrecord MatrixForm [contents])
+(defrecord MatrixView [contents])
 
 ;; this view function renders the matrix in 2D grid form
-(defn matrix-form [m] (MatrixForm. m))
+(defn matrix-view [m] (MatrixView. m))
 
-(extend-type MatrixForm
+(extend-type MatrixView
   Renderable
   (render [self] <<rendering code here>>))
 
 ;; A second wrapper type for indicating an abridged form should be rendered
 ;; the opts will be used to store render specific options, like how many values to show say
-(defrecord AbridgedMatrixForm [contents opts])
+(defrecord AbridgedMatrixView [contents opts])
 
 ;; this view function renders the matrix in 2D grid form, it takes options to control the rendering
-(defn abridged-matrix-form [m & opts] (AbridgedMatrixForm. m opts))
+(defn abridged-matrix-view [m & opts] (AbridgedMatrixView. m opts))
 
-(extend-type AbridgedMatrixForm
+(extend-type AbridgedMatrixView
   Renderable
   (render [self] <<rendering code here>>))
 ```
