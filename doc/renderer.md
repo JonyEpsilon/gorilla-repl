@@ -214,11 +214,10 @@ value, and these view functions can take options to configure the rendering. You
 wrapper types if need be.
 
 Let's make the discussion concrete by considering a renderer for a fictional 2D-matrix library. Let's say this library
-has a couple of functions `multiply` and `inverse` for manipulating matrices. The matrices are stored as simple nested
-Clojure vectors. The library functions take nested vectors and return nested vectors. As discussed in the first
-two points of the list above, these values will be rendered by the default renderer as nested vectors.
-
-We will implement two view functions for these matrices `matrix-form` and `abridged-matrix-form` (catchy name, eh?).
+has functions for manipulating matrices that are stored as simple nested Clojure vectors. As discussed in the first
+two points of the list above, these library functions know nothing about rendering, and the values will be rendered by
+the default renderer as simple nested vectors. We will implement
+two view functions for these matrices `matrix-form` and `abridged-matrix-form` (catchy name, eh?).
 Both will format the matrices as a 2D grid, and the latter will only show a subset of the data, suitable for large
 matrices. The rendering code might look like:
 ```clojure
@@ -239,18 +238,19 @@ matrices. The rendering code might look like:
 ;; the opts will be used to store render specific options, like how many values to show say
 (defrecord AbridgedMatrixForm [contents opts])
 
-;; this view function renders the matrix in 2D grid form
+;; this view function renders the matrix in 2D grid form, it takes options to control the rendering
 (defn abridged-matrix-form [m & opts] (AbridgedMatrixForm. m opts))
 
 (extend-type AbridgedMatrixForm
   Renderable
   (render [self] <<rendering code here>>))
 ```
-Hopefully this toy example gives you an idea of how your rendering code might be structured.
+Hopefully this toy example gives you an idea of how your rendering code might be structured for values that can rendered
+in multiple ways.
 
 ### Things that are never rendered specially
 
-This one is easy - Gorilla's built-in renderer will take care of this!
+This final class of things is easy - Gorilla's built-in renderer will take care of this!
 
 
 ## Conclusion
