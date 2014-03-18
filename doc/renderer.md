@@ -217,7 +217,7 @@ Let's make the discussion concrete by considering a renderer for a fictional 2D-
 has functions for manipulating matrices that are stored as simple nested Clojure vectors. As discussed in the first
 two points of the list above, these library functions know nothing about rendering, and the values will be rendered by
 the default renderer as simple nested vectors. We will implement
-two view functions for these matrices `matrix-form` and `abridged-matrix-form` (catchy name, eh?).
+two view functions for these matrices `matrix-view` and `abridged-matrix-view` (catchy name, eh?).
 Both will format the matrices as a 2D grid, and the latter will only show a subset of the data, suitable for large
 matrices. The rendering code might look like:
 ```clojure
