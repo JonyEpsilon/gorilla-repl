@@ -2,24 +2,26 @@
 
 One of the central components of Gorilla is its renderer. It is the renderer that determines how Clojure values appear
 when they are output, so it is ultimately responsible for things like plotting graphs, drawing tables and
-matrices etc. You don't need to understand how the renderer works to use Gorilla, but you might be interested anyway.
+matrices etc. as well as showing more mundane values like numbers and lists. You don't need to understand how the
+renderer works to use Gorilla, but you might be interested anyway.
 Gorilla's renderer is easily extensible, meaning you can customise Gorilla to show Clojure values in the way that's most
 useful to you. This document will explain what you need to know to do that.
 
-Document summary here.
+First, we'll look at the idea behind the renderer, then we'll work through the various stages in the rendering process.
+After that, we'll look in detail at the stage of this process that you're most likely to customise. Finally we'll
+present a sort of style guide, to help you figure out the best way to implement custom renderers for your values.
 
 ## The big idea
 
-The essence of Gorilla is: run some Clojure code that evaluates to some value, and then _show that value to the user_.
-In
+The essence of Gorilla is: run some Clojure code that evaluates to some value, and then show that value to the user. In
 Gorilla, plotting a graph, or showing a table isn't a side-effect of your code - it's just a nice way of looking at the
 value your code produces. You could say that Gorilla is fundamentally value-based. Being strictly value-based like this
 a limitation, but it's an empowering limitation: it makes it possible to compose and aggregate rendered objects just
 like you compose and aggregate Clojure values, to save worksheets with their rendered output intact, and even to
 manipulate the output of worksheets that
 you haven't/can't run. It should be stated for balance that there are some things that Gorilla's value-based rendering
-is not great at, like rapidly updating plots with many data points, but it will hopefully do much of what you want to
-get done, and do it elegantly!
+is not great at, like rapidly updating plots with many data points for instance, but it will hopefully do much of what
+you want to get done, and do it elegantly!
 
 ## From evaluation to screen
 
@@ -56,7 +58,7 @@ This rendered form will tell the client that the value should be rendered as an 
 that fragment. Note that it also includes a readable representation of the value, as would be obtained from `pr`ing it,
 which is used by the client to implement value copying-and-pasting.
 
-This explains how individual values are rendered, but how about aggregates of values? What if the result of our
+This explains how individual values are rendered, but what about aggregates of values? What if the result of our
 evaluation was `[1 2 3]` or a list of plots? The first part of the answer is easy: when implementing the `render`
 function for aggregates we recursively call `render` on each of the children. But how do we then combine those rendered
 values together to form the final value?
@@ -66,7 +68,7 @@ elements of the aggregate, generating HTML fragments as above, and then we assem
 fragment representing the list:
 ```clojure
 {:type :html
- :contents "<span class='clj-list'>[</span><span class='clj-long'>3</span> ... <span class='clj-list'>]</span>"
+ :contents "<span class='clj-list'>[</span><span class='clj-long'>1</span> ... <span class='clj-list'>]</span>"
  :value "[1 2 3]"}
 ```
 This is nice and simple, and works well in this case, but it has a number of problems:
@@ -144,7 +146,7 @@ you might extend it to support your own values. At the risk of sounding facile, 
 you want achieve. We can divide the sorts of thing you might want to render in to three broad classes:
 
 - things that only really make sense when rendered specially;
-- things that are useful rendered as plain Clojure values, but gain something by being rendered specially;
+- things that are useful when rendered as plain Clojure values, but can gain something by being rendered specially;
 - and things that don't need any special rendering.
 
 Examples in these classes might be: a plot, or an image; a matrix; a number. It's important to decide from the outset
@@ -165,9 +167,9 @@ the set of things that need to be done is more-or-less the same. Consider as an 
 the function `list-plot` from gorilla-plot. It is called with a list of data, and the output
 is shown as a plot in the Gorilla notebook. Let's walk through the steps in this process:
 
-- `list-plot` evaluates to a `Vega` record, of the form `#gorilla_repl.vega.Vega{:content <<vega spec>>}`. Importantly,
-  the function returns the plot value (the vega spec) wrapped in a `Vega` record. In this case, the `Vega` wrapper
-  exists solely to indicate to Gorilla how to do the rendering. But in other cases, the record type could be the
+- `list-plot` evaluates to a `Vega` record, of the form `#gorilla_repl.vega.Vega{:content <<vega spec>>}`.
+  In this case, the `Vega` record type exists solely as a wrapper to indicate to Gorilla how to do the rendering. But in
+  other cases, the record type could be the
   'natural' return type of the function, with other reasons for existing than just directing the rendering;
 - The rendering middleware will call `render` on this value as described above;
 - In the `gorilla-repl.vega` namespace there is a custom renderer defined for `Vega` records, which renders the record
@@ -191,21 +193,60 @@ is the key design decision to make concerning wrapper types.
 ### Things that are sometimes rendered specially
 
 The second class of things, where both the raw Clojure value and specially rendered values are meaningful, is more
-interesting. Here the following approach is recommended:
+interesting. Here we want to give the user choice as to how the value is rendered. The following approach is
+recommended:
 
-- functions manipulating the values should work with raw, unwrapped Clojure values. This is quite likely already the
-  case, as the code you are writing a renderer for is probably not Gorilla specific;
-- these plain, unwrapped Clojure values will be rendered plainly by default, giving a `read`able output;
+- functions manipulating the values should work with 'raw' values that don't implement the render protocol specially.
+  This is quite likely already the case, as the code you are writing a renderer for is probably not Gorilla specific;
+- these plain, unwrapped Clojure values will be rendered plainly by the default renderer, usually giving a `read`able
+  output;
 - you should provide view functions, following the naming pattern `*-form` to specially render the value. These view
-  function should probably live in a separate namespace from the function for actually working with the raw values;
-- these view functions should wrap the raw value in a wrapper record type to indicate how it should be rendered;
+  function should probably live in a separate namespace from the function for actually working with the raw values.
+  Depending on how you want to manage the dependencies for your project, these functions might even live in their own
+  project;
+- these view functions should wrap the raw value in a wrapper record-type to indicate how it should be rendered;
 - you should implement `Renderable` for the record type to do the actual rendering. This implementation should be
   brought into scope when the view functions are loaded.
 
 This approach is nice, because it puts the control of the rendering in the hands of the user, allowing them to view the
-value in
-the way that is most useful to them. You can provide more than one view function for a given type of domain object, and
-these view functions can take options to configure the rendering.
+value in the way that is most useful to them. You can provide more than one view function for a given type of
+value, and these view functions can take options to configure the rendering. You might implement this with multiple
+wrapper types if need be.
+
+Let's make the discussion concrete by considering a renderer for a fictional 2D-matrix library. Let's say this library
+has a couple of functions `multiply` and `inverse` for manipulating matrices. The matrices are stored as simple nested
+Clojure vectors. The library functions take nested vectors and return nested vectors. As discussed in the first
+two points of the list above, these values will be rendered by the default renderer as nested vectors.
+
+We will implement two view functions for these matrices `matrix-form` and `abridged-matrix-form` (catchy name, eh?).
+Both will format the matrices as a 2D grid, and the latter will only show a subset of the data, suitable for large
+matrices. The rendering code might look like:
+```clojure
+(ns my-matrix.renderer
+  (:require [gorilla-renderable.core :as render]))
+
+;; The wrapper type for the renderer
+(defrecord MatrixForm [contents])
+
+;; this view function renders the matrix in 2D grid form
+(defn matrix-form [m] (MatrixForm. m))
+
+(extend-type MatrixForm
+  Renderable
+  (render [self] <<rendering code here>>))
+
+;; A second wrapper type for indicating an abridged form should be rendered
+;; the opts will be used to store render specific options, like how many values to show say
+(defrecord AbridgedMatrixForm [contents opts])
+
+;; this view function renders the matrix in 2D grid form
+(defn abridged-matrix-form [m & opts] (AbridgedMatrixForm. m opts))
+
+(extend-type AbridgedMatrixForm
+  Renderable
+  (render [self] <<rendering code here>>))
+```
+Hopefully this toy example gives you an idea of how your rendering code might be structured.
 
 ### Things that are never rendered specially
 
@@ -214,3 +255,6 @@ This one is easy - Gorilla's built-in renderer will take care of this!
 
 ## Conclusion
 
+We've covered a lot in this document, but hopefully it gives you a solid grounding in the way the renderer works, and
+has some useful suggestions for implementing your own rendering functions. You're encouraged to implement renderers for
+your data and share them - if you need any help with this, please don't hesitate to get in touch.
