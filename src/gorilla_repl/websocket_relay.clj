@@ -28,7 +28,7 @@
 
 (defn- process-message
   [channel data]
-  (let [parsed-message (json/parse-string data true)
+  (let [parsed-message (assoc (json/parse-string data true) :as-html 1)
         client (nrepl/client @conn Long/MAX_VALUE)
         replies (nrepl/message client parsed-message)]
     ;; send the messages out over the WS connection one-by-one.
