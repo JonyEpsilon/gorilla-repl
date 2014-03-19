@@ -1,6 +1,6 @@
 # Gorilla REPL
 
-Gorilla is a rich REPL for Clojure in the notebook style. If you're interested you should take a look at it's
+Gorilla is a rich REPL for Clojure in the notebook style. If you're interested you should take a look at its
 [website](http://gorilla-repl.org).
 
 ## Contributing
