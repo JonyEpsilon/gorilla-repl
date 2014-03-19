@@ -35,4 +35,6 @@ unmerged branches that will definitely no longer be used should also be deleted.
 - Update the version number to suitable release number, following the steps above.
 - Once you're happy merge into master.
 - Tag the release in git/on github.
+- Make sure you're on master! (Both repos).
 - `lein deploy clojars`, first gorilla-repl and then lein-gorilla, and promote.
+- Switch back to develop before you forget. (Both repos).
