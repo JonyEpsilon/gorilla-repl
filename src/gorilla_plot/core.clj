@@ -113,13 +113,8 @@
   [& plots]
   (let [plot-data (map vega/from-vega plots)
         first-plot (first plot-data)
-        width (get first-plot "width")
-        height (get first-plot "height")
-        padding (get first-plot "padding")
-        scales (get first-plot "scales")
-        axes (get first-plot "axes")
-        data (apply concat (map #(get % "data") plot-data))
-        marks (apply concat (map #(get % "marks") plot-data))]
+        {:keys [width height padding scales axes]} first-plot
+        data (apply concat (map :data plot-data))
+        marks (apply concat (map :marks plot-data))]
     (v/vega-view
-      {"width" width "height" height "padding" padding "scales" scales "axes" axes "data" data "marks" marks})))
-
+      {:width width :height height :padding padding :scales scales :axes axes :data data :marks marks})))
