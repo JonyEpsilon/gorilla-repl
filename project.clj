@@ -14,7 +14,8 @@
                  [org.slf4j/slf4j-api "1.7.5"]
                  [ch.qos.logback/logback-classic "1.0.13"]
                  [clojure-complete "0.2.3"]
-                 [gorilla-renderable "1.0.0"]]
+                 [gorilla-renderable "1.0.0"]
+                 [org.clojure/data.codec "0.1.0"]]
   :main ^:skip-aot gorilla-repl.core
   :target-path "target/%s"
   :plugins [[lein-ring "0.8.7"]]
