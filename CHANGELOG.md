@@ -11,8 +11,6 @@
 
 ## Version 0.2.0
 
-### Major changes
-
 - All new renderer. This is the main change. The new renderer is simple and predictable, _very_ flexible, supports
   first-class pluggable custom rendering, and really respects the structure of Clojure values. In particular it renders
   aggregates of values as you might hope, so you can draw lists of tables, tables of plots, associatives of tables of
