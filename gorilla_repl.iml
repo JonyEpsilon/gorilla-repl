@@ -18,6 +18,7 @@
     <orderEntry type="library" name="Leiningen: gorilla-renderable:1.0.0" level="project" />
     <orderEntry type="library" name="Leiningen: http-kit:2.1.16" level="project" />
     <orderEntry type="library" name="Leiningen: org.clojure/clojure:1.5.1" level="project" />
+    <orderEntry type="library" name="Leiningen: org.clojure/data.codec:0.1.0" level="project" />
     <orderEntry type="library" name="Leiningen: org.clojure/tools.nrepl:0.2.3" level="project" />
     <orderEntry type="library" name="Leiningen: org.slf4j/slf4j-api:1.7.5" level="project" />
     <orderEntry type="library" name="Leiningen: ring/ring-json:0.2.0" level="project" />
