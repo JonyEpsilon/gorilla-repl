@@ -46,7 +46,16 @@
 <!-- The page stub -->
 <div class="status" data-bind="visible: (status() !== ''), html: status">Loading ...</div>
 
-<div id="contents">
+<div class="header">
+    <div class="header-left">Made with <a href="http://clojure.org" target="_blank">Clojure</a> and
+        <a href="http://gorilla-repl.org" target="_blank">Gorilla REPL</a></div>
+    <div class="header-right">
+        <a href="#" data-bind="click: showCopyBox">Run a copy of this code</a>
+    </div>
+</div>
+
+
+<div id="contents" data-bind="css: {veiled: copyBoxVisible}">
     <div class="segment container-segment">
         <div class="container-children">
             <div data-bind="template: {name: 'segment-template', foreach: worksheet().segments()}">
@@ -54,6 +63,7 @@
         </div>
     </div>
 </div>
+
 <div class="scroll-pad"></div>
 
 <!-- Templates -->
@@ -86,6 +96,38 @@
         <div class="segment-footer"></div>
     </div>
 </script>
+
+<!-- Copying instructions -->
+<div class="copyBox" style="display: none" data-bind="visible: copyBoxVisible">
+    You can set up to run and edit your own copy of this worksheet in under five minutes, even if you've never used
+    Clojure or Gorilla REPL before.
+    <div data-bind="visible: (source().toLowerCase() === 'github')">
+    <ul>
+        <li>If you don't yet have Leiningen installed, then follow the instructions
+            <a href="http://leiningen.org/#install" target="_blank">here</a>. It only takes a couple of minutes.</li>
+        <li>Clone the GitHub project that contains this worksheet. You can find it here
+            <a data-bind="attr: {href: sourceURL}, text: sourceURL" target="_blank"></a>.</li>
+        <li>Open a terminal in the project directory and run "lein gorilla".</li>
+        <li>Open the load dialog by pressing "alt+g alt+l" ("ctrl+g ctrl+l" on Mac).</li>
+        <li>Enter the path "<span data-bind="text: filename"></span>" into the dialog.</li>
+    </ul>
+    </div>
+    <div data-bind="visible: (source().toLowerCase() === 'gist')">
+        <ul>
+            <li>If you don't have Gorilla REPL installed yet, then follow the instructions
+                <a href="http://gorilla-repl.org/start.html" target="_blank">here</a>.
+            </li>
+            <li>Download the worksheet from the GitHub gist here
+                <a data-bind="attr: {href: sourceURL}, text: sourceURL" target="_blank"></a>.</li>
+            <li>Assuming you've added the Gorilla plugin to your "profiles.clj", as described in the getting started
+                instructions from step one, then run "lein gorilla"</li>
+            <li>Open the load dialog by pressing "alt+g alt+l" ("ctrl+g ctrl+l" on Mac).</li>
+            <li>Enter the path to the file you saved in step two.</li>
+        </ul>
+    </div>
+    That's it, you're done. Have fun!
+    <div class="button" data-bind="click: hideCopyBox">OK, got it</div>
+</div>
 
 </body>
 </html>

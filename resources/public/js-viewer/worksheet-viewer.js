@@ -19,8 +19,10 @@ var worksheetWrapper = function (worksheet) {
     self.filename = ko.observable("");
     self.title = ko.computed(function () {
         if (self.filename() === "") return "Gorilla REPL viewer";
-        else return "Gorilla REPL : " + self.filename();
+        else return "Gorilla REPL viewer: " + self.filename();
     });
+    self.sourceURL = ko.observable("");
+    self.source = ko.observable("");
 
     // status indicator
     self.status = ko.observable("");
@@ -29,6 +31,14 @@ var worksheetWrapper = function (worksheet) {
         var millis = displayMillis ? displayMillis : 700;
         self.status(message);
         setTimeout(function () {self.status("");}, millis);
+    };
+
+    self.copyBoxVisible = ko.observable(false);
+    self.showCopyBox = function () {
+        self.copyBoxVisible(true);
+    };
+    self.hideCopyBox = function () {
+        self.copyBoxVisible(false);
     };
 
     return self;

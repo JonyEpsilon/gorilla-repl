@@ -8,11 +8,14 @@ var app = (function () {
 
     var self = {};
 
-    self.start = function (worksheetData) {
+    self.start = function (worksheetData, sourceURL, worksheetName, source) {
 
         var ws = worksheet();
         ws.segments = ko.observableArray(worksheetParser.parse(worksheetData));
         var wsWrapper = worksheetWrapper(ws);
+        wsWrapper.sourceURL(sourceURL);
+        wsWrapper.filename(worksheetName);
+        wsWrapper.source(source);
         self.wrapper = wsWrapper;
 
         // wire up the UI
@@ -40,12 +43,21 @@ $(function () {
             var user = getParameterByName("user");
             var repo = getParameterByName("repo");
             var path = getParameterByName("path");
-            getFromGithub(user, repo, path, app.start);
+            getFromGithub(user, repo, path, function (data) {
+                app.start(data, "https://github.com/" + user + "/" + repo, path, source);
+            });
             return;
         case "gist":
             var id = getParameterByName("id");
             var filename = getParameterByName("filename");
-            getFromGist(id, filename, app.start);
+            getFromGist(id, filename, function (data) {
+                app.start(data,  "https://gist.github.com/" + id, filename, source);
+            });
             return;
+        case "test":
+            // so you can test without exhausting the github API limit
+            $.get('/test.clj').success(function (data) {
+                app.start(data, "http://gorilla-repl.org/", "test.clj", source);
+            });
     }
 });
