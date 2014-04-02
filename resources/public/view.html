@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<!--
+  ~ This file is part of gorilla-repl. Copyright (C) 2014-, Jony Hudson.
+  ~
+  ~ gorilla-repl is licenced to you under the MIT licence. See the file LICENCE.txt for full details.
+  -->
+
+<html id="document">
+<head>
+    <link href='http://fonts.googleapis.com/css?family=Arvo:400,700,400italic,700italic|Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <!--<link href='css/fonts.css' rel='stylesheet' type='text/css'/>-->
+    <link rel="stylesheet" href="jslib/codemirror-3.20/lib/codemirror.css"/>
+    <link rel="stylesheet" href="css/worksheet.css"/>
+    <link rel="stylesheet" href="css/output.css"/>
+    <link rel="stylesheet" href="css/viewer.css"/>
+
+    <script type="text/javascript"
+            src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_SVG-full.js&delayStartupUntil=configured"></script>
+    <script type="text/javascript" src="jslib/markdown/Markdown.Converter.js"></script>
+    <script type="text/javascript" src="jslib/markdown/Markdown.Sanitizer.js"></script>
+    <script type="text/javascript" src="jslib/codemirror-3.20/lib/codemirror.js"></script>
+    <script type="text/javascript" src="jslib/codemirror-3.20/addon/runmode/runmode.js"></script>
+    <script type="text/javascript" src="jslib/codemirror-3.20/addon/runmode/colorize.js"></script>
+    <script type="text/javascript" src="jslib/codemirror-3.20/mode/clojure/clojure.js"></script>
+    <script type="text/javascript" src="jslib/jquery/jquery-1.10.2.min.js"></script>
+    <script type="text/javascript" src="jslib/underscore/underscore.min.js"></script>
+    <script type="text/javascript" src="jslib/knockoutjs/knockout-3.0.0.min.js"></script>
+    <script type="text/javascript" src="jslib/d3/d3.v3.min.js"></script>
+    <script type="text/javascript" src="jslib/d3/d3.geo.projection.min.js"></script>
+    <script type="text/javascript" src="jslib/vega/vega.1.3.3.min.js"></script>
+    <script type="text/javascript" src="jslib/uuid/uuid.core.js"></script>
+    <script type="text/javascript" src="js/worksheetParser.js"></script>
+    <script type="text/javascript" src="js/clojureUtils.js"></script>
+    <script type="text/javascript" src="js/mathJaxViewer.js"></script>
+    <script type="text/javascript" src="js/outputViewer.js"></script>
+    <script type="text/javascript" src="js/renderer.js"></script>
+    <script type="text/javascript" src="js-viewer/segment-viewer.js"></script>
+    <script type="text/javascript" src="js-viewer/worksheet-viewer.js"></script>
+    <script type="text/javascript" src="js-viewer/github.js"></script>
+    <script type="text/javascript" src="js-viewer/main-viewer.js"></script>
+
+    <title data-bind="text: title">Gorilla REPL viewer</title>
+</head>
+<body>
+
+<!-- The page stub -->
+<div class="status" data-bind="visible: (status() !== ''), html: status">Loading ...</div>
+
+<div id="contents">
+    <div class="segment container-segment">
+        <div class="container-children">
+            <div data-bind="template: {name: 'segment-template', foreach: worksheet().segments()}">
+            </div>
+        </div>
+    </div>
+</div>
+<div class="scroll-pad"></div>
+
+<!-- Templates -->
+<script type="text/html" id="segment-template">
+    <div data-bind="template: {name: renderTemplate}"></div>
+</script>
+
+<script type="text/html" id="code-segment-template">
+    <div class="segment code">
+
+        <div class="segment-main">
+            <pre class="static-code clojure"><code data-bind="text: contents"></pre></code>
+        </div>
+        <div class="error-text" data-bind="text: errorText, visible: errorText() !== ''"></div>
+        <div class="console-text" data-bind="visible: consoleText() !== ''">
+            <pre><code data-bind="html: consoleText"></code></pre>
+        </div>
+        <div class="output"
+             data-bind="visible: (output() != ''), outputViewer: output, segmentID: id">
+        </div>
+        <div class="segment-footer"></div>
+    </div>
+</script>
+
+<script type="text/html" id="free-segment-template">
+    <div class="segment free">
+        <div class="segment-main">
+            <div class="free-preview" data-bind="mathJaxViewer: renderedContent"></div>
+        </div>
+        <div class="segment-footer"></div>
+    </div>
+</script>
+
+</body>
+</html>
