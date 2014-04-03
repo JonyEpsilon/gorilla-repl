@@ -15,6 +15,7 @@
                  [ch.qos.logback/logback-classic "1.0.13"]
                  [clojure-complete "0.2.3"]
                  [gorilla-renderable "1.0.0"]
+                 [instaparse "1.3.1"]
                  [org.clojure/data.codec "0.1.0"]]
   :main ^:skip-aot gorilla-repl.core
   :target-path "target/%s"
