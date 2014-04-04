@@ -59,13 +59,38 @@
        (insta/transform
         {:worksheet (fn [& xs] (rest xs))
          :segmentWithBlankLine (fn [& xs] (first xs))
-         :freeSegment (fn [& xs] [:freeSegment (flatten
-                                               (map
-                                                uncomment
-                                                (filter
-                                                 #(and (not= (first %)
-                                                             :freeSegmentOpenTag)
-                                                       (not= (first %)
-                                                             :freeSegmentCloseTag))
-                                                 xs)))])
+         :freeSegment (fn [& xs] [:freeSegment
+                                 (uncomment
+                                  (first
+                                   (filter
+                                    #(and (not= (first %)
+                                                :freeSegmentOpenTag)
+                                          (not= (first %)
+                                                :freeSegmentCloseTag))
+                                    xs)))])
+         :codeSegment (fn [& xs] [:codeSegment
+                                 (filter
+                                  #(and (not= (first %)
+                                              :codeSegmentOpenTag)
+                                        (not= (first %)
+                                              :codeSegmentCloseTag))
+                                  xs)])
+         :consoleSection (fn [& xs] [:consoleSection
+                                    (uncomment
+                                     (first
+                                      (filter
+                                       #(and (not= (first %)
+                                                   :consoleOpenTag)
+                                             (not= (first %)
+                                                   :consoleCloseTag))
+                                       xs)))])
+         :outputSection (fn [& xs] [:outputSection
+                                   (uncomment
+                                    (first
+                                     (filter
+                                      #(and (not= (first %)
+                                                  :outputOpenTag)
+                                            (not= (first %)
+                                                  :outputCloseTag))
+                                      xs)))])
          :stringNoDelim (fn [& xs] (apply str (map second xs)))})))
