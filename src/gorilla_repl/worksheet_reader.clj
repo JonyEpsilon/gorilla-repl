@@ -1,7 +1,9 @@
 (ns gorilla-repl.worksheet-reader
   (:require [cheshire.core :refer :all]
             [clojure.string :as string]
-            [instaparse.core :as insta]))
+            [markdown.core :refer :all]
+            [instaparse.core :as insta]
+            [hiccup.core :refer :all]))
 
 (defn uncomment
   [xs]
@@ -66,32 +68,47 @@
   [code]
   (str "<pre>" code "</pre>"))
 
+(defn render-free-segment
+  [a-free-segment]
+  (html [:div.free-segment a-free-segment]))
+
 (defn read-worksheet
   [worksheet]
   (->> (gorilla-worksheet (slurp worksheet))
        (insta/transform
         {:worksheet (fn [& xs] (rest xs))
+         
          :segmentWithBlankLine (fn [& xs] (first xs))
+         
          :segment (fn [& xs]
                     (first xs))
+         
          :freeSegment (fn [& xs]
-                        (uncomment
-                         (first
-                          (remove-open-close-tags xs
-                                                  :freeSegmentOpenTag
-                                                  :freeSegmentCloseTag))))
+                        (render-free-segment
+                         (md-to-html-string
+                          (uncomment
+                           (first
+                            (remove-open-close-tags xs
+                                                    :freeSegmentOpenTag
+                                                    :freeSegmentCloseTag))))))
+         
          :codeSegment (fn [& xs]
-                        (map
-                         format-code
-                         (remove-open-close-tags xs
-                                                 :codeSegmentOpenTag
-                                                 :codeSegmentCloseTag)))
+                        (let [code-segment
+                              (remove-open-close-tags xs
+                                                      :codeSegmentOpenTag
+                                                      :codeSegmentCloseTag)]
+                          (if-not (empty? code-segment)
+                            (cons (format-code (first code-segment))
+                                  (rest code-segment))
+                            code-segment)))
+         
          :consoleSection (fn [& xs]
                            (uncomment
                             (first
                              (remove-open-close-tags xs
                                                      :consoleOpenTag
                                                      :consoleCloseTag))))
+         
          :outputSection (fn [& xs]
                           ((parse-string
                             (uncomment
@@ -100,7 +117,7 @@
                                                       :outputOpenTag
                                                       :outputCloseTag))))
                            "content"))
+         
          :stringNoDelim (fn [& xs]
                           (apply str (map second xs)))})))
-
 
