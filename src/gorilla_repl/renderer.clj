@@ -146,6 +146,16 @@
      :items (map r/render self)
      :value (pr-str self)}))
 
+(extend-type clojure.lang.Cons
+  r/Renderable
+  (render [self]
+    {:type :list-like
+     :open "<span class='clj-list'>(<span>"
+     :close "<span class='clj-list'>)</span>"
+     :separator " "
+     :items (map r/render self)
+     :value (pr-str self)}))
+
 
 ;; When we render a map we will map over its entries, which will yield key-value pairs represented as vectors. To render
 ;; the map we render each of these key-value pairs with this helper function. They are rendered as list-likes with no

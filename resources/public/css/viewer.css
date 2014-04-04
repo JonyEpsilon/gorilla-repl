@@ -50,6 +50,11 @@ div.copyBox {
     border-width: 1px;
     background-color: #F1F1F1;
     z-index: 100;
+    line-height: 130%;
+}
+
+div.copyBox li {
+    padding-bottom: 0.3em;
 }
 
 div#contents {
@@ -70,7 +75,7 @@ div.button {
     text-align: center;
     font-family: "Arvo", sans-serif;
     font-weight: 700;
-    margin-top: 4em;
+    margin-top: 2em;
 }
 
 div.button:hover {
