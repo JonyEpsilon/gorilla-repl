@@ -72,11 +72,26 @@
   [a-free-segment]
   (html [:div.free-segment a-free-segment]))
 
+(defn render-clojure-code
+  [a-code-segment]
+  (html [:pre
+         [:code.clojure a-code-segment]]))
+
+(defn render-worksheet
+  [segments]
+  (html [:html
+         [:head
+          [:link {:rel "stylesheet"
+                  :href "http://yandex.st/highlightjs/8.0/styles/default.min.css"}]
+          [:script {:src "http://yandex.st/highlightjs/8.0/highlight.min.js"}]]
+         [:body
+          [:div.content segments]]]))
+
 (defn read-worksheet
   [worksheet]
   (->> (gorilla-worksheet (slurp worksheet))
        (insta/transform
-        {:worksheet (fn [& xs] (rest xs))
+        {:worksheet (fn [& xs] (render-worksheet (rest xs)))
          
          :segmentWithBlankLine (fn [& xs] (first xs))
          
@@ -97,27 +112,36 @@
                               (remove-open-close-tags xs
                                                       :codeSegmentOpenTag
                                                       :codeSegmentCloseTag)]
-                          (if-not (empty? code-segment)
-                            (cons (format-code (first code-segment))
-                                  (rest code-segment))
-                            code-segment)))
+                          (html
+                           [:div.code-segment
+                            (if-not (empty? code-segment)
+                              (cons
+                               (render-clojure-code
+                                (first code-segment))
+                               (rest code-segment))
+                              code-segment)])))
          
          :consoleSection (fn [& xs]
-                           (uncomment
-                            (first
-                             (remove-open-close-tags xs
-                                                     :consoleOpenTag
-                                                     :consoleCloseTag))))
+                           (html
+                            [:div.console
+                             (uncomment
+                              (first
+                               (remove-open-close-tags xs
+                                                       :consoleOpenTag
+                                                       :consoleCloseTag)))]))
          
          :outputSection (fn [& xs]
-                          ((parse-string
-                            (uncomment
-                             (first
-                              (remove-open-close-tags xs
-                                                      :outputOpenTag
-                                                      :outputCloseTag))))
-                           "content"))
+                          (html
+                           [:div.output
+                            ((parse-string
+                              (uncomment
+                               (first
+                                (remove-open-close-tags xs
+                                                        :outputOpenTag
+                                                        :outputCloseTag))))
+                             "content")]))
          
          :stringNoDelim (fn [& xs]
                           (apply str (map second xs)))})))
+
 
