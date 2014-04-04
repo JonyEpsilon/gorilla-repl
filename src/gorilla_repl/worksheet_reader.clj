@@ -1,5 +1,6 @@
 (ns gorilla-repl.worksheet-reader
-  (:require [clojure.string :as string]
+  (:require [cheshire.core :refer :all]
+            [clojure.string :as string]
             [instaparse.core :as insta]))
 
 (defn uncomment
@@ -51,7 +52,19 @@
 
     delimiter = freeSegmentOpenTag / freeSegmentCloseTag / codeSegmentOpenTag / codeSegmentCloseTag / outputOpenTag / outputCloseTag / consoleOpenTag / consoleCloseTag
 
-    noDelimChar = !delimiter #'.|\\s+'"))
+    noDelimChar = !delimiter #'.|\\s'"))
+
+(defn remove-open-close-tags
+  [segment open-tag close-tag]
+  (filter
+   #(and
+     (not= (first %) open-tag)
+     (not= (first %) close-tag))
+   segment))
+
+(defn format-code
+  [code]
+  (str "<pre>" code "</pre>"))
 
 (defn read-worksheet
   [worksheet]
@@ -59,38 +72,35 @@
        (insta/transform
         {:worksheet (fn [& xs] (rest xs))
          :segmentWithBlankLine (fn [& xs] (first xs))
-         :freeSegment (fn [& xs] [:freeSegment
-                                 (uncomment
-                                  (first
-                                   (filter
-                                    #(and (not= (first %)
-                                                :freeSegmentOpenTag)
-                                          (not= (first %)
-                                                :freeSegmentCloseTag))
-                                    xs)))])
-         :codeSegment (fn [& xs] [:codeSegment
-                                 (filter
-                                  #(and (not= (first %)
-                                              :codeSegmentOpenTag)
-                                        (not= (first %)
-                                              :codeSegmentCloseTag))
-                                  xs)])
-         :consoleSection (fn [& xs] [:consoleSection
-                                    (uncomment
-                                     (first
-                                      (filter
-                                       #(and (not= (first %)
-                                                   :consoleOpenTag)
-                                             (not= (first %)
-                                                   :consoleCloseTag))
-                                       xs)))])
-         :outputSection (fn [& xs] [:outputSection
-                                   (uncomment
-                                    (first
-                                     (filter
-                                      #(and (not= (first %)
-                                                  :outputOpenTag)
-                                            (not= (first %)
-                                                  :outputCloseTag))
-                                      xs)))])
-         :stringNoDelim (fn [& xs] (apply str (map second xs)))})))
+         :segment (fn [& xs]
+                    (first xs))
+         :freeSegment (fn [& xs]
+                        (uncomment
+                         (first
+                          (remove-open-close-tags xs
+                                                  :freeSegmentOpenTag
+                                                  :freeSegmentCloseTag))))
+         :codeSegment (fn [& xs]
+                        (map
+                         format-code
+                         (remove-open-close-tags xs
+                                                 :codeSegmentOpenTag
+                                                 :codeSegmentCloseTag)))
+         :consoleSection (fn [& xs]
+                           (uncomment
+                            (first
+                             (remove-open-close-tags xs
+                                                     :consoleOpenTag
+                                                     :consoleCloseTag))))
+         :outputSection (fn [& xs]
+                          ((parse-string
+                            (uncomment
+                             (first
+                              (remove-open-close-tags xs
+                                                      :outputOpenTag
+                                                      :outputCloseTag))))
+                           "content"))
+         :stringNoDelim (fn [& xs]
+                          (apply str (map second xs)))})))
+
+
