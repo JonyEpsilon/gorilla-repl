@@ -10,3 +10,4 @@ pom.xml.asc
 .idea/workspace.xml
 .idea/replstate.xml
 .DS_Store
+ws/
