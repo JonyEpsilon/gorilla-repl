@@ -78,8 +78,9 @@
 
 (defn render-clojure-code
   [a-code-segment]
-  (html [:pre
-         [:code.clojure a-code-segment]]))
+  (html [:div {:class "segment-main"}
+         [:pre
+          [:code.clojure a-code-segment]]]))
 
 (defn render-worksheet
   [segments]
@@ -370,7 +371,7 @@ textarea.last-chance {
                                                       :codeSegmentOpenTag
                                                       :codeSegmentCloseTag)]
                           (html
-                           [:div.code-segment
+                           [:div {:class "segment code"}
                             (if-not (empty? code-segment)
                               (cons
                                (render-clojure-code
@@ -380,7 +381,7 @@ textarea.last-chance {
          
          :consoleSection (fn [& xs]
                            (html
-                            [:div.console
+                            [:div.console-text
                              (uncomment
                               (first
                                (remove-open-close-tags xs
@@ -390,13 +391,14 @@ textarea.last-chance {
          :outputSection (fn [& xs]
                           (html
                            [:div.output
-                            ((parse-string
-                              (uncomment
-                               (first
-                                (remove-open-close-tags xs
-                                                        :outputOpenTag
-                                                        :outputCloseTag))))
-                             "content")]))
+                            [:pre
+                             ((parse-string
+                               (uncomment
+                                (first
+                                 (remove-open-close-tags xs
+                                                         :outputOpenTag
+                                                         :outputCloseTag))))
+                              "content")]]))
          
          :stringNoDelim (fn [& xs]
                           (apply str (map second xs)))})))
