@@ -13,7 +13,7 @@
    #"\n"
    (map
     (fn [x]
-      (subs x 3))
+      (subs x 4))
     (string/split-lines xs))))
 
 (def gorilla-worksheet
@@ -86,7 +86,8 @@
   (html [:html
          [:head
           [:link {:rel "stylesheet"
-                  :href "http://yandex.st/highlightjs/8.0/styles/default.min.css"}]
+                  :href "http://yandex.st/highlightjs/8.0/styles/default.min.css"
+                  :type "text/css"}]
           [:script {:src "http://yandex.st/highlightjs/8.0/highlight.min.js"}]
           [:style "
 body {
@@ -342,7 +343,7 @@ textarea.last-chance {
     width: 100%
 }"]]
          [:body
-          [:div.content segments]]]))
+          [:div#contents segments]]]))
 
 (defn read-worksheet
   [worksheet]
