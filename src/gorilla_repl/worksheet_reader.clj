@@ -99,6 +99,28 @@
             (io/resource "public/jslib/underscore/underscore.min.js"))]
           [:script {:type "text/javascript"}
            (slurp
+            (io/resource "public/jslib/d3/d3.v3.min.js"))]
+          [:script {:type "text/javascript"}
+           (slurp
+            (io/resource "public/jslib/d3/d3.geo.projection.min.js"))]
+          [:script {:type "text/javascript"}
+           (slurp
+            (io/resource "public/jslib/vega/vega.1.3.3.min.js"))]
+          [:script {:type "text/javascript"}
+           (slurp
+            (io/resource "public/jslib/uuid/uuid.core.js"))]
+          [:script {:type "text/javascript"}
+           (slurp
+            (io/resource "public/jslib/mousetrap/mousetrap.min.js"))]
+          
+          [:script {:type "text/javascript"}
+           (slurp
+            (io/resource "public/jslib/jsedn/jsedn.js"))]
+          [:script {:type "text/javascript"}
+           (slurp
+            (io/resource "public/jslib/vex/vex.combined.min.js"))]
+          [:script {:type "text/javascript"}
+           (slurp
             (io/resource "public/js/renderer.js"))]
           [:style (slurp
                    (io/resource "public/css/worksheet.css"))]]
