@@ -93,6 +93,13 @@
                   :href "http://yandex.st/highlightjs/8.0/styles/default.min.css"
                   :type "text/css"}]
           [:script {:src "http://yandex.st/highlightjs/8.0/highlight.min.js"}]
+          [:script {:src "https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"}]
+          [:script {:type "text/javascript"}
+           (slurp
+            (io/resource "public/jslib/underscore/underscore.min.js"))]
+          [:script {:type "text/javascript"}
+           (slurp
+            (io/resource "public/js/renderer.js"))]
           [:style (slurp
                    (io/resource "public/css/worksheet.css"))]]
          [:body
@@ -143,14 +150,21 @@
          :outputSection (fn [& xs]
                           (html
                            [:div.output
-                            [:pre
-                             ((parse-string
+                            [:div]
+                            [:script
+                             {:type "text/javascript"}
+                             "
+var eles = document.getElementsByTagName('script');
+ele = eles[eles.length - 1].parentNode.firstChild;"
+                             (str
+                              "render(JSON.parse("
+                              (encode
                                (uncomment
                                 (first
                                  (remove-open-close-tags xs
                                                          :outputOpenTag
                                                          :outputCloseTag))))
-                              "content")]]))
+                              "), ele)")]]))
          
          :stringNoDelim (fn [& xs]
                           (apply str (map second xs)))})))
