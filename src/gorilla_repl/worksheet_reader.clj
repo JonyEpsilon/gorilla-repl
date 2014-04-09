@@ -87,6 +87,9 @@
   (html [:html
          [:head
           [:link {:rel "stylesheet"
+                  :href "http://fonts.googleapis.com/css?family=Arvo:400,700,400italic,700italic|Lora:400,700,400italic,700italic"
+                  :type "text/css"}]
+          [:link {:rel "stylesheet"
                   :href "http://yandex.st/highlightjs/8.0/styles/default.min.css"
                   :type "text/css"}]
           [:script {:src "http://yandex.st/highlightjs/8.0/highlight.min.js"}]
