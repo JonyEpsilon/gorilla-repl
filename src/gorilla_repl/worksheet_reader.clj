@@ -127,7 +127,7 @@
          [:body
           [:div#contents segments]]]))
 
-(defn read-worksheet
+(defn worksheet->standalone-html
   [worksheet]
   (->> (gorilla-worksheet (slurp worksheet))
        (insta/transform
