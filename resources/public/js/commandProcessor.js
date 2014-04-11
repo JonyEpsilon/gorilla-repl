@@ -167,6 +167,15 @@ commandList = [
         action: function () {
             eventBus.trigger("app:save");
         }
+    },
+    {
+        name: "command:app:export",
+        desc: "Export the worksheet.",
+        showInMenu: true,
+        kb: combo('g', 'e'),
+        action: function () {
+            eventBus.trigger("app:export");
+        }
     }
 ];
 
