@@ -2,7 +2,6 @@
   (:require [cheshire.core :refer :all]
             [clojure.java.io :as io]
             [clojure.string :as string]
-            [markdown.core :refer :all]
             [instaparse.core :as insta]
             [hiccup.core :refer :all])
   (:import [org.apache.commons.lang StringEscapeUtils]))
@@ -98,8 +97,11 @@ parentTag.innerHTML = converter.makeHtml(\""
           [:link {:rel "stylesheet"
                   :href "http://yandex.st/highlightjs/8.0/styles/default.min.css"
                   :type "text/css"}]
-          [:script {:src "http://yandex.st/highlightjs/8.0/highlight.min.js"}]
-          [:script {:src "https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"}]
+          [:script {:type "text/javascript"
+                    :src "http://yandex.st/highlightjs/8.0/highlight.min.js"}]
+          [:script {:type "text/javascript"}
+           (slurp
+            (io/resource "public/jslib/jquery/jquery-1.10.2.min.js"))]
           [:script {:type "text/javascript"}
            (slurp
             (io/resource "public/jslib/underscore/underscore.min.js"))]
