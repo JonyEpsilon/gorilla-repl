@@ -158,9 +158,9 @@ parentTag.innerHTML = converter.makeHtml(\""
           [:div#contents segments]
           [:script "MathJax.Hub.Queue([\"Typeset\",MathJax.Hub]);"]]]))
 
-(defn worksheet->standalone-html
+(defn worksheet-str->standalone-html
   [worksheet]
-  (->> (gorilla-worksheet (slurp worksheet))
+  (->> (gorilla-worksheet worksheet)
        (insta/transform
         {:worksheet (fn [& xs] (render-worksheet (rest xs)))
          
@@ -221,5 +221,10 @@ ele = eles[eles.length - 1].parentNode.firstChild;"
          
          :stringNoDelim (fn [& xs]
                           (apply str (map second xs)))})))
+
+(defn worksheet->standalone-html
+  [filename]
+  (worksheet-str->standalone-html
+   (slurp filename)))
 
 

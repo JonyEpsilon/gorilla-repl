@@ -16,7 +16,8 @@
             [gorilla-repl.websocket-relay :as ws-relay]
             [gorilla-repl.render-values-mw :as render-mw]
             [gorilla-repl.renderer :as renderer] ;; this is needed to bring the render implementations into scope
-            [complete.core :as complete])
+            [complete.core :as complete]
+            [gorilla-repl.worksheet-reader :as worksheet-reader])
   (:gen-class))
 
 ;; useful for debugging the nREPL requests
@@ -56,6 +57,19 @@
       (println (str "done. [" (java.util.Date.) "]"))
       (res/response {:status "ok"}))))
 
+(defn export
+  [req]
+  ;; TODO: error handling!
+  (when-let [ws-data (:worksheet-data (:params req))]
+    (when-let [ws-file (:worksheet-filename (:params req))]
+      (let [ws-out-file (if (re-find #"\.html$" ws-file)
+                          ws-file
+                          (str ws-file ".html"))]
+       (print (str "Exporting: " ws-file " ... "))
+       (spit ws-out-file (worksheet-reader/worksheet-str->standalone-html ws-data))
+       (println (str "done. [" (java.util.Date.) "]"))
+       (res/response {:status "ok"})))))
+
 
 ;; API endpoint for getting completions
 (defn completions
@@ -70,6 +84,7 @@
 (defroutes app-routes
            (GET "/load" [] (wrap-api-handler load-worksheet))
            (POST "/save" [] (wrap-api-handler save))
+           (POST "/export" [] (wrap-api-handler export))
            (GET "/completions" [] (wrap-api-handler completions))
            (GET "/repl" [] ws-relay/ring-handler)
            (route/resources "/"))
