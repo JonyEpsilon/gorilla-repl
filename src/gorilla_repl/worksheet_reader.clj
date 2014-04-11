@@ -97,6 +97,21 @@
           [:script {:type "text/javascript"}
            (slurp
             (io/resource "public/jslib/underscore/underscore.min.js"))]
+          [:script {:type "text/javascript"
+                    :src  "http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_SVG-full.js&amp;delayStartupUntil=configured"}]
+          [:script {:type "text/javascript"}
+
+           "MathJax.Hub.Config({
+             messageStyle: \"none\",
+             showProcessingMessages: false,
+             skipStartupTypeset: true,
+             tex2jax: {
+              inlineMath: [
+               ['@@', '@@']
+              ]
+             }
+            });
+            MathJax.Hub.Configured();"]
           [:script {:type "text/javascript"}
            (slurp
             (io/resource "public/jslib/d3/d3.v3.min.js"))]
@@ -112,7 +127,6 @@
           [:script {:type "text/javascript"}
            (slurp
             (io/resource "public/jslib/mousetrap/mousetrap.min.js"))]
-          
           [:script {:type "text/javascript"}
            (slurp
             (io/resource "public/jslib/jsedn/jsedn.js"))]
@@ -125,7 +139,8 @@
           [:style (slurp
                    (io/resource "public/css/worksheet.css"))]]
          [:body
-          [:div#contents segments]]]))
+          [:div#contents segments]
+          [:script "MathJax.Hub.Queue([\"Typeset\",MathJax.Hub]);"]]]))
 
 (defn worksheet->standalone-html
   [worksheet]
