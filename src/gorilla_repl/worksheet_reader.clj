@@ -73,8 +73,14 @@
 (defn render-free-segment
   [a-free-segment]
   (html [:div {:class "segment free"}
-         (md-to-html-string
-          (StringEscapeUtils/unescapeJava a-free-segment))]))
+         (str
+          "<script>
+var scriptTag = document.getElementsByTagName('script');
+scriptTag = scriptTag[scriptTag.length - 1];
+var parentTag = scriptTag.parentNode;
+parentTag.innerHTML = converter.makeHtml(\""
+          a-free-segment
+          \"");</script>")]))
 
 (defn render-clojure-code
   [a-code-segment]
@@ -114,6 +120,12 @@
             MathJax.Hub.Configured();"]
           [:script {:type "text/javascript"}
            (slurp
+            (io/resource "public/jslib/markdown/Markdown.Converter.js"))]
+          [:script {:type "text/javascript"}
+           (slurp
+            (io/resource "public/jslib/markdown/Markdown.Sanitizer.js"))]
+          [:script {:type "text/javascript"}
+           (slurp
             (io/resource "public/jslib/d3/d3.v3.min.js"))]
           [:script {:type "text/javascript"}
            (slurp
@@ -136,6 +148,8 @@
           [:script {:type "text/javascript"}
            (slurp
             (io/resource "public/js/renderer.js"))]
+          [:script {:type "text/javascript"}
+           "var converter = new Markdown.Converter();"]
           [:style (slurp
                    (io/resource "public/css/worksheet.css"))]]
          [:body
