@@ -30,6 +30,12 @@ var app = (function () {
                 // wire up the UI
                 ko.applyBindings(wsWrapper, document.getElementById("document"));
 
+                // deactivate active segment on click outside #contents
+                $('body').click(function(e) {
+                    if($('#contents').find(e.target).size()) return;
+                    eventBus.trigger('worksheet:deactivate-active-segment');
+                });
+
                 // make it easier for the user to get started by highlighting the empty code segment
                 eventBus.trigger("worksheet:segment-clicked", {id: ws.segments()[1].id});
             },

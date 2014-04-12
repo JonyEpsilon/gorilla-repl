@@ -141,7 +141,6 @@ var freeSegment = function (contents) {
         self.content.blur();
         self.markupVisible(false);
         self.active(false);
-
     };
 
     // serialises the segment for saving. The result is valid clojure code, marked up with some magic comments.

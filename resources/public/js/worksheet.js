@@ -220,6 +220,11 @@ var worksheet = function () {
         self.moveSegment(false);
     });
 
+    addEventHandler("worksheet:deactivate-active-segment", function() {
+        if (self.activeSegmentIndex!==null)
+            self.deactivateSegment(self.activeSegmentIndex);
+    });
+
     // * Changing segment types *
 
     // a helper function that changes the type of the active segment
