@@ -6,6 +6,8 @@
 - Change default Linux command key to alt.
 - Add code to support online viewer.
 - View images with `image-view`.
+- Plots don't always include (0,0).
+- Renderer for [loom](https://github.com/aysylu/loom) graphs https://github.com/JonyEpsilon/loom-gorilla .
 
 ### Breaking changes
 
