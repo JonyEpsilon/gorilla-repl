@@ -35,12 +35,14 @@
   {:scales [{:name   "x"
              :type   "linear"
              :range  "width"
+             :zero   false
              :domain (domain-helper data-key (first plot-range) "x")
              },
             {:name   "y"
              :type   "linear"
              :range  "height"
              :nice   true
+             :zero   false
              :domain (domain-helper data-key (second plot-range) "y")
              }
             ]})
