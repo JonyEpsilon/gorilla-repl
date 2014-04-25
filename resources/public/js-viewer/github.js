@@ -17,7 +17,7 @@ var getFromGist = function (id, filename, callback) {
 };
 
 var decodeGitHubBase64 = function (data) {
-    return base64Decode(data.replace(/[^a-z, A-Z, 0-9, =, +, -]/g, ""));
+    return base64Decode(data.replace(/[^a-z, A-Z, 0-9, =, +, -, \n]/g, ""));
 };
 
 // taken from phpjs : https://github.com/kvz/phpjs
