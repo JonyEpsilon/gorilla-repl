@@ -5,14 +5,14 @@
 - Renderer handles Cons sequences correctly.
 - Change default Linux command key to alt.
 - Add code to support online viewer.
-- View images with `image-view`.
+- View images with `image-view` (thanks to @scottdw).
 - Plots don't always include (0,0).
 - Renderer for [loom](https://github.com/aysylu/loom) graphs https://github.com/JonyEpsilon/loom-gorilla .
 
 ### Breaking changes
 
-- Vega data now uses keywords rather than strings as keys. This will break any functions written to directly manipulate
-  Vega structures. Value copy of Vega structures from old worksheets will also break.
+- Vega data now uses keywords rather than strings as keys (thanks to @cldellow). This will break any functions written
+  to directly manipulate Vega structures. Value copy of Vega structures from old worksheets will also break.
 
 ## Version 0.2.0
 
