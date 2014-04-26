@@ -1,9 +1,0 @@
-<component name="libraryTable">
-  <library name="Leiningen: ring/ring-codec:1.0.0">
-    <CLASSES>
-      <root url="jar://$MAVEN_REPOSITORY$/ring/ring-codec/1.0.0/ring-codec-1.0.0.jar!/" />
-    </CLASSES>
-    <JAVADOC />
-    <SOURCES />
-  </library>
-</component>

@@ -1,9 +1,0 @@
-<component name="libraryTable">
-  <library name="Leiningen: gorilla-repl:0.3.0-20140403.231751-1">
-    <CLASSES>
-      <root url="jar://$MAVEN_REPOSITORY$/gorilla-repl/gorilla-repl/0.3.0-SNAPSHOT/gorilla-repl-0.3.0-SNAPSHOT.jar!/" />
-    </CLASSES>
-    <JAVADOC />
-    <SOURCES />
-  </library>
-</component>

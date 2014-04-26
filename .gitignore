@@ -9,5 +9,7 @@ pom.xml.asc
 /.nrepl-port
 .idea/workspace.xml
 .idea/replstate.xml
+.idea
+*.iml
 .DS_Store
 ws/

@@ -1,9 +1,0 @@
-<component name="libraryTable">
-  <library name="Leiningen: com.fasterxml.jackson.dataformat/jackson-dataformat-smile:2.1.2">
-    <CLASSES>
-      <root url="jar://$MAVEN_REPOSITORY$/com/fasterxml/jackson/dataformat/jackson-dataformat-smile/2.1.2/jackson-dataformat-smile-2.1.2.jar!/" />
-    </CLASSES>
-    <JAVADOC />
-    <SOURCES />
-  </library>
-</component>

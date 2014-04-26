@@ -1,9 +1,0 @@
-<component name="libraryTable">
-  <library name="Leiningen: gorilla-plot:0.1.0-SNAPSHOT">
-    <CLASSES>
-      <root url="jar://$MAVEN_REPOSITORY$/gorilla-plot/gorilla-plot/0.1.0-SNAPSHOT/gorilla-plot-0.1.0-SNAPSHOT.jar!/" />
-    </CLASSES>
-    <JAVADOC />
-    <SOURCES />
-  </library>
-</component>
