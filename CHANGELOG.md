@@ -8,6 +8,7 @@
 - View images with `image-view` (thanks to @scottdw).
 - Plots don't always include (0,0).
 - Renderer for [loom](https://github.com/aysylu/loom) graphs https://github.com/JonyEpsilon/loom-gorilla .
+- Incanter integration https://github.com/JonyEpsilon/loom-gorilla .
 
 ### Breaking changes
 
