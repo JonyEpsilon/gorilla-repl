@@ -30,14 +30,15 @@ var app = (function () {
                 // wire up the UI
                 ko.applyBindings(wsWrapper, document.getElementById("document"));
 
+                // load an existing worksheet, if specified by URL anchor
                 filename = window.location.hash.slice(1)
                 if (filename != "") {
-                  // load an existing worksheet, if specified by URL anchor
                   loadWorksheet(filename);
-                } else {
-                  // make it easier for the user to get started by highlighting the empty code segment
-                  eventBus.trigger("worksheet:segment-clicked", {id: ws.segments()[1].id});
                 }
+
+                // make it easier for the user to get started by highlighting the empty code segment
+                console.log(_.last(ws.segments()).id)
+                eventBus.trigger("worksheet:segment-clicked", {id: _.last(ws.segments()).id});
             },
             // this function is called if we failed to make a REPL connection. We can't really go any further.
             function () {
