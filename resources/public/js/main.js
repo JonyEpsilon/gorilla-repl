@@ -33,12 +33,11 @@ var app = (function () {
                 // load an existing worksheet, if specified by URL anchor
                 filename = window.location.hash.slice(1)
                 if (filename != "") {
-                  loadWorksheet(filename);
+                    loadWorksheet(filename);
+                } else {
+                    // make it easier for the user to get started by highlighting the empty code segment
+                    eventBus.trigger("worksheet:segment-clicked", {id: _.last(ws.segments()).id});
                 }
-
-                // make it easier for the user to get started by highlighting the empty code segment
-                console.log(_.last(ws.segments()).id)
-                eventBus.trigger("worksheet:segment-clicked", {id: _.last(ws.segments()).id});
             },
             // this function is called if we failed to make a REPL connection. We can't really go any further.
             function () {
@@ -81,6 +80,9 @@ var app = (function () {
 
                         // and bind the UI to the new worksheet
                         self.wrapper.worksheet(ws);
+
+                        // highlight the last empty code segment
+                        eventBus.trigger("worksheet:segment-clicked", {id: _.last(ws.segments()).id});
                     }
                 })
                 .fail(function () {
