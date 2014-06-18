@@ -16,9 +16,10 @@ var worksheetWrapper = function (worksheet) {
 
     // the filename that the worksheet corresponds to, if the worksheet was not loaded, or has never been saved,
     // this will be the empty string.
-    self.filename = ko.observable("").subscribe(function (filename) {
-      history.pushState(null, null, "#" + filename);
-    });
+    self.filename = ko.observable("");
+    self.filename.subscribe(function (filename) {
+        history.pushState(null, null, "#" + filename);
+    })
 
     self.title = ko.computed(function () {
         if (self.filename() === "") return "Gorilla REPL";
