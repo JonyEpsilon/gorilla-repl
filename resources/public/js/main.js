@@ -78,6 +78,9 @@ var app = (function () {
                         // store the filename for subsequent saving
                         self.wrapper.filename(filename);
 
+                        // store the filename for URL sharing
+                        history.pushState(null, null, "#" + filename);
+
                         // and bind the UI to the new worksheet
                         self.wrapper.worksheet(ws);
 
