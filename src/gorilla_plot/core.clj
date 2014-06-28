@@ -84,7 +84,10 @@
         points-in-range (util/count-in-range data range-min range-max)
         ;; if bins :automatic then use the Sturges rule (it's simple)
         num-bins (if (= bins :automatic) (Math/ceil (+ 1 (/ (Math/log points-in-range) (Math/log 2)))) bins)
-        bin-size (/ (- range-max range-min) (double num-bins))
+        bin-size-raw (/ (- range-max range-min) (double num-bins))
+        ;; this is a hack to catch the case when all of the points are identical.
+        ;; TODO: this could probably be done in a much nicer way.
+        bin-size (if (< bin-size-raw 1e-15) 1.0 bin-size-raw)
         cat-counts (util/bin-counts data range-min range-max bin-size)
         ;; optionally normalise to probability - note that the normalisation is wrt the whole dataset, not just the
         ;; plotted portion.
