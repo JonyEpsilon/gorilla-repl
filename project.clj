@@ -15,7 +15,11 @@
                  [ch.qos.logback/logback-classic "1.0.13"]
                  [clojure-complete "0.2.3"]
                  [gorilla-renderable "1.0.0"]
-                 [org.clojure/data.codec "0.1.0"]]
+                 [hiccup "1.0.5"]
+                 [instaparse "1.3.1"]
+                 [markdown-clj "0.9.41"]
+                 [org.clojure/data.codec "0.1.0"]
+                 [commons-lang/commons-lang "2.6"]]
   :main ^:skip-aot gorilla-repl.core
   :target-path "target/%s"
   :plugins [[lein-ring "0.8.7"]]
