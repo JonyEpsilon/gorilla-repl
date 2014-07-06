@@ -30,8 +30,14 @@ var app = (function () {
                 // wire up the UI
                 ko.applyBindings(wsWrapper, document.getElementById("document"));
 
-                // make it easier for the user to get started by highlighting the empty code segment
-                eventBus.trigger("worksheet:segment-clicked", {id: ws.segments()[1].id});
+                // load an existing worksheet, if specified by URL anchor
+                filename = window.location.hash.slice(1)
+                if (filename != "") {
+                    loadWorksheet(filename);
+                } else {
+                    // make it easier for the user to get started by highlighting the empty code segment
+                    eventBus.trigger("worksheet:segment-clicked", {id: _.last(ws.segments()).id});
+                }
             },
             // this function is called if we failed to make a REPL connection. We can't really go any further.
             function () {
@@ -53,38 +59,43 @@ var app = (function () {
     };
 
     // ** Application event handlers
+    
+    var loadWorksheet = function (filename) {
+        // if the user selected a worksheet
+        if (filename) {
+            // ask the backend to load the data from disk
+            $.get("/load", {"worksheet-filename": filename})
+                .done(function (data) {
+                    if (data['worksheet-data']) {
+                        // disconnect the worksheet event handlers
+                        self.wrapper.worksheet().removeEventHandlers();
+
+                        // parse the new worksheet
+                        var segments = worksheetParser.parse(data["worksheet-data"]);
+                        var ws = worksheet();
+                        ws.segments = ko.observableArray(segments);
+
+                        // store the filename for subsequent saving
+                        self.wrapper.filename(filename);
+
+                        // store the filename for URL sharing
+                        history.pushState(null, null, "#" + filename);
+
+                        // and bind the UI to the new worksheet
+                        self.wrapper.worksheet(ws);
+
+                        // highlight the last empty code segment
+                        eventBus.trigger("worksheet:segment-clicked", {id: _.last(ws.segments()).id});
+                    }
+                })
+                .fail(function () {
+                    self.wrapper.flashStatusMessage("Failed to load worksheet: " + filename, 1500);
+                });
+        }
+    }
 
     eventBus.on("app:load", function () {
-        prompt(
-            'Worksheet to load (relative to project directory):',
-            function (filename) {
-                // if the user selected a worksheet
-                if (filename) {
-                    // ask the backend to load the data from disk
-                    $.get("/load", {"worksheet-filename": filename})
-                        .done(function (data) {
-                            if (data['worksheet-data']) {
-                                // disconnect the worksheet event handlers
-                                self.wrapper.worksheet().removeEventHandlers();
-
-                                // parse the new worksheet
-                                var segments = worksheetParser.parse(data["worksheet-data"]);
-                                var ws = worksheet();
-                                ws.segments = ko.observableArray(segments);
-
-                                // store the filename for subsequent saving
-                                self.wrapper.filename(filename);
-
-                                // and bind the UI to the new worksheet
-                                self.wrapper.worksheet(ws);
-                            }
-                        })
-                        .fail(function () {
-                            self.wrapper.flashStatusMessage("Failed to load worksheet: " + filename, 1500);
-                        });
-                }
-            }
-        );
+        prompt('Worksheet to load (relative to project directory):', loadWorksheet);
     });
 
     var saveToFile = function (filename, successCallback) {
