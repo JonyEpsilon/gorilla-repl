@@ -92,7 +92,7 @@
     (println (str "Running at http://localhost:" webapp-port "/worksheet.html ."))
     (println "Ctrl+C to exit.")
     ;; block this thread by joining the server (which should run until killed)
-    #_(.join s)))
+    (.join s)))
 
 (defn -main
   [& args]
