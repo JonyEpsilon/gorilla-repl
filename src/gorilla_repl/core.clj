@@ -87,12 +87,14 @@
         _ (println "Started nREPL server on port" nrepl-port)
         _ (ws-relay/connect-to-nrepl nrepl-port)
         webapp-port (or (:port conf) 8990)
-        s (server/run-server app-routes {:port webapp-port :join? false})]
+        s (server/run-server app-routes {:port webapp-port :join? false})
+        plugin? (:plugin? conf)]
     (spit (doto repl-port-file .deleteOnExit) nrepl-port)
     (println (str "Running at http://localhost:" webapp-port "/worksheet.html ."))
     (println "Ctrl+C to exit.")
     ;; block this thread by joining the server (which should run until killed)
-    (.join s)))
+    (when plugin?
+      (.join s))))
 
 (defn -main
   [& args]
