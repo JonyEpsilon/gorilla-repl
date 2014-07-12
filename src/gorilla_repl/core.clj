@@ -92,9 +92,14 @@
     (spit (doto repl-port-file .deleteOnExit) nrepl-port)
     (println (str "Running at http://localhost:" webapp-port "/worksheet.html ."))
     (println "Ctrl+C to exit.")
-    ;; block this thread by joining the server (which should run until killed)
+    ;; block this thread by joining another thread that catch for an exit message (which should run until killed)
     (when plugin?
-      (.join s))))
+      (let [listen-f (fn []
+                       (loop []
+                         (case (read-line)
+                           "quit" nil
+                           :else (recur))))]
+        (.join (doto (Thread. listen-f) (.start)))))))
 
 (defn -main
   [& args]
