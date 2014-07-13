@@ -4,52 +4,6 @@
  * gorilla-repl is licenced to you under the MIT licence. See the file LICENCE.txt for full details.
  */
 
-// ** The worksheet wrapper **
-
-// The main view model is wrapped in a wrapper. It exists mainly for historical reasons. It handles the UI elements that
-// aren't really part of the worksheet (status etc), and contains info related to the server-side (like filename).
-
-var worksheetWrapper = function (worksheet) {
-    var self = {};
-
-    self.worksheet = ko.observable(worksheet);
-
-    // the filename that the worksheet corresponds to, if the worksheet was not loaded, or has never been saved,
-    // this will be the empty string.
-    self.filename = ko.observable("");
-    self.title = ko.computed(function () {
-        if (self.filename() === "") return "Gorilla REPL";
-        else return "Gorilla REPL : " + self.filename();
-    });
-
-    // status indicator
-    self.status = ko.observable("");
-    // A message queue could be useful here, although I'm not sure it'll ever come up in practice.
-    self.flashStatusMessage = function (message, displayMillis) {
-        var millis = displayMillis ? displayMillis : 700;
-        self.status(message);
-        setTimeout(function () {self.status("");}, millis);
-    };
-
-    self.showDisconnectionAlert = function () {
-        vex.dialog.alert({
-            message: "<p>The connection to the server has been lost. This window is now dead! Hit OK to reload the " +
-                "browser window once the server is running again.</p>" +
-                "<p>In case you didn't manage to save the worksheet, " +
-                "the contents are below for your convenience :-)</p>" +
-                "<div class='last-chance'><textarea class='last-chance'>" + self.worksheet().toClojure()
-                + "</textarea></div>",
-            className: 'vex-theme-plain',
-            callback: function () {
-                location.reload();
-            }
-        });
-    };
-
-    return self;
-};
-
-
 // ** The worksheet **
 
 // this viewmodel represents the worksheet document itself. Code to manage the "cursor" that is, the highlight on the
@@ -227,7 +181,7 @@ var worksheet = function () {
         var index = self.activeSegmentIndex;
         if (index == null) return;
         var seg = self.segments()[index];
-        // if the segment is already a free segment, do nothing.
+        // if the segment is already the right type, do nothing.
         if (seg.type == newType) return;
 
         var contents = seg.getContents();
@@ -244,17 +198,6 @@ var worksheet = function () {
         changeActiveSegmentType("code", codeSegment);
     });
 
-    // * Toggling live mode *
-
-    addEventHandler("worksheet:toggle-live", function () {
-        var seg = self.getActiveSegment();
-        if (seg == null) return;
-
-        if (seg.type == "code") {
-            var oldVal = seg.liveEvaluationMode();
-            seg.liveEvaluationMode(!oldVal);
-        }
-    });
 
     // * Evaluation *
 
@@ -282,19 +225,6 @@ var worksheet = function () {
         else eventBus.trigger("worksheet:newBelow")
     });
 
-    // A minimal evaluation handler that is called when in live mode. The output is not cleared each time.
-    addEventHandler("worksheet:live-evaluate", function () {
-        // check that a segment is active
-        var seg = self.getActiveSegment();
-        if (seg == null) return;
-
-        if (seg.type == "code") {
-            // if this is a code segment, then evaluate the contents
-            var code = seg.getContents();
-            seg.clearErrorAndConsole();
-            eventBus.trigger("evaluator:evaluate", {code: code, segmentID: seg.id});
-        }
-    });
 
     // messages from the evaluator
 

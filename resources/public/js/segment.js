@@ -12,9 +12,6 @@ var codeSegment = function (contents, consoleText, output) {
     self.id = UUID.generate();
     self.type = "code";
 
-    // Segment configuration
-    self.liveEvaluationMode = ko.observable(false);
-
     // Segment UI state
     self.active = ko.observable(false);
     self.errorText = ko.observable("");
@@ -23,8 +20,6 @@ var codeSegment = function (contents, consoleText, output) {
     if (output) self.output = ko.observable(output);
     else self.output = ko.observable("");
     self.runningIndicator = ko.observable(false);
-    self.warningIndicator = ko.observable(false);
-    self.outputVisible = ko.observable(true);
 
     // The code
     // handle null contents
@@ -34,11 +29,6 @@ var codeSegment = function (contents, consoleText, output) {
         contents,
         "text/x-clojure"
     );
-
-    // This listener watches for any kind of content change, and if in live mode triggers an immediate re-evaluation.
-    self.content.contents.subscribe( function () {
-        if (self.liveEvaluationMode()) eventBus.trigger("worksheet:live-evaluate");
-    });
 
     self.getContents = function() {
         return self.content.contents();

@@ -89,7 +89,7 @@
 
 <script type="text/html" id="code-segment-template">
     <div class="segment code running"
-         data-bind="css: {selected: active(), 'code-warning': warningIndicator() && active(), running: runningIndicator, live: liveEvaluationMode() && active()}, attr: {id: id}">
+         data-bind="css: {selected: active(), running: runningIndicator}, attr: {id: id}">
 
         <div class="segment-main">
             <textarea class="codeTextArea mousetrap" data-bind="codemirror: content"></textarea>
@@ -99,7 +99,7 @@
             <pre><code data-bind="html: consoleText"></code></pre>
         </div>
         <div class="output"
-             data-bind="visible: (output() != ''), outputViewer: output, segmentID: id, css: {'browser-muted': warningIndicator}">
+             data-bind="visible: (output() != ''), outputViewer: output, segmentID: id">
             </div>
         <div class="segment-footer"></div>
     </div>
