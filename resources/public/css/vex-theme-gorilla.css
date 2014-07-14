@@ -199,7 +199,7 @@
 }
 /* line 77, ../sass/vex-theme-plain.sass */
 .vex.vex-theme-plain .vex-dialog-form .vex-dialog-buttons {
-  *zoom: 1;
+  /*zoom: 1;*/
 }
 /* line 38, ../../../../../.rvm/gems/ruby-1.9.3-p194/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/utilities/general/_clearfix.scss */
 .vex.vex-theme-plain .vex-dialog-form .vex-dialog-buttons:after {
