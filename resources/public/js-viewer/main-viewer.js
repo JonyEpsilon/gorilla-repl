@@ -5,18 +5,10 @@
  */
 
 
-// ** The worksheet wrapper **
-
-// The main view model is wrapped in a wrapper. It exists mainly for historical reasons. It handles the UI elements that
-// aren't really part of the worksheet (status etc), and contains info related to the server-side (like filename).
-
-var worksheetWrapper = function (worksheet) {
+var app = function () {
     var self = {};
 
-    self.worksheet = ko.observable(worksheet);
-
-    // the filename that the worksheet corresponds to, if the worksheet was not loaded, or has never been saved,
-    // this will be the empty string.
+    self.worksheet = ko.observable();
     self.filename = ko.observable("");
     self.title = ko.computed(function () {
         if (self.filename() === "") return "Gorilla REPL viewer";
@@ -25,15 +17,7 @@ var worksheetWrapper = function (worksheet) {
     self.sourceURL = ko.observable("");
     self.source = ko.observable("");
 
-    // status indicator
-    self.status = ko.observable("");
-    // A message queue could be useful here, although I'm not sure it'll ever come up in practice.
-    self.flashStatusMessage = function (message, displayMillis) {
-        var millis = displayMillis ? displayMillis : 700;
-        self.status(message);
-        setTimeout(function () {self.status("");}, millis);
-    };
-
+    // The copyBox is a UI element that gives links to the source of the worksheet, and how to copy/edit it.
     self.copyBoxVisible = ko.observable(false);
     self.showCopyBox = function () {
         self.copyBoxVisible(true);
@@ -42,25 +26,17 @@ var worksheetWrapper = function (worksheet) {
         self.copyBoxVisible(false);
     };
 
-    return self;
-};
-
-var app = (function () {
-
-    var self = {};
-
     self.start = function (worksheetData, sourceURL, worksheetName, source) {
 
         var ws = worksheet();
         ws.segments = ko.observableArray(worksheetParser.parse(worksheetData));
-        var wsWrapper = worksheetWrapper(ws);
-        wsWrapper.sourceURL(sourceURL);
-        wsWrapper.filename(worksheetName);
-        wsWrapper.source(source);
-        self.wrapper = wsWrapper;
+        self.worksheet(ws);
+        self.sourceURL(sourceURL);
+        self.filename(worksheetName);
+        self.source(source);
 
         // wire up the UI
-        ko.applyBindings(wsWrapper, document.getElementById("document"));
+        ko.applyBindings(self, document.getElementById("document"));
 
         // we only use CodeMirror to syntax highlight the code in the viewer
         CodeMirror.colorize($("pre.static-code"), "text/x-clojure");
@@ -68,7 +44,7 @@ var app = (function () {
     };
 
     return self;
-})();
+};
 
 var getParameterByName = function (name) {
     var match = RegExp('[?&]' + name + '=([^&]*)').exec(window.location.search);
@@ -77,6 +53,7 @@ var getParameterByName = function (name) {
 
 // The application entry point
 $(function () {
+    var viewer = app();
     // how are we getting the worksheet data?
     var source = getParameterByName("source");
     switch (source) {
@@ -85,20 +62,20 @@ $(function () {
             var repo = getParameterByName("repo");
             var path = getParameterByName("path");
             getFromGithub(user, repo, path, function (data) {
-                app.start(data, "https://github.com/" + user + "/" + repo, path, source);
+                viewer.start(data, "https://github.com/" + user + "/" + repo, path, source);
             });
             return;
         case "gist":
             var id = getParameterByName("id");
             var filename = getParameterByName("filename");
             getFromGist(id, filename, function (data) {
-                app.start(data,  "https://gist.github.com/" + id, filename, source);
+                viewer.start(data,  "https://gist.github.com/" + id, filename, source);
             });
             return;
         case "test":
             // so you can test without exhausting the github API limit
             $.get('/test.clj').success(function (data) {
-                app.start(data, "http://gorilla-repl.org/", "test.clj", source);
+                viewer.start(data, "http://gorilla-repl.org/", "test.clj", source);
             });
     }
 });
