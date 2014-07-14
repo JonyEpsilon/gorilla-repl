@@ -4,6 +4,8 @@
  * gorilla-repl is licenced to you under the MIT licence. See the file LICENCE.txt for full details.
  */
 
+// Stripped down segment viewmodels for the viewer.
+
 // a code segment contains code, and shows the results of running that code.
 var codeSegment = function (contents, consoleText, output) {
     var self = {};
@@ -36,7 +38,6 @@ var freeSegment = function (contents) {
     if (contents) self.contents = ko.observable(contents);
     else self.contents = ko.observable("");
 
-    // var mdConverter = Markdown.getSanitizingConverter();
     var mdConverter = new Markdown.Converter();
 
     self.renderedContent = ko.computed(function () {

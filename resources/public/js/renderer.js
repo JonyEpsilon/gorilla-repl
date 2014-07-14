@@ -7,10 +7,15 @@
 
 /* Takes a data structure representing the output data and renders it in to the given element. */
 var render = function (data, element, errorCallback) {
+    // Some parts of the output might need to run js functions to complete the rendering (like Vega graphs for instance)
+    // We maintain a list of those functions that we accumulate as we put together the HTML, and then call them all
+    // after the HTML has been inserted into the document.
     var callbackQueue = [];
     var htmlString = renderPart(data, callbackQueue, errorCallback);
     $(element).html("<pre>" + htmlString + "</pre>");
     _.each(callbackQueue, function (callback) {callback()});
+
+    // Attach a click event handler to each element for value copy and paste.
     $(".value", element).click(function (ed) {
         if (ed.altKey) {
             var value = $(this).attr('data-value');
@@ -42,6 +47,7 @@ var renderPart = function (data, callbackQueue, errorCallback) {
     return "Unknown render type";
 };
 
+// This helper supports value copy and paste.
 var wrapWithValue = function (data, content) {
     return "<span class='value' data-value='" + _.escape(data.value) + "'>" + content + "</span>";
 };

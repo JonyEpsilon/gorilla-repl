@@ -4,9 +4,7 @@
  * gorilla-repl is licenced to you under the MIT licence. See the file LICENCE.txt for full details.
  */
 
-// ** The worksheet **
-
-// this viewmodel represents the worksheet document itself. Code to manage the "cursor" that is, the highlight on the
+// This viewmodel represents the worksheet document itself. Code to manage the "cursor" that is, the highlight on the
 // active segment, and the position of the editor cursors, is in the worksheet, as it needs to know about the
 // relationship between the segments.
 var worksheet = function () {

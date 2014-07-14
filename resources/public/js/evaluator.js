@@ -4,12 +4,12 @@
  * gorilla-repl is licenced to you under the MIT licence. See the file LICENCE.txt for full details.
  */
 
-// This maps evaluation IDs to the IDs of the segment that initiated them.
 
 var evaluator = function () {
 
     var self = {};
 
+    // This maps evaluation IDs to the IDs of the segment that initiated them.
     self.evaluationMap = {};
     self.currentNamespace = "user";
 

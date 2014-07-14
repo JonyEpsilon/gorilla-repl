@@ -46,7 +46,6 @@ commandList = [
         name: "command:worksheet:leaveBack",
         desc: "Move to the previous segment.",
         showInMenu: false,
- //       kb: "up",
         action: function () {
             eventBus.trigger("worksheet:leaveBack");
         }
@@ -55,7 +54,6 @@ commandList = [
         name: "command:worksheet:leaveForward",
         desc: "Move to the next segment.",
         showInMenu: false,
-//        kb: "down",
         action: function () {
             eventBus.trigger("worksheet:leaveForward");
         }

@@ -4,11 +4,6 @@
  * gorilla-repl is licenced to you under the MIT licence. See the file LICENCE.txt for full details.
  */
 
-// ** The worksheet wrapper **
-
-// The main view model is wrapped in a wrapper. It exists mainly for historical reasons. It handles the UI elements that
-// aren't really part of the worksheet (status etc), and contains info related to the server-side (like filename).
-
 var worksheetWrapper = function (worksheet) {
     var self = {};
 
@@ -50,14 +45,10 @@ var worksheetWrapper = function (worksheet) {
 };
 
 
-
 var app = (function () {
 
     var self = {};
 
-    // start the app. First of all, the client will call an HTML endpoint on the server to get configuration
-    // information. Then the worksheet object is constructed, either from data in the configuration reply, or using
-    // default content, and bound to the UI.
     self.start = function () {
 
         // start the REPL - the app is started in a callback from the repl connection that indicates we are

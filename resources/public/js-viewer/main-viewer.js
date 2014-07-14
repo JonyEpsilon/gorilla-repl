@@ -4,6 +4,47 @@
  * gorilla-repl is licenced to you under the MIT licence. See the file LICENCE.txt for full details.
  */
 
+
+// ** The worksheet wrapper **
+
+// The main view model is wrapped in a wrapper. It exists mainly for historical reasons. It handles the UI elements that
+// aren't really part of the worksheet (status etc), and contains info related to the server-side (like filename).
+
+var worksheetWrapper = function (worksheet) {
+    var self = {};
+
+    self.worksheet = ko.observable(worksheet);
+
+    // the filename that the worksheet corresponds to, if the worksheet was not loaded, or has never been saved,
+    // this will be the empty string.
+    self.filename = ko.observable("");
+    self.title = ko.computed(function () {
+        if (self.filename() === "") return "Gorilla REPL viewer";
+        else return "Gorilla REPL viewer: " + self.filename();
+    });
+    self.sourceURL = ko.observable("");
+    self.source = ko.observable("");
+
+    // status indicator
+    self.status = ko.observable("");
+    // A message queue could be useful here, although I'm not sure it'll ever come up in practice.
+    self.flashStatusMessage = function (message, displayMillis) {
+        var millis = displayMillis ? displayMillis : 700;
+        self.status(message);
+        setTimeout(function () {self.status("");}, millis);
+    };
+
+    self.copyBoxVisible = ko.observable(false);
+    self.showCopyBox = function () {
+        self.copyBoxVisible(true);
+    };
+    self.hideCopyBox = function () {
+        self.copyBoxVisible(false);
+    };
+
+    return self;
+};
+
 var app = (function () {
 
     var self = {};
