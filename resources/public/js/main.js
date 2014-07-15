@@ -59,6 +59,8 @@ var app = function () {
         setTimeout(function () {self.status("");}, millis);
     };
 
+    self.palette = palette();
+
     // A helper function for prompting with a modal dialog
     var prompt = function (message, cb) {
         Mousetrap.enable(false);

@@ -51,6 +51,7 @@
     <script type="text/javascript" src="js/renderer.js"></script>
     <script type="text/javascript" src="js/segment.js"></script>
     <script type="text/javascript" src="js/worksheet.js"></script>
+    <script type="text/javascript" src="js/palette.js"></script>
     <script type="text/javascript" src="js/main.js"></script>
 
     <title data-bind="text: title">Gorilla REPL</title>
@@ -59,17 +60,9 @@
 
 <!-- The page stub -->
 <div class="status" data-bind="visible: (status() !== ''), html: status">Loading ...</div>
-<div class="commands">?
-    <div class="command-contents">
-        <!--<h2>Commands</h2>-->
-        <ul data-bind="foreach: commandList.filter(function (x) {return x.showInMenu})">
-            <li>
-                <div class="command" data-bind="text: desc"></div>
-                <div class="command-shortcut" data-bind="text: kb"></div>
-            </li>
-        </ul>
-    </div>
-</div>
+
+<div data-bind="template: {name: 'palette-template', data: palette}"></div>
+
 <div id="contents">
     <div class="segment container-segment">
         <div class="container-children">
@@ -81,6 +74,24 @@
 <div class="scroll-pad"></div>
 
 <!-- Templates -->
+
+<script type="text/html" id="palette-template">
+    <div class="palette" data-bind="visible: shown">
+        <h3>Choose a command:</h3>
+        <div class="palette-content">
+            <input type="text"/>
+            <div class="palette-items">
+                <ul data-bind="foreach: items">
+                    <li>
+                        <div class="palette-item" data-bind="text: desc"></div>
+                        <!--<div class="command-shortcut" data-bind="text: kb"></div>-->
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</script>
+
 <script type="text/html" id="segment-template">
     <div data-bind="template: {name: renderTemplate}"></div>
 </script>
