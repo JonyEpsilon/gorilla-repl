@@ -43,8 +43,11 @@ div.selected {
 }
 
 div.palette {
-    position: absolute;
+    position: fixed;
+    /* There seems to be a bug in Safari with rendering text in fixed elements. */
+    -webkit-font-smoothing: subpixel-antialiased;
     z-index: 999;
+    top: 8px;
     left: 50%;
     width: 600px;
     margin-left: -300px;
@@ -52,11 +55,22 @@ div.palette {
     padding: 7px;
     border: 1px solid #4682b4;
     font-family: 'Arvo', serif;
+    font-size: 16px
 }
 
 div.palette h3 {
     padding: 0;
     margin: 0;
+}
+
+div.palette-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: white;
+    opacity: 0.7;
 }
 
 div.palette-content {

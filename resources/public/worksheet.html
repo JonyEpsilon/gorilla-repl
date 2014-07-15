@@ -76,14 +76,18 @@
 <!-- Templates -->
 
 <script type="text/html" id="palette-template">
+    <div class="palette-overlay" data-bind="visible: shown, click: handleOverlayClick"></div>
     <div class="palette" data-bind="visible: shown">
-        <h3>Choose a command:</h3>
+        <h3 data-bind="text: caption"></h3>
         <div class="palette-content">
-            <input type="text"/>
+            <input type="text"
+                   data-bind="hasFocus: focused, value: filterText, event: {keydown: handleKeyPress}"/>
             <div class="palette-items">
                 <ul data-bind="foreach: items">
-                    <li>
-                        <div class="palette-item" data-bind="text: desc"></div>
+                    <li data-bind="click: $parent.handleItemClick">
+                        <div class="palette-item"
+                             data-bind="text: desc, css: {highlight: ($index() == $parent.highlight())}">
+                        </div>
                         <!--<div class="command-shortcut" data-bind="text: kb"></div>-->
                     </li>
                 </ul>
