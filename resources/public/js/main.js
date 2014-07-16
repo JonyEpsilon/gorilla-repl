@@ -31,8 +31,10 @@ var app = function () {
         // prepare a skeleton worksheet
         var ws = worksheet();
         ws.segments().push(
-            freeSegment("# Gorilla REPL\n\nWelcome to gorilla :-) Shift + enter evaluates code. " +
-                "Hit ctrl+g (Mac)/alt+g (Windows, Linux) twice in succession for more commands ...")
+            // Note that the variable ck here is defined in commandProcessor.js, and gives the appropriate shortcut key
+            // (ctrl or alt) for the platform.
+            freeSegment("# Gorilla REPL\n\nWelcome to gorilla :-)\n\nShift + enter evaluates code. " +
+                "Hit " + ck + "+g twice in succession for more commands ...")
         );
         ws.segments().push(codeSegment(""));
         self.setWorksheet(ws, "");
