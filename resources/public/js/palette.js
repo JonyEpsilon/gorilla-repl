@@ -51,8 +51,14 @@ var palette = function () {
         self.items.push.apply(self.items, newItems);
     };
 
+
     self.updateFilter = function (filterText) {
-        var filteredItems = self.allItems.filter(function (i) {return i.text.lastIndexOf(filterText, 0) === 0});
+        var filteredItems = self.allItems.filter(
+            function (i) {
+                // the idea to do it this way comes from http://stackoverflow.com/a/24570566
+                var re = new RegExp(filterText.toLowerCase().split('').join('.*'));
+                return i.text.toLowerCase().match(re);
+            });
         self.updateItems(filteredItems);
     };
 
