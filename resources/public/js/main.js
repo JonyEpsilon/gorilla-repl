@@ -34,7 +34,7 @@ var app = function () {
             // Note that the variable ck here is defined in commandProcessor.js, and gives the appropriate shortcut key
             // (ctrl or alt) for the platform.
             freeSegment("# Gorilla REPL\n\nWelcome to gorilla :-)\n\nShift + enter evaluates code. " +
-                "Hit " + ck + "+g twice in succession for more commands ...")
+                "Hit " + ck + "+g twice in quick succession for more commands ...")
         );
         ws.segments().push(codeSegment(""));
         self.setWorksheet(ws, "");
@@ -98,6 +98,7 @@ var app = function () {
         var paletteCommands = visibleCommands.map(function (c) {
             return {
                 desc: '<div class="command">' + c.desc + '</div><div class="command-shortcut">' + c.kb + '</div>',
+                text: c.desc,
                 action: c.action
             }
         });
@@ -182,4 +183,3 @@ $(function () {
             alert("Failed to make initial connection to nREPL server. Refreshing the page might help.");
         });
 });
-

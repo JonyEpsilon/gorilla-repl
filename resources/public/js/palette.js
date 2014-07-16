@@ -14,6 +14,9 @@ var palette = function () {
 
     self.shown = ko.observable(false);
     self.caption = ko.observable("Choose a command:");
+    // These are the items that the palette was shown with - we keep these because when we filter ...
+    self.allItems = [];
+    // ... we will only show a subset of the items, held in the following observable array.
     self.items = ko.observableArray();
     self.highlight = ko.observable(1);
     // this is used to control/read the focus state of the text input. This is the only part of the palette that will
@@ -21,18 +24,18 @@ var palette = function () {
     self.focused = ko.observable(false);
     // the text the user has put in the filter box
     self.filterText = ko.observable("");
+    self.filterText.subscribe(function (nv) {self.updateFilter(nv)});
 
     // This function shows the palette with the given items. It's the only function on the palette that you should need
     // to call. The `items` should be an array of objects, with each object having a `desc` property, which is an HTML
-    // string that will be shown to the user, and an `action` property which a function that will be called if that item
-    // is selected.
+    // string that will be shown to the user, a `text` property which is what the item will be filtered against (and so
+    // had better match up with how the user reads the `desc` property, and an `action` property which a function that
+    // will be called if that item is selected.
     self.show = function (caption, items) {
         self.caption(caption);
-        self.items.removeAll();
-        // insert all of the items into the now empty observableArray
-        self.items.push.apply(self.items, items);
+        self.allItems = items;
+        self.updateItems(items);
         self.filterText("");
-        self.highlight(0);
         self.shown(true);
         self.focused(true);
         self.scrollToNth(0,true);
@@ -40,6 +43,17 @@ var palette = function () {
 
     self.hide = function () {
         self.shown(false);
+    };
+
+    self.updateItems = function (newItems) {
+        self.highlight(0);
+        self.items.removeAll();
+        self.items.push.apply(self.items, newItems);
+    };
+
+    self.updateFilter = function (filterText) {
+        var filteredItems = self.allItems.filter(function (i) {return i.text.lastIndexOf(filterText, 0) === 0});
+        self.updateItems(filteredItems);
     };
 
     self.moveSelectionDown = function () {
