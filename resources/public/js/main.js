@@ -34,7 +34,8 @@ var app = function () {
             // Note that the variable ck here is defined in commandProcessor.js, and gives the appropriate shortcut key
             // (ctrl or alt) for the platform.
             freeSegment("# Gorilla REPL\n\nWelcome to gorilla :-)\n\nShift + enter evaluates code. " +
-                "Hit " + ck + "+g twice in quick succession for more commands ...")
+                "Hit " + ck + "+g twice in quick succession, or click the menu icon (upper-right corner) for more " +
+                "commands ...")
         );
         ws.segments().push(codeSegment(""));
         self.setWorksheet(ws, "");
@@ -63,6 +64,10 @@ var app = function () {
 
     // The palette UI component. This single palette is reused each time it appears.
     self.palette = palette();
+
+    self.handleMenuClick = function () {
+        eventBus.trigger("command:app:commands");
+    };
 
     // A helper function for prompting with a modal dialog
     var prompt = function (message, cb) {

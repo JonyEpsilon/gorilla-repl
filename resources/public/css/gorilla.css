@@ -46,6 +46,20 @@ div.selected {
     outline: none;
 }
 
+div.menu-icon {
+    position: fixed;
+    z-index: 100;
+    top: 10px;
+    right: 20px;
+    font-size: 30px;
+    opacity: 0.2;
+    cursor: default;
+}
+
+div.menu-icon:hover {
+    opacity: 0.5;
+}
+
 div.palette {
     position: fixed;
     /* There seems to be a bug in Safari with rendering text in fixed elements. */

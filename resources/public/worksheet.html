@@ -60,7 +60,7 @@
 
 <!-- The page stub -->
 <div class="status" data-bind="visible: (status() !== '')"><h3 data-bind="html: status">Loading ...</h3></div>
-
+<div class="menu-icon" data-bind="click: handleMenuClick">&#9776;</div>
 <div data-bind="template: {name: 'palette-template', data: palette}"></div>
 
 <div id="contents">
