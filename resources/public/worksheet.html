@@ -59,7 +59,7 @@
 <body>
 
 <!-- The page stub -->
-<div class="status" data-bind="visible: (status() !== ''), html: status">Loading ...</div>
+<div class="status" data-bind="visible: (status() !== '')"><h3 data-bind="html: status">Loading ...</h3></div>
 
 <div data-bind="template: {name: 'palette-template', data: palette}"></div>
 
@@ -84,9 +84,9 @@
                    data-bind="hasFocus: focused, value: filterText, event: {keydown: handleKeyPress}"/>
             <div class="palette-items">
                 <ul data-bind="foreach: items">
-                    <li data-bind="click: $parent.handleItemClick">
+                    <li data-bind="click: $parent.handleItemClick, attr: {id: ('palette-item-' + $index())}">
                         <div class="palette-item"
-                             data-bind="text: desc, css: {highlight: ($index() == $parent.highlight())}">
+                             data-bind="html: desc, css: {highlight: ($index() == $parent.highlight())}">
                         </div>
                         <!--<div class="command-shortcut" data-bind="text: kb"></div>-->
                     </li>

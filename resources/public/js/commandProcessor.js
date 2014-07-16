@@ -43,6 +43,15 @@ var combo = function (k1, k2) { return ck + "+" + k1 + " " + ck + "+" + k2};
 
 commandList = [
     {
+        name: "command:app:commands",
+        desc: "Show the command list.",
+        showInMenu: false,
+        kb: combo('g', 'g'),
+        action: function () {
+            eventBus.trigger("app:commands");
+        }
+    },
+    {
         name: "command:worksheet:leaveBack",
         desc: "Move to the previous segment.",
         showInMenu: false,

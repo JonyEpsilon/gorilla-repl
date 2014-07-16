@@ -8,20 +8,24 @@
 
 div.status {
     font-family: 'Arvo', serif;
-    font-size: 15px;
+    font-size: 16px;
     position: fixed;
-    top: 10px;
+    /* There seems to be a bug in Safari with rendering text in fixed elements. */
+    -webkit-font-smoothing: subpixel-antialiased;
+    top: 8px;
     left: 50%;
     width: 600px;
     margin-left: -300px;
     padding: 10px;
     text-align: center;
-    box-shadow: 0 0 10px steelblue;
-    border-style: solid;
-    border-color: #888888;
-    border-width: 1px;
-    background-color: #F1F1F1;
+    border: 1px solid #4682b4;
+    background-color: #eeeeee;
     z-index: 100;
+}
+
+div.status h3 {
+    padding: 0;
+    margin: 0;
 }
 
 
@@ -70,7 +74,8 @@ div.palette-overlay {
     width: 100%;
     height: 100%;
     background-color: white;
-    opacity: 0.7;
+    opacity: 0.8;
+    z-index: 998;
 }
 
 div.palette-content {
@@ -108,6 +113,13 @@ div.palette-item {
 
 div.palette-item.highlight {
     background: #FF29D2;
+}
+
+div.command-shortcut {
+    padding-top: 5px;
+    font-family: 'lucida console', sans-serif;
+    font-size: 11px;
+    color: #555555;
 }
 
 /* Hack for FF as it puts the outline around the box-shadow :-( */

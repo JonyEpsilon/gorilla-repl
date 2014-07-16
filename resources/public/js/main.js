@@ -32,7 +32,7 @@ var app = function () {
         var ws = worksheet();
         ws.segments().push(
             freeSegment("# Gorilla REPL\n\nWelcome to gorilla :-) Shift + enter evaluates code. " +
-                "Poke the question mark (top right) to learn more ...")
+                "Hit ctrl+g (Mac)/alt+g (Windows, Linux) twice in succession for more commands ...")
         );
         ws.segments().push(codeSegment(""));
         self.setWorksheet(ws, "");
@@ -59,6 +59,7 @@ var app = function () {
         setTimeout(function () {self.status("");}, millis);
     };
 
+    // The palette UI component. This single palette is reused each time it appears.
     self.palette = palette();
 
     // A helper function for prompting with a modal dialog
@@ -83,11 +84,23 @@ var app = function () {
             self.flashStatusMessage("Saved: " + filename);
             if (successCallback) successCallback();
         }).fail(function () {
-            self.flashStatusMessage("Failed to save worksheet: " + filename, 1500);
+            self.flashStatusMessage("Failed to save worksheet: " + filename, 2000);
         });
     };
 
     // ** Application event handlers
+
+    // The user has summoned the palette with the list of commands
+    eventBus.on("app:commands", function () {
+        var visibleCommands = commandList.filter(function (x) {return x.showInMenu});
+        var paletteCommands = visibleCommands.map(function (c) {
+            return {
+                desc: '<div class="command">' + c.desc + '</div><div class="command-shortcut">' + c.kb + '</div>',
+                action: c.action
+            }
+        });
+        self.palette.show("Choose a command:", paletteCommands);
+    });
 
     eventBus.on("app:load", function () {
         prompt(
@@ -108,7 +121,7 @@ var app = function () {
                             }
                         })
                         .fail(function () {
-                            self.flashStatusMessage("Failed to load worksheet: " + filename, 1500);
+                            self.flashStatusMessage("Failed to load worksheet: " + filename, 2000);
                         });
                 }
             }
