@@ -19,8 +19,8 @@ var palette = function () {
     // ... we will only show a subset of the items, held in the following observable array.
     self.items = ko.observableArray();
     self.highlight = ko.observable(1);
-    // this is used to control/read the focus state of the text input. This is the only part of the palette that will
-    // take the focus, and is focused when the palette appears.
+    // this is used to control/read the focus state of the text input. The text input is the only part of the palette
+    // that will take the focus, and is focused when the palette appears.
     self.focused = ko.observable(false);
     // the text the user has put in the filter box
     self.filterText = ko.observable("");
@@ -45,13 +45,16 @@ var palette = function () {
         self.shown(false);
     };
 
+    // updates the list of _visible_ items.
     self.updateItems = function (newItems) {
         self.highlight(0);
         self.items.removeAll();
         self.items.push.apply(self.items, newItems);
     };
 
-
+    // update the list of visible items, based on the filter text. Uses that matching that I don't really know the name
+    // of that you get in IntelliJ/Sublime/Atom etc where as long as the chars in the filter text appear, in that order,
+    // in the string, then it matches.
     self.updateFilter = function (filterText) {
         var filteredItems = self.allItems.filter(
             function (i) {
@@ -62,6 +65,7 @@ var palette = function () {
         self.updateItems(filteredItems);
     };
 
+    // This method and the next move the selected item highlight
     self.moveSelectionDown = function () {
         var curPos = self.highlight();
         var newPos;
@@ -95,10 +99,12 @@ var palette = function () {
         self.hide();
     };
 
+    // The overlay is a viewport sized div that sits behind the palette, but over everything else.
     self.handleOverlayClick = function () {
         self.hide();
     };
 
+    // This is bound to keypresses on the text input.
     self.handleKeyPress = function (d, event) {
         // up
         if (event.keyCode === 38) {
