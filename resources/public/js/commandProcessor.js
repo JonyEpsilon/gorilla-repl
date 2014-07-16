@@ -77,22 +77,48 @@ commandList = [
         }
     },
     {
-        name: "command:worksheet:completions",
-        desc: "Show possible auto-completions.",
-        showInMenu: true,
-        // alternative provided to workaround Firefox's idiotic unstoppable binding of ctrl+space
-        kb: ["ctrl+space", combo('g', 'a')],
-        action: function () {
-            eventBus.trigger("worksheet:completions");
-        }
-    },
-    {
         name: "command:worksheet:delete",
         desc: "Delete the highlighted segment.",
         showInMenu: true,
         kb: combo('g', 'x'),
         action: function () {
             eventBus.trigger("worksheet:delete");
+        }
+    },
+    {
+        name: "command:worksheet:changeToFree",
+        desc: "Convert the highlighted segment to a markdown segment.",
+        showInMenu: true,
+        kb: combo('g', 'm'),
+        action: function () {
+            eventBus.trigger("worksheet:changeToFree");
+        }
+    },
+    {
+        name: "command:worksheet:changeToCode",
+        desc: "Convert the highlighted segment to a clojure segment.",
+        showInMenu: true,
+        kb: combo('g', 'j'),
+        action: function () {
+            eventBus.trigger("worksheet:changeToCode");
+        }
+    },
+    {
+        name: "command:app:open",
+        desc: "Load a worksheet.",
+        showInMenu: true,
+        kb: combo('g', 'l'),
+        action: function () {
+            eventBus.trigger("app:load");
+        }
+    },
+    {
+        name: "command:app:save",
+        desc: "Save the worksheet.",
+        showInMenu: true,
+        kb: combo('g', 's'),
+        action: function () {
+            eventBus.trigger("app:save");
         }
     },
     {
@@ -111,23 +137,6 @@ commandList = [
         kb: combo('g', 'b'),
         action: function () {
             eventBus.trigger("worksheet:newAbove");
-        }
-    },    {
-        name: "command:worksheet:changeToFree",
-        desc: "Convert the highlighted segment to a markdown segment.",
-        showInMenu: true,
-        kb: combo('g', 'm'),
-        action: function () {
-            eventBus.trigger("worksheet:changeToFree");
-        }
-    },
-    {
-        name: "command:worksheet:changeToCode",
-        desc: "Convert the highlighted segment to a clojure segment.",
-        showInMenu: true,
-        kb: combo('g', 'j'),
-        action: function () {
-            eventBus.trigger("worksheet:changeToCode");
         }
     },
     {
@@ -149,21 +158,13 @@ commandList = [
         }
     },
     {
-        name: "command:app:open",
-        desc: "Load a worksheet.",
+        name: "command:worksheet:completions",
+        desc: "Show possible auto-completions.",
         showInMenu: true,
-        kb: combo('g', 'l'),
+        // alternative provided to workaround Firefox's idiotic unstoppable binding of ctrl+space
+        kb: ["ctrl+space", combo('g', 'a')],
         action: function () {
-            eventBus.trigger("app:load");
-        }
-    },
-    {
-        name: "command:app:save",
-        desc: "Save the worksheet.",
-        showInMenu: true,
-        kb: combo('g', 's'),
-        action: function () {
-            eventBus.trigger("app:save");
+            eventBus.trigger("worksheet:completions");
         }
     }
 ];
