@@ -81,6 +81,9 @@ var app = function () {
         }
     };
 
+    // The code dialog component, which is used for last-chance worksheet data and value copy and paste.
+    self.codeDialog = codeDialog();
+
     // Helpers for loading and saving the worksheet - called by the various command handlers
     var saveToFile = function (filename, successCallback) {
         $.post("/save", {
@@ -158,17 +161,27 @@ var app = function () {
     });
 
     eventBus.on("app:connection-lost", function () {
-        vex.dialog.alert({
-            message: "<p>The connection to the server has been lost. This window is now dead! Hit OK to reload the " +
-                "browser window once the server is running again.</p>" +
+        self.codeDialog.show({
+            message: "<p>The connection to the server has been lost. This window is now dead! Hit the button to " +
+                "reload the browser window once the server is running again.</p>" +
                 "<p>In case you didn't manage to save the worksheet, " +
-                "the contents are below for your convenience :-)</p>" +
-                "<div class='last-chance'><textarea class='last-chance'>" + self.worksheet().toClojure()
-                + "</textarea></div>",
-            className: 'vex-theme-plain',
-            callback: function () {
+                "the contents are below for your convenience :-)</p>",
+            caption: "Connection to server lost",
+            contents: self.worksheet().toClojure(),
+            okButtonText: "Reload",
+            hideCallback: function () {
                 location.reload();
             }
+        });
+    });
+
+    eventBus.on("app:show-value", function (e, value) {
+        self.codeDialog.show({
+            message: "",
+            caption: "Clojure value:",
+            contents: value,
+            okButtonText: "OK",
+            hideCallback: function () {}
         });
     });
 

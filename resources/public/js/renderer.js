@@ -19,12 +19,7 @@ var render = function (data, element, errorCallback) {
     $(".value", element).click(function (ed) {
         if (ed.altKey) {
             var value = $(this).attr('data-value');
-            // TODO - don't like these dialogs peppered everywhere!
-            vex.dialog.alert({
-                message: "Clojure value:<div class='last-chance'><textarea class='last-chance'>" + value
-                    + "</textarea></div>",
-                className: 'vex-theme-plain'
-            });
+            eventBus.trigger("app:show-value", value);
         }
         return false;
     });

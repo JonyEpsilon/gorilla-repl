@@ -139,7 +139,7 @@ div.command-shortcut {
 
 div.modal-button {
     width: 150px;
-    padding: 10px;
+    padding: 8px 10px 8px 10px;
     margin-right: 10px;
     color: white;
     background: #4682b4;
@@ -151,6 +151,7 @@ div.modal-button {
 div.modal-button.highlight {
     background: #FF29D2;
 }
+
 
 /* Hack for FF as it puts the outline around the box-shadow :-( */
 @-moz-document url-prefix() {
@@ -167,8 +168,11 @@ div.last-chance {
 
 textarea.last-chance {
     width: 100%;
+    border: none;
     height: 80px;
     resize: none;
+    margin: 10px 0 5px 0;
+    padding: 0;
 }
 
 .scroll-pad {
