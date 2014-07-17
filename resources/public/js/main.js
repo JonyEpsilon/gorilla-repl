@@ -82,7 +82,6 @@ var app = function () {
         });
     };
 
-    
     // A helper for saving the worksheet
     var saveToFile = function (filename, successCallback) {
         $.post("/save", {
@@ -96,6 +95,23 @@ var app = function () {
         });
     };
 
+    var loadFromFile = function (filename) {
+        // ask the backend to load the data from disk
+        $.get("/load", {"worksheet-filename": filename})
+            .done(function (data) {
+                if (data['worksheet-data']) {
+                    // parse and construct the new worksheet
+                    var segments = worksheetParser.parse(data["worksheet-data"]);
+                    var ws = worksheet();
+                    ws.segments = ko.observableArray(segments);
+                    // show it in the editor
+                    self.setWorksheet(ws, filename);
+                }
+            })
+            .fail(function () {
+                self.flashStatusMessage("Failed to load worksheet: " + filename, 2000);
+            });
+    };
 
     // ** Application event handlers
 
@@ -113,29 +129,24 @@ var app = function () {
     });
 
     eventBus.on("app:load", function () {
-        prompt(
-            'Worksheet to load (relative to project directory):',
-            function (filename) {
-                // if the user selected a worksheet
-                if (filename) {
-                    // ask the backend to load the data from disk
-                    $.get("/load", {"worksheet-filename": filename})
-                        .done(function (data) {
-                            if (data['worksheet-data']) {
-                                // parse and construct the new worksheet
-                                var segments = worksheetParser.parse(data["worksheet-data"]);
-                                var ws = worksheet();
-                                ws.segments = ko.observableArray(segments);
-                                // show it in the editor
-                                self.setWorksheet(ws, filename);
-                            }
-                        })
-                        .fail(function () {
-                            self.flashStatusMessage("Failed to load worksheet: " + filename, 2000);
-                        });
-                }
+        var files = [];
+        $.ajax({
+            type: "GET",
+            url: "/gorilla-files",
+            async: false,
+            success: function (data) {
+                files = data.files;
             }
-        );
+        });
+        var paletteFiles = files.map(function (c) {
+            return {
+                desc: '<div class="command">' + c + '</div>',
+                text: c,
+                action: (function () {loadFromFile(c)})
+            }
+        });
+        self.palette.show("Choose a file to load:", paletteFiles);
+
     });
 
     eventBus.on("app:save", function () {

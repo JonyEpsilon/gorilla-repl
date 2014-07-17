@@ -16,6 +16,7 @@
             [gorilla-repl.websocket-relay :as ws-relay]
             [gorilla-repl.render-values-mw :as render-mw]
             [gorilla-repl.renderer :as renderer] ;; this is needed to bring the render implementations into scope
+            [gorilla-repl.files :as files]
             [complete.core :as complete])
   (:gen-class))
 
@@ -64,6 +65,12 @@
     (when-let [ns (:ns (:params req))]
       (res/response {:completions (complete/completions stub (symbol ns))}))))
 
+;; API endpoint for getting the list of worksheets in the project
+(defn gorilla-files
+  [req]
+  (let [paths (files/gorilla-filepaths-in-current-directory)]
+      (res/response {:files paths})))
+
 
 ;; the combined routes - we serve up everything in the "public" directory of resources under "/".
 ;; The REPL traffic is handled in the websocket-transport ns.
@@ -71,6 +78,7 @@
            (GET "/load" [] (wrap-api-handler load-worksheet))
            (POST "/save" [] (wrap-api-handler save))
            (GET "/completions" [] (wrap-api-handler completions))
+           (GET "/gorilla-files" [] (wrap-api-handler gorilla-files))
            (GET "/repl" [] ws-relay/ring-handler)
            (route/resources "/"))
 

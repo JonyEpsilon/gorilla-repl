@@ -95,8 +95,8 @@ var palette = function () {
     };
 
     self.handleItemClick = function (item) {
-        item.action();
         self.hide();
+        item.action();
     };
 
     // The overlay is a viewport sized div that sits behind the palette, but over everything else.
@@ -124,8 +124,8 @@ var palette = function () {
         // enter
         if (event.keyCode === 13) {
             var item = self.items()[self.highlight()];
-            if (item) item.action();
             self.hide();
+            if (item) item.action();
             return false;
         }
         // Pass through keypresses to the default handler.
