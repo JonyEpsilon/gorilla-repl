@@ -60,7 +60,7 @@ div.menu-icon:hover {
     opacity: 0.5;
 }
 
-div.palette {
+div.modal {
     position: fixed;
     /* There seems to be a bug in Safari with rendering text in fixed elements. */
     -webkit-font-smoothing: subpixel-antialiased;
@@ -76,12 +76,12 @@ div.palette {
     font-size: 16px
 }
 
-div.palette h3 {
+div.modal h3 {
     padding: 0;
     margin: 0;
 }
 
-div.palette-overlay {
+div.modal-overlay {
     position: fixed;
     top: 0;
     left: 0;
@@ -92,12 +92,12 @@ div.palette-overlay {
     z-index: 998;
 }
 
-div.palette-content {
+div.modal-content {
     padding: 3px;
     font-family: 'Lucida Grande', sans-serif;
 }
 
-div.palette-content input {
+div.modal-content input {
     width: 580px;
     resize: none;
     border: none;
@@ -135,6 +135,21 @@ div.command-shortcut {
     font-family: 'lucida console', sans-serif;
     font-size: 11px;
     color: #555555;
+}
+
+div.modal-button {
+    width: 150px;
+    padding: 10px;
+    margin-right: 10px;
+    color: white;
+    background: #4682b4;
+    font-weight: bold;
+    font-family: 'Arvo', serif;
+    float: left;
+}
+
+div.modal-button.highlight {
+    background: #FF29D2;
 }
 
 /* Hack for FF as it puts the outline around the box-shadow :-( */

@@ -52,6 +52,7 @@
     <script type="text/javascript" src="js/segment.js"></script>
     <script type="text/javascript" src="js/worksheet.js"></script>
     <script type="text/javascript" src="js/palette.js"></script>
+    <script type="text/javascript" src="js/saveDialog.js"></script>
     <script type="text/javascript" src="js/main.js"></script>
 
     <title data-bind="text: title">Gorilla REPL</title>
@@ -62,6 +63,9 @@
 <div class="status" data-bind="visible: (status() !== '')"><h3 data-bind="html: status">Loading ...</h3></div>
 <div class="menu-icon" data-bind="click: handleMenuClick">&#9776;</div>
 <div data-bind="template: {name: 'palette-template', data: palette}"></div>
+<!--<div data-bind="template: {name: 'last-chance-template'}"></div>-->
+<div data-bind="template: {name: 'save-template', data: saveDialog}"></div>
+
 
 <div id="contents">
     <div class="segment container-segment">
@@ -76,10 +80,10 @@
 <!-- Templates -->
 
 <script type="text/html" id="palette-template">
-    <div class="palette-overlay" data-bind="visible: shown, click: handleOverlayClick"></div>
-    <div class="palette" data-bind="visible: shown">
+    <div class="modal-overlay" data-bind="visible: shown, click: handleOverlayClick"></div>
+    <div class="modal" data-bind="visible: shown">
         <h3 data-bind="text: caption"></h3>
-        <div class="palette-content">
+        <div class="modal-content">
             <input type="text"
                    data-bind="hasFocus: focused, value: filterText, valueUpdate: 'input', event: {keydown: handleKeyPress}"/>
             <div class="palette-items">
@@ -92,6 +96,19 @@
                     </li>
                 </ul>
             </div>
+        </div>
+    </div>
+</script>
+
+<script type="text/html" id="save-template">
+    <div class="modal-overlay" data-bind="visible: shown, click: handleOverlayClick"></div>
+    <div class="modal" data-bind="visible: shown">
+        <h3>Filename (relative to project directory):</h3>
+        <div class="modal-content">
+            <input type="text" data-bind="hasFocus: focused, value: filename, valueUpdate: 'input', event: {keydown: handleKeyPress}"/>
+        <div><div class="modal-button" data-bind="click: handleCancelClick">Cancel</div>
+            <div class="modal-button highlight" data-bind="click: handleOKClick">OK</div>
+        </div>
         </div>
     </div>
 </script>

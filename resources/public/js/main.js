@@ -64,25 +64,24 @@ var app = function () {
 
     // The palette UI component. This single palette is reused each time it appears.
     self.palette = palette();
-
+    // handler for the worksheet menu icon.
     self.handleMenuClick = function () {
         eventBus.trigger("command:app:commands");
     };
 
-    // A helper function for prompting with a modal dialog
-    var prompt = function (message, cb) {
-        Mousetrap.enable(false);
-        vex.dialog.prompt({
-            message: message,
-            className: 'vex-theme-plain', // yuck
-            callback: function (filename) {
-                Mousetrap.enable(true);
-                cb(filename);
-            }
-        });
+    // The save dialog UI component. See below for a summary of the app:save logic.
+    self.saveDialog = saveDialog((function (f) {self.handleSaveDialogSuccess(f)}));
+    // the callback that the save dialog will call
+    self.handleSaveDialogSuccess = function (fname) {
+        if (fname) {
+            saveToFile(fname, function() {
+                // if the save was successful, hold on to the filename.
+                self.filename(fname);
+            });
+        }
     };
 
-    // A helper for saving the worksheet
+    // Helpers for loading and saving the worksheet - called by the various command handlers
     var saveToFile = function (filename, successCallback) {
         $.post("/save", {
             "worksheet-filename": filename,
@@ -146,22 +145,16 @@ var app = function () {
         });
     });
 
+    // Save logic is a bit confusing. This event will be triggered if the user commands a save. If there's a filename
+    // we save using the helper above, and are done. If not, we put up the save dialog. If the user completes the save
+    // dialog then it fires a callback which does the actual saving and stores the filename (see
+    // self.handleSaveDialogSuccess)
     eventBus.on("app:save", function () {
         var fname = self.filename();
         // if we already have a filename, save to it. Else, prompt for a name.
         if (fname !== "") {
             saveToFile(fname);
-        } else {
-            prompt('Filename (relative to project directory):',
-            function (fname) {
-                if (fname) {
-                    saveToFile(fname, function() {
-                        // if the save was successful, hold on to the filename.
-                        self.filename(fname);
-                    });
-                }
-            })
-        }
+        } else self.saveDialog.show();
     });
 
     eventBus.on("app:connection-lost", function () {
