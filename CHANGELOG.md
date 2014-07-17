@@ -2,6 +2,7 @@
 
 ## Version 0.3.?
 
+- URL shows filename, and can load worksheet from URL (thanks to @gfredericks and @modellurgist).
 - New UI for commands and loading files. Mouse-friendly, small-screen friendlier, and generally less shoddy.
 - Renderer handles Cons sequences correctly.
 - Change default Linux command key to alt.
