@@ -34,7 +34,7 @@ var app = function () {
             // Note that the variable ck here is defined in commandProcessor.js, and gives the appropriate shortcut key
             // (ctrl or alt) for the platform.
             freeSegment("# Gorilla REPL\n\nWelcome to gorilla :-)\n\nShift + enter evaluates code. " +
-                "Hit " + ck + "+g twice in quick succession, or click the menu icon (upper-right corner) for more " +
+                "Hit " + ck + "+g twice in quick succession or click the menu icon (upper-right corner) for more " +
                 "commands ...")
         );
         ws.segments().push(codeSegment(""));
@@ -82,6 +82,7 @@ var app = function () {
         });
     };
 
+    
     // A helper for saving the worksheet
     var saveToFile = function (filename, successCallback) {
         $.post("/save", {
@@ -94,6 +95,7 @@ var app = function () {
             self.flashStatusMessage("Failed to save worksheet: " + filename, 2000);
         });
     };
+
 
     // ** Application event handlers
 

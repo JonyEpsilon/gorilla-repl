@@ -94,6 +94,7 @@ div.palette-overlay {
 
 div.palette-content {
     padding: 3px;
+    font-family: 'Lucida Grande', sans-serif;
 }
 
 div.palette-content input {
