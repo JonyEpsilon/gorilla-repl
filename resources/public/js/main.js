@@ -16,6 +16,10 @@ var app = function () {
     // the filename that the worksheet corresponds to. If the worksheet was not loaded, or has never been saved,
     // this will be the empty string.
     self.filename = ko.observable("");
+    // whenever we change the filename, we update the URL to match
+    self.filename.subscribe(function (filename) {
+        history.pushState(null, null, "?filename=" + filename);
+     });
 
     // Use this to change the worksheet being edited. It takes care of hooking/unhooking event handlers as well as
     // changing the worksheet data structure itself.
@@ -27,18 +31,27 @@ var app = function () {
         newWorksheet.addEventHandlers();
     };
 
-    self.start = function () {
-        // prepare a skeleton worksheet
+    self.start = function (initialFilename) {
+        // Prepare an empty worksheet so the UI has something to bind to. We do this as if we are loading a worksheet
+        // on startup, we do it asynchronously, so need to have something in place before starting the UI. This is
+        // easier than having two paths that both have UI startup code on them. (Although, the UX is slightly less slick
+        // this way).
         var ws = worksheet();
-        ws.segments().push(
-            // Note that the variable ck here is defined in commandProcessor.js, and gives the appropriate shortcut key
-            // (ctrl or alt) for the platform.
-            freeSegment("# Gorilla REPL\n\nWelcome to gorilla :-)\n\nShift + enter evaluates code. " +
-                "Hit " + ck + "+g twice in quick succession or click the menu icon (upper-right corner) for more " +
-                "commands ...")
-        );
-        ws.segments().push(codeSegment(""));
         self.setWorksheet(ws, "");
+
+        if (initialFilename) {
+            loadFromFile(initialFilename);
+        } else {
+            // Prepare a skeleton worksheet with some introductory messages in.
+            ws.segments().push(
+                // Note that the variable ck here is defined in commandProcessor.js, and gives the appropriate shortcut
+                // key (ctrl or alt) for the platform.
+                freeSegment("# Gorilla REPL\n\nWelcome to gorilla :-)\n\nShift + enter evaluates code. " +
+                    "Hit " + ck + "+g twice in quick succession or click the menu icon (upper-right corner) for more " +
+                    "commands ...")
+            );
+            ws.segments().push(codeSegment(""));
+        }
 
         // start the UI
         ko.applyBindings(self, document.getElementById("document"));
@@ -188,6 +201,11 @@ var app = function () {
     return self;
 };
 
+var getParameterByName = function (name) {
+    var match = new RegExp('[?&]' + name + '=([^&]*)').exec(window.location.search);
+    return match && decodeURIComponent(match[1].replace(/\+/g, ' '));
+};
+
 // The application entry point
 $(function () {
     // start the REPL - the app is started in a callback from the repl connection that indicates we are
@@ -195,7 +213,8 @@ $(function () {
     repl.connect(
         function () {
             var gorilla = app();
-            gorilla.start();
+            var initialFilename = getParameterByName("filename");
+            gorilla.start(initialFilename);
             // for debugging. Let's hope nobody else has defined a global variable called gorilla!
             window.gorilla = gorilla;
         },
