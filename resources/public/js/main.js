@@ -129,24 +129,21 @@ var app = function () {
     });
 
     eventBus.on("app:load", function () {
-        var files = [];
+        self.palette.show("Scanning for files ...", []);
         $.ajax({
             type: "GET",
             url: "/gorilla-files",
-            async: false,
             success: function (data) {
-                files = data.files;
+                var paletteFiles = data.files.map(function (c) {
+                    return {
+                        desc: '<div class="command">' + c + '</div>',
+                        text: c,
+                        action: (function () {loadFromFile(c)})
+                    }
+                });
+                self.palette.show("Choose a file to load:", paletteFiles);
             }
         });
-        var paletteFiles = files.map(function (c) {
-            return {
-                desc: '<div class="command">' + c + '</div>',
-                text: c,
-                action: (function () {loadFromFile(c)})
-            }
-        });
-        self.palette.show("Choose a file to load:", paletteFiles);
-
     });
 
     eventBus.on("app:save", function () {
