@@ -69,9 +69,9 @@ div.palette {
     left: 50%;
     width: 600px;
     margin-left: -300px;
-    background-color: #eeeeee;
+    background-color: #cccccc;
     padding: 7px;
-    border: 1px solid #4682b4;
+    /*border: 1px solid #4682b4;*/
     font-family: 'Arvo', serif;
     font-size: 16px
 }
@@ -123,7 +123,7 @@ div.palette-items ul {
 
 div.palette-item {
     padding: 10px;
-    border-bottom: 1px solid #4682b4;
+    border-bottom: 1px solid white;
 }
 
 div.palette-item.highlight {
