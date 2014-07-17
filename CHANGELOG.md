@@ -2,6 +2,7 @@
 
 ## Version 0.3.?
 
+- New UI for commands and loading files. Mouse-friendly, small-screen friendlier, and generally less shoddy.
 - Renderer handles Cons sequences correctly.
 - Change default Linux command key to alt.
 - Add code to support online viewer.
