@@ -17,6 +17,7 @@
             [gorilla-repl.render-values-mw :as render-mw]
             [gorilla-repl.renderer :as renderer] ;; this is needed to bring the render implementations into scope
             [gorilla-repl.files :as files]
+            [gorilla-repl.version :as version]
             [complete.core :as complete])
   (:gen-class))
 
@@ -85,9 +86,11 @@
 
 (defn run-gorilla-server
   [conf]
-  (println "Gorilla-REPL.")
   ;; start the app - first start the nREPL server, and then the http server.
-  (let [nrepl-requested-port (or (:nrepl-port conf) 0) ;; auto-select port if none requested
+  (let [version (or (:version conf) "develop")
+        _ (println "Gorilla-REPL:" version)
+        _ (version/check-for-update version)
+        nrepl-requested-port (or (:nrepl-port conf) 0) ;; auto-select port if none requested
         nrepl (nrepl-server/start-server :port nrepl-requested-port
                                          :handler (nrepl-server/default-handler #'render-mw/render-values))
         nrepl-port (:port nrepl)
@@ -95,12 +98,10 @@
         _ (println "Started nREPL server on port" nrepl-port)
         _ (ws-relay/connect-to-nrepl nrepl-port)
         webapp-port (or (:port conf) 8990)
-        s (server/run-server app-routes {:port webapp-port :join? false})]
+        _ (server/run-server app-routes {:port webapp-port :join? false})]
     (spit (doto repl-port-file .deleteOnExit) nrepl-port)
     (println (str "Running at http://localhost:" webapp-port "/worksheet.html ."))
-    (println "Ctrl+C to exit.")
-    ;; block this thread by joining the server (which should run until killed)
-    #_(.join s)))
+    (println "Ctrl+C to exit.")))
 
 (defn -main
   [& args]
