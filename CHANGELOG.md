@@ -2,6 +2,7 @@
 
 ## Version 0.3.?
 
+- Prints a message if a newer version is available.
 - URL shows filename, and can load worksheet from URL (thanks to @gfredericks and @modellurgist).
 - New UI for commands and loading files. Mouse-friendly, small-screen friendlier, and generally less shoddy.
 - Renderer handles Cons sequences correctly.
