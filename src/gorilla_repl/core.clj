@@ -66,11 +66,9 @@
     (when-let [ns (:ns (:params req))]
       (res/response {:completions (complete/completions stub (symbol ns))}))))
 
+
 ;; API endpoint for getting the list of worksheets in the project
-(defn gorilla-files
-  [req]
-  (let [paths (files/gorilla-filepaths-in-current-directory)]
-      (res/response {:files paths})))
+(defn gorilla-files [req] (res/response {:files (files/gorilla-filepaths-in-current-directory)}))
 
 
 ;; the combined routes - we serve up everything in the "public" directory of resources under "/".
@@ -89,7 +87,7 @@
   ;; start the app - first start the nREPL server, and then the http server.
   (let [version (or (:version conf) "develop")
         _ (println "Gorilla-REPL:" version)
-        _ (version/check-for-update version)
+        _ (version/check-for-update version)  ;; runs asynchronously
         nrepl-requested-port (or (:nrepl-port conf) 0) ;; auto-select port if none requested
         nrepl (nrepl-server/start-server :port nrepl-requested-port
                                          :handler (nrepl-server/default-handler #'render-mw/render-values))
