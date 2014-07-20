@@ -20,6 +20,9 @@ var app = function () {
     self.filename.subscribe(function (filename) {
         history.pushState(null, null, "?filename=" + filename);
      });
+    // shows the name of the Leiningen project that gorilla was launched from, makes it easier to manage multiple
+    // tabs with multiple gorilla sessions.
+    self.project = ko.observable("no project");
 
     // Use this to change the worksheet being edited. It takes care of hooking/unhooking event handlers as well as
     // changing the worksheet data structure itself.
@@ -31,39 +34,53 @@ var app = function () {
         newWorksheet.addEventHandlers();
     };
 
+    // This starts the application. First of all we ask the server for configuration information, and then prepare the
+    // UI and, if appropriate, load an initial worksheet.
     self.start = function (initialFilename) {
-        // Prepare an empty worksheet so the UI has something to bind to. We do this as if we are loading a worksheet
-        // on startup, we do it asynchronously, so need to have something in place before starting the UI. This is
-        // easier than having two paths that both have UI startup code on them. (Although, the UX is slightly less slick
-        // this way).
-        var ws = worksheet();
-        self.setWorksheet(ws, "");
+        // get hold of configuration information from the backend
+        $.get("/config")
+            .done(function (data) {
+                self.config = data;
+                // If we've got the configuration, then start the app
+                self.project(self.config.project);
+                // Prepare an empty worksheet so the UI has something to bind to. We do this as if we are loading a
+                // worksheet on startup, we do it asynchronously, so need to have something in place before starting
+                // the UI. This is easier than having two paths that both have UI startup code on them. (Although, the
+                // UX is slightly less slick this way).
+                var ws = worksheet();
+                self.setWorksheet(ws, "");
 
-        if (initialFilename) {
-            loadFromFile(initialFilename);
-        } else {
-            // Prepare a skeleton worksheet with some introductory messages in.
-            ws.segments().push(
-                // Note that the variable ck here is defined in commandProcessor.js, and gives the appropriate shortcut
-                // key (ctrl or alt) for the platform.
-                freeSegment("# Gorilla REPL\n\nWelcome to gorilla :-)\n\nShift + enter evaluates code. " +
-                    "Hit " + ck + "+g twice in quick succession or click the menu icon (upper-right corner) for more " +
-                    "commands ...")
-            );
-            ws.segments().push(codeSegment(""));
-        }
+                if (initialFilename) {
+                    loadFromFile(initialFilename);
+                } else {
+                    // Prepare a skeleton worksheet with some introductory messages in.
+                    ws.segments().push(
+                        // Note that the variable ck here is defined in commandProcessor.js, and gives the appropriate
+                        // shortcut key (ctrl or alt) for the platform.
+                        freeSegment("# Gorilla REPL\n\nWelcome to gorilla :-)\n\nShift + enter evaluates code. " +
+                            "Hit " + ck + "+g twice in quick succession or click the menu icon (upper-right corner) " +
+                            "for more commands ...")
+                    );
+                    ws.segments().push(codeSegment(""));
+                }
 
-        // start the UI
-        ko.applyBindings(self, document.getElementById("document"));
+                // start the UI
+                ko.applyBindings(self, document.getElementById("document"));
 
-        // make it easier for the user to get started by highlighting the empty code segment
-        eventBus.trigger("worksheet:segment-clicked", {id: self.worksheet().segments()[1].id});
+                // make it easier for the user to get started by highlighting the empty code segment
+                eventBus.trigger("worksheet:segment-clicked", {id: self.worksheet().segments()[1].id});
+            })
+            .fail(function () {
+                // not a lot we can do here.
+                alert("Unable to get app configuration. Restart server.");
+            });
     };
+
 
     // bound to the window's title
     self.title = ko.computed(function () {
-        if (self.filename() === "") return "Gorilla REPL";
-        else return "Gorilla REPL : " + self.filename();
+        if (self.filename() === "") return "Gorilla REPL - " + self.project();
+        else return self.project() + " : " + self.filename();
     });
 
     // status indicator - bound to a popover type element in the UI
@@ -210,6 +227,7 @@ var getParameterByName = function (name) {
 $(function () {
     // start the REPL - the app is started in a callback from the repl connection that indicates we are
     // successfully connected.
+    // TODO: a bit of historical weirdness that the REPL connection is made here, and not inside the app.start method
     repl.connect(
         function () {
             var gorilla = app();

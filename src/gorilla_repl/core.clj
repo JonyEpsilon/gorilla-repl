@@ -70,6 +70,11 @@
 ;; API endpoint for getting the list of worksheets in the project
 (defn gorilla-files [req] (res/response {:files (files/gorilla-filepaths-in-current-directory)}))
 
+;; configuration information that will be made available to the webapp
+(def conf (atom {}))
+(defn set-config [k v] (swap! conf assoc k v))
+;; API endpoint for getting webapp configuration information
+(defn config [req] (res/response @conf))
 
 ;; the combined routes - we serve up everything in the "public" directory of resources under "/".
 ;; The REPL traffic is handled in the websocket-transport ns.
@@ -78,6 +83,7 @@
            (POST "/save" [] (wrap-api-handler save))
            (GET "/completions" [] (wrap-api-handler completions))
            (GET "/gorilla-files" [] (wrap-api-handler gorilla-files))
+           (GET "/config" [] (wrap-api-handler config))
            (GET "/repl" [] ws-relay/ring-handler)
            (route/resources "/"))
 
@@ -88,6 +94,7 @@
   (let [version (or (:version conf) "develop")
         _ (println "Gorilla-REPL:" version)
         _ (version/check-for-update version)  ;; runs asynchronously
+        _ (set-config :project (or (:project conf) "no project"))
         nrepl-requested-port (or (:nrepl-port conf) 0) ;; auto-select port if none requested
         nrepl (nrepl-server/start-server :port nrepl-requested-port
                                          :handler (nrepl-server/default-handler #'render-mw/render-values))
@@ -95,6 +102,7 @@
         repl-port-file (io/file ".nrepl-port")
         _ (println "Started nREPL server on port" nrepl-port)
         _ (ws-relay/connect-to-nrepl nrepl-port)
+
         webapp-port (or (:port conf) 8990)
         _ (server/run-server app-routes {:port webapp-port :join? false})]
     (spit (doto repl-port-file .deleteOnExit) nrepl-port)
