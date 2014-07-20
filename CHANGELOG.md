@@ -30,7 +30,7 @@
   REPL.
 - Runs a real nREPL server now, so should work together with things like vim-fireplace that make their own connection
   to the REPL server. (I haven't tested this though!)
-- As you might have guessed from the above, there's now a website. http://gorilla-repl.org
+- There's now a website. http://gorilla-repl.org
 - Numerous small bug-fixes and feature requests.
 
 ### Breaking changes
