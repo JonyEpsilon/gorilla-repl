@@ -158,6 +158,14 @@ commandList = [
         }
     },
     {
+        name: "command:app:reset-worksheet",
+        desc: "Reset the worksheet - a fresh start.",
+        showInMenu: true,
+        action: function () {
+            eventBus.trigger("app:reset-worksheet");
+        }
+    },
+    {
         name: "command:worksheet:completions",
         desc: "Show possible auto-completions.",
         showInMenu: true,

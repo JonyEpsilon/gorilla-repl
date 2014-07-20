@@ -18,7 +18,8 @@ var app = function () {
     self.filename = ko.observable("");
     // whenever we change the filename, we update the URL to match
     self.filename.subscribe(function (filename) {
-        history.pushState(null, null, "?filename=" + filename);
+        if (filename !== "") history.pushState(null, null, "?filename=" + filename);
+        else history.pushState(null, null, "/worksheet.html");
      });
     // shows the name of the Leiningen project that gorilla was launched from, makes it easier to manage multiple
     // tabs with multiple gorilla sessions.
@@ -50,19 +51,8 @@ var app = function () {
                 var ws = worksheet();
                 self.setWorksheet(ws, "");
 
-                if (initialFilename) {
-                    loadFromFile(initialFilename);
-                } else {
-                    // Prepare a skeleton worksheet with some introductory messages in.
-                    ws.segments().push(
-                        // Note that the variable ck here is defined in commandProcessor.js, and gives the appropriate
-                        // shortcut key (ctrl or alt) for the platform.
-                        freeSegment("# Gorilla REPL\n\nWelcome to gorilla :-)\n\nShift + enter evaluates code. " +
-                            "Hit " + ck + "+g twice in quick succession or click the menu icon (upper-right corner) " +
-                            "for more commands ...")
-                    );
-                    ws.segments().push(codeSegment(""));
-                }
+                if (initialFilename) loadFromFile(initialFilename);
+                else setBlankWorksheet();
 
                 // start the UI
                 ko.applyBindings(self, document.getElementById("document"));
@@ -74,6 +64,20 @@ var app = function () {
                 // not a lot we can do here.
                 alert("Unable to get app configuration. Restart server.");
             });
+    };
+
+    // A helper function to create a new, blank worksheet with some introductory messages in.
+    var setBlankWorksheet = function () {
+        var ws = worksheet();
+        ws.segments().push(
+            // Note that the variable ck here is defined in commandProcessor.js, and gives the appropriate
+            // shortcut key (ctrl or alt) for the platform.
+            freeSegment("# Gorilla REPL\n\nWelcome to gorilla :-)\n\nShift + enter evaluates code. " +
+                "Hit " + ck + "+g twice in quick succession or click the menu icon (upper-right corner) " +
+                "for more commands ...")
+        );
+        ws.segments().push(codeSegment(""));
+        self.setWorksheet(ws, "");
     };
 
 
@@ -151,8 +155,10 @@ var app = function () {
     eventBus.on("app:commands", function () {
         var visibleCommands = commandList.filter(function (x) {return x.showInMenu});
         var paletteCommands = visibleCommands.map(function (c) {
+            // take care of commands with no shortcut.
+            var kb = c.kb ? c.kb : "&nbsp";
             return {
-                desc: '<div class="command">' + c.desc + '</div><div class="command-shortcut">' + c.kb + '</div>',
+                desc: '<div class="command">' + c.desc + '</div><div class="command-shortcut">' + kb + '</div>',
                 text: c.desc,
                 action: c.action
             }
@@ -188,6 +194,10 @@ var app = function () {
         if (fname !== "") {
             saveToFile(fname);
         } else self.saveDialog.show();
+    });
+
+    eventBus.on("app:reset-worksheet", function () {
+        setBlankWorksheet();
     });
 
     eventBus.on("app:connection-lost", function () {
