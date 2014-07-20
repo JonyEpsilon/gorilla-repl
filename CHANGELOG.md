@@ -1,7 +1,9 @@
 # Changelog
 
-## Version 0.3.?
+## Version 0.3.1
 
+- Command to reset worksheet.
+- Project is shown in title bar. Makes it easier to work with multiple Gorilla sessions.
 - Prints a message if a newer version is available.
 - URL shows filename, and can load worksheet from URL (thanks to @gfredericks and @modellurgist).
 - New UI for commands and loading files. Mouse-friendly, small-screen friendlier, and generally less shoddy.
