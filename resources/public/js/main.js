@@ -51,14 +51,11 @@ var app = function () {
                 var ws = worksheet();
                 self.setWorksheet(ws, "");
 
-                if (initialFilename) loadFromFile(initialFilename);
-                else setBlankWorksheet();
-
                 // start the UI
                 ko.applyBindings(self, document.getElementById("document"));
 
-                // make it easier for the user to get started by highlighting the empty code segment
-                eventBus.trigger("worksheet:segment-clicked", {id: self.worksheet().segments()[1].id});
+                if (initialFilename) loadFromFile(initialFilename);
+                else setBlankWorksheet();
             })
             .fail(function () {
                 // not a lot we can do here.
@@ -78,6 +75,8 @@ var app = function () {
         );
         ws.segments().push(codeSegment(""));
         self.setWorksheet(ws, "");
+        // make it easier for the user to get started by highlighting the empty code segment
+        eventBus.trigger("worksheet:segment-clicked", {id: self.worksheet().segments()[1].id});
     };
 
 
