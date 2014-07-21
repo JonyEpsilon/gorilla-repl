@@ -11,6 +11,7 @@ var evaluator = function () {
 
     // This maps evaluation IDs to the IDs of the segment that initiated them.
     self.evaluationMap = {};
+    self.lastEvaluation = null;
     self.currentNamespace = "user";
 
     eventBus.on("evaluator:evaluate", function (e, d) {
@@ -19,7 +20,12 @@ var evaluator = function () {
         var id = UUID.generate();
         // store the evaluation ID and the segment ID in the evaluationMap
         self.evaluationMap[id] = d.segmentID;
+        self.lastEvaluation = id;
         repl.execute(d.code, id);
+    });
+
+    eventBus.on("evaluator:interrupt", function () {
+        if (self.lastEvaluation) repl.interrupt(self.lastEvaluation);
     });
 
     // handle the various different nREPL responses

@@ -55,5 +55,10 @@ var repl = (function () {
         self.sendREPLCommand(message);
     };
 
+    self.interrupt = function (commandID) {
+        var message = {'op': 'interrupt', 'interrupt-id': commandID, 'session': self.sessionID};
+        self.sendREPLCommand(message);
+    };
+
     return self;
 })();
