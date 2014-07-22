@@ -2,6 +2,7 @@
 
 ## Version 0.3.1
 
+- Configurable keymap.
 - Get rid of standalone mode: you now always run Gorilla from inside a project. Makes a number of things more
   consistent.
 - Command to reset worksheet.
