@@ -11,10 +11,8 @@
             [ring.middleware.params :as params]
             [ring.middleware.json :as json]
             [ring.util.response :as res]
-            [clojure.tools.nrepl.server :as nrepl-server]
-            [clojure.java.io :as io]
+            [gorilla-repl.nrepl :as nrepl]
             [gorilla-repl.websocket-relay :as ws-relay]
-            [gorilla-repl.render-values-mw :as render-mw]
             [gorilla-repl.renderer :as renderer] ;; this is needed to bring the render implementations into scope
             [gorilla-repl.files :as files]
             [gorilla-repl.version :as version]
@@ -76,6 +74,7 @@
 ;; API endpoint for getting webapp configuration information
 (defn config [req] (res/response @conf))
 
+
 ;; the combined routes - we serve up everything in the "public" directory of resources under "/".
 ;; The REPL traffic is handled in the websocket-transport ns.
 (defroutes app-routes
@@ -90,22 +89,21 @@
 
 (defn run-gorilla-server
   [conf]
-  ;; start the app - first start the nREPL server, and then the http server.
+  ;; get configuration information from parameters
   (let [version (or (:version conf) "develop")
-        _ (println "Gorilla-REPL:" version)
-        _ (version/check-for-update version)  ;; runs asynchronously
-        _ (set-config :project (or (:project conf) "no project"))
-        nrepl-requested-port (or (:nrepl-port conf) 0) ;; auto-select port if none requested
-        nrepl (nrepl-server/start-server :port nrepl-requested-port
-                                         :handler (nrepl-server/default-handler #'render-mw/render-values))
-        nrepl-port (:port nrepl)
-        repl-port-file (io/file ".nrepl-port")
-        _ (println "Started nREPL server on port" nrepl-port)
-        _ (ws-relay/connect-to-nrepl nrepl-port)
-
         webapp-port (or (:port conf) 8990)
-        _ (server/run-server app-routes {:port webapp-port :join? false})]
-    (spit (doto repl-port-file .deleteOnExit) nrepl-port)
+        nrepl-requested-port (or (:nrepl-port conf) 0)  ;; auto-select port if none requested
+        project (or (:project conf) "no project")]
+    ;; app startup
+    (println "Gorilla-REPL:" version)
+    ;; build config information for client
+    (set-config :project project)
+    ;; check for updates
+    (version/check-for-update version)  ;; runs asynchronously
+    ;; first startup nREPL
+    (nrepl/start-and-connect nrepl-requested-port)
+    ;; and then the webserver
+    (server/run-server app-routes {:port webapp-port :join? false})
     (println (str "Running at http://localhost:" webapp-port "/worksheet.html ."))
     (println "Ctrl+C to exit.")))
 
