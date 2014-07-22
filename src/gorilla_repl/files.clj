@@ -40,10 +40,9 @@
   [file]
   (or (cljw-file? file) (and (clj-file? file) (gorilla-file? file))))
 
-;; TODO: make the exclude list configurable
 (defn gorilla-filepaths-in-current-directory
-  []
+  [excludes]
   (map #(str/replace-first (. % getPath) "./" "")
        (filter include-file? (excluded-file-seq
                                (clojure.java.io/file ".")
-                               #{".git"}))))
+                               excludes))))

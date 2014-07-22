@@ -16,7 +16,8 @@
             [gorilla-repl.renderer :as renderer] ;; this is needed to bring the render implementations into scope
             [gorilla-repl.files :as files]
             [gorilla-repl.version :as version]
-            [complete.core :as complete])
+            [complete.core :as complete]
+            [clojure.set :as set])
   (:gen-class))
 
 ;; useful for debugging the nREPL requests
@@ -65,8 +66,12 @@
       (res/response {:completions (complete/completions stub (symbol ns))}))))
 
 
+;; More ugly atom usage to support defroutes
+(def excludes (atom #{".git"}))
 ;; API endpoint for getting the list of worksheets in the project
-(defn gorilla-files [req] (res/response {:files (files/gorilla-filepaths-in-current-directory)}))
+(defn gorilla-files [req]
+  (let [excludes @excludes]
+  (res/response {:files (files/gorilla-filepaths-in-current-directory excludes)})))
 
 ;; configuration information that will be made available to the webapp
 (def conf (atom {}))
@@ -93,11 +98,14 @@
   (let [version (or (:version conf) "develop")
         webapp-port (or (:port conf) 8990)
         nrepl-requested-port (or (:nrepl-port conf) 0)  ;; auto-select port if none requested
-        project (or (:project conf) "no project")]
+        project (or (:project conf) "no project")
+        keymap (or (:keymap (:gorilla-options conf)) {})
+        _ (swap! excludes (fn [x] (set/union x (:load-scan-exclude (:gorilla-options conf)))))]
     ;; app startup
     (println "Gorilla-REPL:" version)
     ;; build config information for client
     (set-config :project project)
+    (set-config :keymap keymap)
     ;; check for updates
     (version/check-for-update version)  ;; runs asynchronously
     ;; first startup nREPL

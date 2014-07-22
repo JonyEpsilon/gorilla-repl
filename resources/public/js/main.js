@@ -52,6 +52,7 @@ var app = function () {
                 self.setWorksheet(ws, "");
 
                 // start the UI
+                commandProcessor.installCommands(self.config.keymap);
                 ko.applyBindings(self, document.getElementById("document"));
 
                 if (initialFilename) loadFromFile(initialFilename);

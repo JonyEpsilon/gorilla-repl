@@ -21,7 +21,7 @@ var commandProcessor = (function () {
         return !Mousetrap.enabled;
     };
 
-    self.addCommand = function (command) {
+    var addCommand = function (command) {
         eventBus.on(command.name, command.action);
         if (command.kb) Mousetrap.bind(command.kb, function () {
             eventBus.trigger(command.name);
@@ -29,11 +29,22 @@ var commandProcessor = (function () {
         });
     };
 
+    self.installCommands = function (keymapOverrides) {
+        if (keymapOverrides) {
+            _.keys(keymapOverrides).forEach(function (k) {
+                commandList.forEach(function (c) {
+                    if (c.name === k) c.kb = keymapOverrides[k];
+                })
+            });
+        }
+        commandList.forEach(addCommand);
+    };
+
     return self;
 
 })();
 
-// The list of commands. These could be located with the components they belong too if the list gets too unwieldy,
+// The list of commands. These could be located with the components they belong to if the list gets too unwieldy,
 // but for now they're fine together here.
 
 // On Windows and Linux "alt" is used as the command key, on Mac "ctrl"
@@ -176,5 +187,3 @@ commandList = [
         }
     }
 ];
-
-commandList.forEach(commandProcessor.addCommand);
