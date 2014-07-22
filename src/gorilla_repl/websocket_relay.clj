@@ -23,16 +23,24 @@
 (defn- send-json-over-ws
   [channel data]
   (let [json-data (json/generate-string data)]
-    #_(println json-data)
+    (println json-data)
     (server/send! channel json-data)))
 
+;; This is a bit confusing, at least to my mind. I think the problem is that I don't really understand how nREPL queues
+;; eval messages. You'll notice that the reply handling (last line of this function) is handled in a future. If this
+;; processing is done on the main thread it blocks the message processor, and in particular it is not possible to send
+;; an interrupt message to kill an eval. However, this seems to introduce its own problem, which is if you then fire
+;; multiple eval messages at once, so that some are sent before previous evals finish, then the 'done' messages never
+;; show up. This breaks the client. So, the solution that I've got is: include the future here, so that interrupt works,
+;; and queue eval messages on the client side so that only one at a time is sent through here.
 (defn- process-message
   [channel data]
   (let [parsed-message (assoc (json/parse-string data true) :as-html 1)
+        _ (println parsed-message)
         client (nrepl/client @conn Long/MAX_VALUE)
         replies (nrepl/message client parsed-message)]
     ;; send the messages out over the WS connection one-by-one.
-    (doall (map (partial send-json-over-ws channel) replies))))
+    (future (doall (map (partial send-json-over-ws channel) replies)))))
 
 (defn ring-handler
   "This ring handler expects the client to make a websocket connection to the endpoint. It relays messages back and
