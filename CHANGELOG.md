@@ -2,6 +2,8 @@
 
 ## Version 0.3.1
 
+- Get rid of standalone mode: you now always run Gorilla from inside a project. Makes a number of things more
+  consistent.
 - Command to reset worksheet.
 - Project is shown in title bar. Makes it easier to work with multiple Gorilla sessions.
 - Prints a message if a newer version is available.
