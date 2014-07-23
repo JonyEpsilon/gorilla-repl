@@ -104,6 +104,10 @@
   (render [self]
     (span-render self "clj-ratio")))
 
+(extend-type java.lang.Class
+  r/Renderable
+  (render [self]
+    (span-render self "clj-class")))
 
 (extend-type clojure.lang.IPersistentVector
   r/Renderable

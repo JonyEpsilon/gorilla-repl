@@ -24,6 +24,7 @@
 .clj-bigint {color: blue; font-weight: bold}
 .clj-bigdecimal {color: darkgreen; font-weight: bold}
 .clj-ratio {color: darkblue}
+.clj-class {color: indigo}
 
 .output table {
     border: 1px #666;
