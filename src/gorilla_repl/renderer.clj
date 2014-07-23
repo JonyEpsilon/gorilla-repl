@@ -193,3 +193,14 @@
      :separator " "
      :items (map r/render self)
      :value (pr-str self)}))
+
+;; A record is like a map, but it is tagged with its type
+(extend-type clojure.lang.IRecord
+  r/Renderable
+  (render [self]
+    {:type :list-like
+     :open (str "<span class='clj-record'>#" (pr-str (type self)) "{</span>")
+     :close "<span class='clj-record'>}</span>"
+     :separator " "
+     :items (map render-map-entry self)
+     :value (pr-str self)}))
