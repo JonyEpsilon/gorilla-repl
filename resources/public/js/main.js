@@ -142,6 +142,10 @@ var app = function () {
                     ws.segments = ko.observableArray(segments);
                     // show it in the editor
                     self.setWorksheet(ws, filename);
+                    // highlight the first code segment if it exists
+                    var codeSegments = _.filter(self.worksheet().segments(), function(s) {return s.type === 'code'});
+                    if (codeSegments.length > 0)
+                        eventBus.trigger("worksheet:segment-clicked", {id: codeSegments[0].id});
                 }
             })
             .fail(function () {
