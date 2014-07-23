@@ -67,13 +67,13 @@
 
 (defn histogram
   "Plot the histogram of a sample."
-  [data & {:keys [plot-range bins normalize normalise plot-size aspect-ratio colour color opacity fillOpacity]
+  [data & {:keys [plot-range bins normalize normalise plot-size aspect-ratio colour color opacity fill-opacity]
            :or   {plot-range   [:all :all]
                   bins         :automatic
                   plot-size    400
                   aspect-ratio 1.618
                   opacity      1
-                  fillOpacity  0.4}
+                  fill-opacity  0.4}
            :as   opts}]
   (let [bin-range-spec (first plot-range)
         range-min (if (= bin-range-spec :all) (apply min data) (first bin-range-spec))
@@ -108,7 +108,7 @@
       (v/vega-view (merge
                         (vega/container plot-size aspect-ratio)
                         (vega/data-from-list series-name plot-data)
-                        (vega/histogram-marks series-name (or colour color) opacity fillOpacity)
+                        (vega/histogram-marks series-name (or colour color) opacity fill-opacity)
                         (vega/default-list-plot-scales series-name plot-range)
                         (vega/default-plot-axes))))))
 
