@@ -2,6 +2,7 @@
 
 ## Version 0.3.1
 
+- Generate suggested ns declaration in new file (thanks to @gfredericks and @modellurgist).
 - Fix a bug when outputting 'list-like' values.
 - Fix a bug with record type output.
 - Command to re-evaluate all code in a worksheet.
