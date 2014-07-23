@@ -2,6 +2,9 @@
 
 ## Version 0.3.1
 
+- Fix a bug when outputting 'list-like' values.
+- Fix a bug with record type output.
+- Command to re-evaluate all code in a worksheet.
 - Configurable keymap.
 - Get rid of standalone mode: you now always run Gorilla from inside a project. Makes a number of things more
   consistent.
