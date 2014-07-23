@@ -91,9 +91,13 @@ ko.bindingHandlers.codemirror = {
         CodeMirror.commands['doNothing'] = function () {};
         // then patch the Mac default keymap to get rid of the emacsy binding, which interfere with our shortcuts
         CodeMirror.keyMap['macDefault'].fallthrough = "basic";
-        // and then create our custom map, which will fall through to the (patched) default. Shift+Enter is stopped
-        // from doing anything.
-        CodeMirror.keyMap["gorilla"] = {'Shift-Enter': "doNothing", fallthrough: "default"};
+        // and then create our custom map, which will fall through to the (patched) default. Shift+Enter and variants
+        // are stopped from doing anything.
+        CodeMirror.keyMap["gorilla"] = {
+            'Shift-Enter': "doNothing",
+            'Shift-Ctrl-Enter': "doNothing",
+            'Shift-Alt-Enter': "doNothing",
+            fallthrough: "default"};
         var cm = CodeMirror.fromTextArea(element,
             {
                 lineNumbers: false,

@@ -200,15 +200,9 @@ var worksheet = function () {
 
         // * Evaluation *
 
-        // The evaluation command will fire this event. The worksheet will then send a message to the evaluator
-        // to do the evaluation itself.
-        addEventHandler("worksheet:evaluate", function () {
-            // check that a segment is active
-            var seg = self.getActiveSegment();
-            if (seg == null) return;
-
+        var evaluateSegment = function (seg) {
+            // only evaluate code segments
             if (seg.type == "code") {
-                // if this is a code segment, then evaluate the contents
                 var code = seg.getContents();
                 // clear the output
                 seg.clearOutput();
@@ -217,13 +211,24 @@ var worksheet = function () {
 
                 eventBus.trigger("evaluator:evaluate", {code: code, segmentID: seg.id});
             }
+        };
 
+        // The evaluation command will fire this event. The worksheet will then send a message to the evaluator
+        // to do the evaluation itself.
+        addEventHandler("worksheet:evaluate", function () {
+            // check that a segment is active
+            var seg = self.getActiveSegment();
+            if (seg == null) return;
+            evaluateSegment(seg);
             // if this isn't the last segment, move to the next
             if (self.activeSegmentIndex != self.segments().length - 1) eventBus.trigger("command:worksheet:leaveForward");
             // if it is the last, create a new one at the end
             else eventBus.trigger("worksheet:newBelow")
         });
 
+        addEventHandler("worksheet:evaluate-all", function () {
+            self.segments().forEach(evaluateSegment);
+        });
 
         // messages from the evaluator
 

@@ -88,6 +88,15 @@ commandList = [
         }
     },
     {
+        name: "command:evaluator:evaluate-all",
+        desc: "Evaluate all segments.",
+        showInMenu: true,
+        kb: ck + "+shift+enter",
+        action: function () {
+            eventBus.trigger("worksheet:evaluate-all");
+        }
+    },
+    {
         name: "command:worksheet:delete",
         desc: "Delete the highlighted segment.",
         showInMenu: true,
