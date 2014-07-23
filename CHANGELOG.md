@@ -26,6 +26,7 @@
 
 - Vega data now uses keywords rather than strings as keys (thanks to @cldellow). This will break any functions written
   to directly manipulate Vega structures. Value copy of Vega structures from old worksheets will also break.
+- Change the gorilla-plot.core/histogram option fillOpacity to fill-opacity.
 
 ## Version 0.2.0
 
