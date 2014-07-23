@@ -109,7 +109,7 @@
   r/Renderable
   (render [self]
     {:type :list-like
-     :open "<span class='clj-vector'>[<span>"
+     :open "<span class='clj-vector'>[</span>"
      :close "<span class='clj-vector'>]</span>"
      :separator " "
      :items (map r/render self)
@@ -119,7 +119,7 @@
   r/Renderable
   (render [self]
     {:type :list-like
-     :open "<span class='clj-lazy-seq'>(<span>"
+     :open "<span class='clj-lazy-seq'>(</span>"
      :close "<span class='clj-lazy-seq'>)</span>"
      :separator " "
      :items (map r/render self)
@@ -129,7 +129,7 @@
   r/Renderable
   (render [self]
     {:type :list-like
-     :open "<span class='clj-list'>(<span>"
+     :open "<span class='clj-list'>(</span>"
      :close "<span class='clj-list'>)</span>"
      :separator " "
      :items (map r/render self)
@@ -140,7 +140,7 @@
   r/Renderable
   (render [self]
     {:type :list-like
-     :open "<span class='clj-list'>(<span>"
+     :open "<span class='clj-list'>(</span>"
      :close "<span class='clj-list'>)</span>"
      :separator " "
      :items (map r/render self)
@@ -150,7 +150,7 @@
   r/Renderable
   (render [self]
     {:type :list-like
-     :open "<span class='clj-list'>(<span>"
+     :open "<span class='clj-list'>(</span>"
      :close "<span class='clj-list'>)</span>"
      :separator " "
      :items (map r/render self)
@@ -173,7 +173,7 @@
   r/Renderable
   (render [self]
     {:type :list-like
-     :open "<span class='clj-map'>{<span>"
+     :open "<span class='clj-map'>{</span>"
      :close "<span class='clj-map'>}</span>"
      :separator ", "
      :items (map render-map-entry self)
@@ -184,7 +184,7 @@
   r/Renderable
   (render [self]
     {:type :list-like
-     :open "<span class='clj-set'>#{<span>"
+     :open "<span class='clj-set'>#{</span>"
      :close "<span class='clj-set'>}</span>"
      :separator " "
      :items (map r/render self)
