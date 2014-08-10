@@ -191,3 +191,10 @@ textarea.last-chance {
     overflow-x: auto;
     width: 100%
 }
+
+/* Override CM matching bracket style to be more visible */
+div.CodeMirror span.CodeMirror-matchingbracket {
+    color: #1887F1;
+    border-bottom: 1px solid;
+    font-weight: bold;
+}
