@@ -1,5 +1,7 @@
 # Changelog
 
+## Version 0.3.2
+
 ## Version 0.3.1
 
 - Generate suggested ns declaration in new file (thanks to @gfredericks and @modellurgist).
