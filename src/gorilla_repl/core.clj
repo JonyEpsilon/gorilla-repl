@@ -111,7 +111,7 @@
     ;; first startup nREPL
     (nrepl/start-and-connect nrepl-requested-port)
     ;; and then the webserver
-    (server/run-server app-routes {:port webapp-port :join? false})
+    (server/run-server app-routes {:port webapp-port :join? false :ip "127.0.0.1"})
     (println (str "Running at http://localhost:" webapp-port "/worksheet.html ."))
     (println "Ctrl+C to exit.")))
 
