@@ -2,6 +2,8 @@
 
 ## Version 0.3.2
 
+- Disallow non-local connections by default. Gorilla sessions are now safe by default, even when the firewall allows
+  access to Gorilla's port (thanks to @silasdavis and @foogoof).
 - Change bracket match highlighting to improve visibility.
 
 ## Version 0.3.1
