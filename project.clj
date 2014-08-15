@@ -19,6 +19,4 @@
                  [grimradical/clj-semver "0.2.0"]]
   :main ^:skip-aot gorilla-repl.core
   :target-path "target/%s"
-  :plugins [[lein-ring "0.8.7"]]
-  :ring {:handler gorilla-repl.core/app-routes}
   :profiles {:uberjar {:aot :all}})
