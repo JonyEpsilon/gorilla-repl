@@ -6,7 +6,7 @@
   :description "A rich REPL for Clojure in the notebook style."
   :url "https://github.com/JonyEpsilon/gorilla-repl"
   :license {:name "MIT"}
-  :dependencies [[org.clojure/clojure "1.5.1"]
+  :dependencies [[org.clojure/clojure "1.6.0"]
                  [http-kit "2.1.16"]
                  [ring/ring-json "0.2.0"]
                  [cheshire "5.0.2"]
@@ -16,7 +16,7 @@
                  [clojure-complete "0.2.3"]
                  [gorilla-renderable "1.0.0"]
                  [org.clojure/data.codec "0.1.0"]
-                 [grimradical/clj-semver "0.2.0"]]
+                 [grimradical/clj-semver "0.2.0" :exclusions [org.clojure/clojure]]]
   :main ^:skip-aot gorilla-repl.core
   :target-path "target/%s"
   :profiles {:uberjar {:aot :all}})
