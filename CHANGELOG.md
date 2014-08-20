@@ -1,5 +1,10 @@
 # Changelog
 
+## Version 0.3.3
+
+- Write out web-app port to file on startup to enable other tools to interoperate.
+- Fix version range warning.
+
 ## Version 0.3.2
 
 - Disallow non-local connections by default. Gorilla sessions are now safe by default, even when the firewall allows

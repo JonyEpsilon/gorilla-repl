@@ -17,7 +17,8 @@
             [gorilla-repl.files :as files]
             [gorilla-repl.version :as version]
             [complete.core :as complete]
-            [clojure.set :as set])
+            [clojure.set :as set]
+            [clojure.java.io :as io])
   (:gen-class))
 
 ;; useful for debugging the nREPL requests
@@ -113,6 +114,7 @@
     (nrepl/start-and-connect nrepl-requested-port)
     ;; and then the webserver
     (server/run-server app-routes {:port webapp-port :join? false :ip ip})
+    (spit (doto (io/file ".gorilla-port") .deleteOnExit) webapp-port)
     (println (str "Running at http://localhost:" webapp-port "/worksheet.html ."))
     (println "Ctrl+C to exit.")))
 
