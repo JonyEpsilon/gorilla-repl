@@ -113,7 +113,7 @@
     ;; first startup nREPL
     (nrepl/start-and-connect nrepl-requested-port)
     ;; and then the webserver
-    (server/run-server app-routes {:port webapp-port :join? false :ip ip})
+    (server/run-server #'app-routes {:port webapp-port :join? false :ip ip})
     (spit (doto (io/file ".gorilla-port") .deleteOnExit) webapp-port)
     (println (str "Running at http://localhost:" webapp-port "/worksheet.html ."))
     (println "Ctrl+C to exit.")))
