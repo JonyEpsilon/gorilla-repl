@@ -2,6 +2,7 @@
 
 ## Version 0.3.3
 
+- App routes now a var for easier hacking on the server.
 - Write out web-app port to file on startup to enable other tools to interoperate.
 - Fix version range warning.
 
