@@ -2,6 +2,7 @@
 
 ## Version 0.3.3
 
+- Hopefully fix an odd intermittent dependency bug (thanks to @jococo).
 - App routes now a var for easier hacking on the server (thanks to @ticking).
 - Write out web-app port to file on startup to enable other tools to interoperate.
 - Fix version range warning.
