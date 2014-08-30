@@ -97,7 +97,7 @@
   [conf]
   ;; get configuration information from parameters
   (let [version (or (:version conf) "develop")
-        webapp-port (or (:port conf) 8990)
+        webapp-requested-port (or (:port conf) 0)
         ip (or (:ip conf) "127.0.0.1")
         nrepl-requested-port (or (:nrepl-port conf) 0)  ;; auto-select port if none requested
         project (or (:project conf) "no project")
@@ -113,10 +113,11 @@
     ;; first startup nREPL
     (nrepl/start-and-connect nrepl-requested-port)
     ;; and then the webserver
-    (server/run-server #'app-routes {:port webapp-port :join? false :ip ip})
-    (spit (doto (io/file ".gorilla-port") .deleteOnExit) webapp-port)
-    (println (str "Running at http://localhost:" webapp-port "/worksheet.html ."))
-    (println "Ctrl+C to exit.")))
+    (let [s (server/run-server #'app-routes {:port webapp-requested-port :join? false :ip ip})
+          webapp-port (:local-port (meta s))]
+      (spit (doto (io/file ".gorilla-port") .deleteOnExit) webapp-port)
+      (println (str "Running at http://localhost:" webapp-port "/worksheet.html ."))
+      (println "Ctrl+C to exit."))))
 
 (defn -main
   [& args]
