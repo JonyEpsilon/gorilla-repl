@@ -2,6 +2,9 @@
 
 ## Version 0.3.3
 
+- Autoselects a free port by default.
+- Upgrade to CodeMirror 4.5.
+- Interoperable with Emacs/CIDER > v.0.7.0 i.e. auto-adds cider-nrepl middleware.
 - Hopefully fix an odd intermittent dependency bug (thanks to @jococo).
 - App routes now a var for easier hacking on the server (thanks to @ticking).
 - Write out web-app port to file on startup to enable other tools to interoperate.
