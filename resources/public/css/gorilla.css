@@ -159,11 +159,17 @@ div.doc-viewer {
     z-index: 999;
     top: 8px;
     right: 8px;
-    width: 400px;
-    background-color: #cccccc;
-    padding: 7px;
-    font-family: 'Arvo', serif;
-    font-size: 12px
+    width: 500px;
+    background-color: #eeeeee;
+    padding: 3px 7px 3px 7px;
+    font-family: monospace;
+    font-size: 12px;
+    border: 1px solid #aaaaaa;
+}
+
+div.doc-viewer-content {
+    overflow-y: auto;
+    max-height: 300px;
 }
 
 

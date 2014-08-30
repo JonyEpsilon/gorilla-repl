@@ -13,6 +13,10 @@ var docViewer = function () {
     self.shown = ko.observable(false);
     self.doc = ko.observable("");
     self.show = function () {
+        // OK, this is really, really nasty. Position the doc viewer next to the CM autocomplete pop-up.
+        var rect = $(".CodeMirror-hints")[0].getBoundingClientRect();
+        var dv = $(".doc-viewer");
+        dv.css({top: rect.top, left: rect.right});
         self.shown(true);
     };
 

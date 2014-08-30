@@ -25,7 +25,8 @@ var clojureCompleter = function (cm, callback, options) {
         // We show docs for the selected completion
         CodeMirror.on(completions, "select", function (s) {
             repl.getCompletionDoc(s, ns, function (docs) {
-                eventBus.trigger("completer:show-doc", docs);
+                if (docs != null && docs != "")
+                    eventBus.trigger("completer:show-doc", docs);
             });
         });
 
