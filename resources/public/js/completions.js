@@ -21,6 +21,20 @@ var clojureCompleter = function (cm, callback, options) {
             from: CodeMirror.Pos(cur.line, start),
             to: CodeMirror.Pos(cur.line, end)
         };
+
+        // We show docs for the selected completion
+        CodeMirror.on(completions, "select", function (s) {
+            repl.getCompletionDoc(s, ns, function (docs) {
+                eventBus.trigger("completer:show-doc", docs);
+            });
+        });
+
+        // When the autocomplete UI is dismissed, hide the docs
+        CodeMirror.on(completions, "close", function () {
+            eventBus.trigger("completer:hide-doc");
+        });
+
+        // Show the UI
         callback(completions);
     });
 };

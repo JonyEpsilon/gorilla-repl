@@ -119,6 +119,9 @@ var app = function () {
     // The code dialog component, which is used for last-chance worksheet data and value copy and paste.
     self.codeDialog = codeDialog();
 
+    // The doc viewer component, which shows docs on autocomplete, and manages the ELDOC style status bar
+    self.docViewer = docViewer();
+
     // Helpers for loading and saving the worksheet - called by the various command handlers
     var saveToFile = function (filename, successCallback) {
         $.post("/save", {
@@ -228,6 +231,15 @@ var app = function () {
             okButtonText: "OK",
             hideCallback: function () {}
         });
+    });
+
+
+    eventBus.on("completer:show-doc", function (e, d) {
+        self.docViewer.doc(d.replace(/\n/g, "<br/>"));
+        self.docViewer.show();
+    });
+    eventBus.on("completer:hide-doc", function (e, d) {
+        self.docViewer.hide();
     });
 
     return self;

@@ -87,6 +87,12 @@ var repl = (function () {
         });
     };
 
+    self.getCompletionDoc = function (symbol, ns, callback) {
+        sendServiceMessage({op: "complete-doc", symbol: symbol, ns: ns}, function (d) {
+            callback(d.value);
+        })
+    };
+
     // handle the various different nREPL responses
     var handleMessage = function (message) {
         var d = JSON.parse(message.data);

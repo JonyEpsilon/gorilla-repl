@@ -50,6 +50,7 @@
     <script type="text/javascript" src="js/palette.js"></script>
     <script type="text/javascript" src="js/saveDialog.js"></script>
     <script type="text/javascript" src="js/codeDialog.js"></script>
+    <script type="text/javascript" src="js/docViewer.js"></script>
     <script type="text/javascript" src="js/main.js"></script>
 
     <title data-bind="text: title">Gorilla REPL</title>
@@ -62,6 +63,7 @@
 <div data-bind="template: {name: 'palette-template', data: palette}"></div>
 <div data-bind="template: {name: 'code-dialog-template', data: codeDialog}"></div>
 <div data-bind="template: {name: 'save-template', data: saveDialog}"></div>
+<div data-bind="template: {name: 'doc-template', data: docViewer}"></div>
 
 
 <div id="contents">
@@ -127,6 +129,14 @@
     </div>
 </script>
 
+<script type="text/html" id="doc-template">
+    <div class="doc-viewer" data-bind="visible: shown">
+        <div class="doc-viewer-content">
+            <div data-bind="html: doc"></div>
+        </div>
+    </div>
+</script>
+
 <script type="text/html" id="segment-template">
     <div data-bind="template: {name: renderTemplate}"></div>
 </script>
@@ -160,8 +170,6 @@
         <div class="segment-footer"></div>
     </div>
 </script>
-
-<!-- Dialogs -->
 
 
 </body>
