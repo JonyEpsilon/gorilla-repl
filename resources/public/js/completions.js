@@ -4,7 +4,7 @@
  * gorilla-repl is licenced to you under the MIT licence. See the file LICENCE.txt for full details.
  */
 
-var clojureCompleter = function (cm, options) {
+var clojureCompleter = function (cm, callback, options) {
     // The gist of this is lifted from the auto-completion modes included with CodeMirror.
     var cur = cm.getCursor();
     var token = cm.getTokenAt(cur);
@@ -15,22 +15,18 @@ var clojureCompleter = function (cm, options) {
     // we need to know what namespace the user is currently working in, which we get from the evaluator module
     var ns = evaluator.currentNamespace;
 
-    // This call must be synchronous as CodeMirror expects a reply right now. This stops us from just sending an
-    // nREPL message, which is always async, hence the HTTP API endpoint.
-    var completions = [];
     $.ajax({
         type: "GET",
         url: "/completions",
         data: {stub: word, ns: ns},
-        async: false,
         success: function (data) {
-            completions = data.completions;
+            callback({
+                list: data.completions,
+                from: CodeMirror.Pos(cur.line, start),
+                to: CodeMirror.Pos(cur.line, end)
+            });
+
         }
     });
 
-    return {
-        list: completions,
-        from: CodeMirror.Pos(cur.line, start),
-        to: CodeMirror.Pos(cur.line, end)
-    };
 };

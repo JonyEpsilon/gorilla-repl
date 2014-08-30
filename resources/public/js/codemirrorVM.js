@@ -31,7 +31,7 @@ var codemirrorVM = function (id, initialContents, contentType) {
     };
 
     self.complete = function (completionFunc) {
-        CodeMirror.showHint(self.codeMirror, completionFunc);
+        CodeMirror.showHint(self.codeMirror, completionFunc, {async: true});
     };
 
     // These can be called to position the CodeMirror cursor appropriately. They are used when the cell is receiving
