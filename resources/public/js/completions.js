@@ -13,20 +13,14 @@ var clojureCompleter = function (cm, callback, options) {
     var end = token.end;
 
     // we need to know what namespace the user is currently working in, which we get from the evaluator module
-    var ns = evaluator.currentNamespace;
+    var ns = repl.currentNamespace;
 
-    $.ajax({
-        type: "GET",
-        url: "/completions",
-        data: {stub: word, ns: ns},
-        success: function (data) {
-            callback({
-                list: data.completions,
-                from: CodeMirror.Pos(cur.line, start),
-                to: CodeMirror.Pos(cur.line, end)
-            });
-
-        }
+    repl.getCompletions(word, ns, null, function (compl) {
+        var completions = {
+            list: compl,
+            from: CodeMirror.Pos(cur.line, start),
+            to: CodeMirror.Pos(cur.line, end)
+        };
+        callback(completions);
     });
-
 };
