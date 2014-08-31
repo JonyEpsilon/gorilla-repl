@@ -2,7 +2,8 @@
 
 ## Version 0.3.3
 
-- Inline documentation.
+- Look up symbol in ClojureDocs.
+- Inline documentation in auto-complete.
 - Much better auto-complete, thanks to compliment and cider-nrepl.
 - Autoselects a free port by default.
 - Upgrade to CodeMirror 4.5.
