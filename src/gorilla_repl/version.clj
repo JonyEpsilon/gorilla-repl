@@ -18,7 +18,7 @@
   [current]
   (http/get
     (str update-url current)
-    {:timeout 10000 :as :text}
+    {:timeout 30000 :as :text}
     (fn [{:keys [status headers body error]}]
       (if error
         (println "Unable to reach update server.")

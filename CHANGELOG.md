@@ -2,6 +2,14 @@
 
 ## Version 0.3.3
 
+- Look up symbol in ClojureDocs.
+- Inline documentation in auto-complete.
+- Much better auto-complete, thanks to compliment and cider-nrepl.
+- Autoselects a free port by default.
+- Upgrade to CodeMirror 4.5.
+- Interoperable with Emacs/CIDER > v.0.7.0 i.e. auto-adds cider-nrepl middleware.
+- Hopefully fix an odd intermittent dependency bug (thanks to @jococo).
+- App routes now a var for easier hacking on the server (thanks to @ticking).
 - Write out web-app port to file on startup to enable other tools to interoperate.
 - Fix version range warning.
 

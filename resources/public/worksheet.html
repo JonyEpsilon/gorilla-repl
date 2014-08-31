@@ -8,7 +8,7 @@
 <html id="document">
 <head>
     <link href='http://fonts.googleapis.com/css?family=Arvo:400,700,400italic,700italic|Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" href="jslib/codemirror-3.20/lib/codemirror.css"/>
+    <link rel="stylesheet" href="jslib/codemirror-4.5/lib/codemirror.css"/>
     <link rel="stylesheet" href="css/codemirror-hint.css"/>
     <link rel="stylesheet" href="css/worksheet.css"/>
     <link rel="stylesheet" href="css/gorilla.css"/>
@@ -21,15 +21,15 @@
     <script type="text/javascript" src="jslib/jquery/jquery-1.10.2.min.js"></script>
     <script type="text/javascript" src="jslib/underscore/underscore.min.js"></script>
     <script type="text/javascript" src="jslib/knockoutjs/knockout-3.0.0.min.js"></script>
-    <script type="text/javascript" src="jslib/codemirror-3.20/lib/codemirror.js"></script>
-    <script type="text/javascript" src="jslib/codemirror-3.20/addon/edit/closebrackets.js"></script>
-    <script type="text/javascript" src="jslib/codemirror-3.20/addon/edit/matchbrackets.js"></script>
-    <script type="text/javascript" src="jslib/codemirror-3.20/addon/runmode/runmode.js"></script>
-    <script type="text/javascript" src="jslib/codemirror-3.20/addon/runmode/colorize.js"></script>
-    <script type="text/javascript" src="jslib/codemirror-3.20/addon/hint/show-hint.js"></script>
-    <script type="text/javascript" src="jslib/codemirror-3.20/mode/clojure/clojure.js"></script>
-    <script type="text/javascript" src="jslib/codemirror-3.20/mode/markdown/markdown.js"></script>
-    <script type="text/javascript" src="jslib/codemirror-3.20/mode/xml/xml.js"></script>
+    <script type="text/javascript" src="jslib/codemirror-4.5/lib/codemirror.js"></script>
+    <script type="text/javascript" src="jslib/codemirror-4.5/addon/edit/closebrackets.js"></script>
+    <script type="text/javascript" src="jslib/codemirror-4.5/addon/edit/matchbrackets.js"></script>
+    <script type="text/javascript" src="jslib/codemirror-4.5/addon/runmode/runmode.js"></script>
+    <script type="text/javascript" src="jslib/codemirror-4.5/addon/runmode/colorize.js"></script>
+    <script type="text/javascript" src="jslib/codemirror-4.5/addon/hint/show-hint.js"></script>
+    <script type="text/javascript" src="jslib/codemirror-4.5/mode/clojure/clojure.js"></script>
+    <script type="text/javascript" src="jslib/codemirror-4.5/mode/markdown/markdown.js"></script>
+    <script type="text/javascript" src="jslib/codemirror-4.5/mode/xml/xml.js"></script>
     <script type="text/javascript" src="jslib/d3/d3.v3.min.js"></script>
     <script type="text/javascript" src="jslib/d3/d3.geo.projection.min.js"></script>
     <script type="text/javascript" src="jslib/vega/vega.1.3.3.min.js"></script>
@@ -40,7 +40,6 @@
     <script type="text/javascript" src="js/repl-ws.js"></script>
     <script type="text/javascript" src="js/utils.js"></script>
     <script type="text/javascript" src="js/worksheetParser.js"></script>
-    <script type="text/javascript" src="js/evaluator.js"></script>
     <script type="text/javascript" src="js/codemirrorVM.js"></script>
     <script type="text/javascript" src="js/completions.js"></script>
     <script type="text/javascript" src="js/mathJaxViewer.js"></script>
@@ -51,6 +50,7 @@
     <script type="text/javascript" src="js/palette.js"></script>
     <script type="text/javascript" src="js/saveDialog.js"></script>
     <script type="text/javascript" src="js/codeDialog.js"></script>
+    <script type="text/javascript" src="js/docViewer.js"></script>
     <script type="text/javascript" src="js/main.js"></script>
 
     <title data-bind="text: title">Gorilla REPL</title>
@@ -63,6 +63,7 @@
 <div data-bind="template: {name: 'palette-template', data: palette}"></div>
 <div data-bind="template: {name: 'code-dialog-template', data: codeDialog}"></div>
 <div data-bind="template: {name: 'save-template', data: saveDialog}"></div>
+<div data-bind="template: {name: 'doc-template', data: docViewer}"></div>
 
 
 <div id="contents">
@@ -128,6 +129,14 @@
     </div>
 </script>
 
+<script type="text/html" id="doc-template">
+    <div class="doc-viewer" data-bind="visible: shown">
+        <div class="doc-viewer-content">
+            <div data-bind="html: doc"></div>
+        </div>
+    </div>
+</script>
+
 <script type="text/html" id="segment-template">
     <div data-bind="template: {name: renderTemplate}"></div>
 </script>
@@ -161,8 +170,6 @@
         <div class="segment-footer"></div>
     </div>
 </script>
-
-<!-- Dialogs -->
 
 
 </body>

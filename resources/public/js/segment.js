@@ -30,6 +30,10 @@ var codeSegment = function (contents, consoleText, output) {
         "text/x-clojure"
     );
 
+    self.getTokenAtCursor = function () {
+        return self.content.getTokenAtCursor();
+    };
+
     self.getContents = function() {
         return self.content.contents();
     };

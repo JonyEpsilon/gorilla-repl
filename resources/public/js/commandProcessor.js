@@ -178,6 +178,15 @@ commandList = [
         }
     },
     {
+        name: "command:docs:clojuredocs",
+        desc: "Look up the symbol under the cursor in ClojureDocs.",
+        showInMenu: true,
+        kb: combo('g', 'm'),
+        action: function () {
+            eventBus.trigger("docs:clojuredocs");
+        }
+    },
+    {
         name: "command:app:reset-worksheet",
         desc: "Reset the worksheet - a fresh start.",
         showInMenu: true,

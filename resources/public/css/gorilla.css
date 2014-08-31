@@ -152,6 +152,26 @@ div.modal-button.highlight {
     background: #FF29D2;
 }
 
+div.doc-viewer {
+    position: fixed;
+    /* There seems to be a bug in Safari with rendering text in fixed elements. */
+    -webkit-font-smoothing: subpixel-antialiased;
+    z-index: 999;
+    top: 8px;
+    right: 8px;
+    width: 500px;
+    background-color: #eeeeee;
+    padding: 3px 7px 3px 7px;
+    font-family: monospace;
+    font-size: 12px;
+    border: 1px solid #aaaaaa;
+}
+
+div.doc-viewer-content {
+    overflow-y: auto;
+    max-height: 300px;
+}
+
 
 /* Hack for FF as it puts the outline around the box-shadow :-( */
 @-moz-document url-prefix() {

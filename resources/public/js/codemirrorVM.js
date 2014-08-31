@@ -31,7 +31,8 @@ var codemirrorVM = function (id, initialContents, contentType) {
     };
 
     self.complete = function (completionFunc) {
-        CodeMirror.showHint(self.codeMirror, completionFunc);
+        CodeMirror.showHint(self.codeMirror, completionFunc,
+            {async: true, completeSingle: false, alignWithWord: false});
     };
 
     // These can be called to position the CodeMirror cursor appropriately. They are used when the cell is receiving
@@ -55,6 +56,12 @@ var codemirrorVM = function (id, initialContents, contentType) {
         self.codeMirror.focus();
         self.codeMirror.setCursor(self.codeMirror.lineCount() - 1, 0);
         self.codeMirror.focus();
+    };
+
+    self.getTokenAtCursor = function () {
+        var token = self.codeMirror.getTokenAt(self.codeMirror.getCursor());
+        if (token != null) return token.string;
+        else return null;
     };
 
     // ** Internal methods - should only be called by our CodeMirror instance. **
@@ -105,58 +112,54 @@ ko.bindingHandlers.codemirror = {
                 autoCloseBrackets: '()[]{}""',
                 lineWrapping: true,
                 keyMap: 'gorilla',
-                mode: valueAccessor().contentType,
-                onKeyEvent: function (editor, event) {
-                    // only check on cursor key keydowns
-                    // we stop() the cursor events, as we don't want them reaching the worksheet. We explicity
-                    // generate events when the cursor should leave the segment.
-                    if (event.type === 'keydown' && !event.shiftKey) {
-                        // up
-                        var curs;
-                        if (event.keyCode === 38) {
-                            // get the current cursor position
-                            curs = editor.getCursor();
-                            // check for first line
-                            // TODO: I'm not sure whether the completionActive state is part of the public API
-                            if ((curs.line === 0) && !editor.state.completionActive)
-                                valueAccessor().notifyMoveCursorBack();
-                            event.stop();
-                        }
-                        // left
-                        if (event.keyCode === 37 && !event.shiftKey) {
-                            // get the current cursor position
-                            curs = editor.getCursor();
-                            // check for first line, start position
-                            if (curs.line === 0 && curs.ch === 0) valueAccessor().notifyMoveCursorBack();
-                            event.stop();
-                        }
-                        // down
-                        if (event.keyCode === 40 && !event.shiftKey) {
-                            // get the current cursor position
-                            curs = editor.getCursor();
-                            // check for last line
-                            if ((curs.line === (editor.lineCount() - 1)) && !editor.state.completionActive)
-                                valueAccessor().notifyMoveCursorForward();
-                            event.stop();
-                        }
-                        // right
-                        if (event.keyCode === 39 && !event.shiftKey) {
-                            // get the current cursor position
-                            curs = editor.getCursor();
-                            // check for last line, last position
-                            if (curs.line === (editor.lineCount() - 1)) {
-                                if (curs.ch === editor.getLine(curs.line).length)
-                                    valueAccessor().notifyMoveCursorForward();
-                            }
-                            event.stop();
-                        }
-                        // delete on an empty editor
-                        if (event.keyCode === 8) {
-                            if (editor.getValue() === "") valueAccessor().notifyBackspaceOnEmpty();
-                        }
-                    }
-                }
+                mode: valueAccessor().contentType
             });
+        cm.on("keydown", function (editor, event) {
+            // we stop() the cursor events, as we don't want them reaching the worksheet. We explicitly
+            // generate events when the cursor should leave the segment.
+            var curs;
+            if (event.keyCode === 38 && !event.shiftKey) {
+                // get the current cursor position
+                curs = editor.getCursor();
+                // check for first line
+                // TODO: I'm not sure whether the completionActive state is part of the public API
+                if ((curs.line === 0) && !editor.state.completionActive)
+                    valueAccessor().notifyMoveCursorBack();
+           //     event.preventDefault();
+            }
+            // left
+            if (event.keyCode === 37 && !event.shiftKey) {
+                // get the current cursor position
+                curs = editor.getCursor();
+                // check for first line, start position
+                if (curs.line === 0 && curs.ch === 0) valueAccessor().notifyMoveCursorBack();
+            //    event.preventDefault();
+            }
+            // down
+            if (event.keyCode === 40 && !event.shiftKey) {
+                // get the current cursor position
+                curs = editor.getCursor();
+                // check for last line
+                if ((curs.line === (editor.lineCount() - 1)) && !editor.state.completionActive)
+                    valueAccessor().notifyMoveCursorForward();
+             //   event.preventDefault();
+            }
+            // right
+            if (event.keyCode === 39 && !event.shiftKey) {
+                // get the current cursor position
+                curs = editor.getCursor();
+                // check for last line, last position
+                if (curs.line === (editor.lineCount() - 1)) {
+                    if (curs.ch === editor.getLine(curs.line).length)
+                        valueAccessor().notifyMoveCursorForward();
+                }
+            //    event.preventDefault();
+            }
+            // delete on an empty editor
+            if (event.keyCode === 8) {
+                if (editor.getValue() === "") valueAccessor().notifyBackspaceOnEmpty();
+            }
+        });
 
         // this function is called back by codemirror when ever the contents changes.
         // It keeps the model in sync with the code.
