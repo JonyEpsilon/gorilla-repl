@@ -15,27 +15,33 @@ var clojureCompleter = function (cm, callback, options) {
     // we need to know what namespace the user is currently working in, which we get from the evaluator module
     var ns = repl.currentNamespace;
 
-    repl.getCompletions(word, ns, null, function (compl) {
-        var completions = {
-            list: compl,
-            from: CodeMirror.Pos(cur.line, start),
-            to: CodeMirror.Pos(cur.line, end)
-        };
+    // TODO: this is a workaround for https://github.com/alexander-yakushev/compliment/issues/15
+    if (word[0] != "/") {
+        repl.getCompletions(word, ns, null, function (compl) {
+            var completions = {
+                list: compl,
+                from: CodeMirror.Pos(cur.line, start),
+                to: CodeMirror.Pos(cur.line, end)
+            };
 
-        // We show docs for the selected completion
-        CodeMirror.on(completions, "select", function (s) {
-            repl.getCompletionDoc(s, ns, function (docs) {
-                if (docs != null && docs != "")
-                    eventBus.trigger("completer:show-doc", docs);
+            // We show docs for the selected completion
+            CodeMirror.on(completions, "select", function (s) {
+                // TODO: this is a workaround for https://github.com/alexander-yakushev/compliment/issues/15
+                if (s != "/") {
+                    repl.getCompletionDoc(s, ns, function (docs) {
+                        if (docs != null && docs != "")
+                            eventBus.trigger("completer:show-doc", docs);
+                    });
+                }
             });
-        });
 
-        // When the autocomplete UI is dismissed, hide the docs
-        CodeMirror.on(completions, "close", function () {
-            eventBus.trigger("completer:hide-doc");
-        });
+            // When the autocomplete UI is dismissed, hide the docs
+            CodeMirror.on(completions, "close", function () {
+                eventBus.trigger("completer:hide-doc");
+            });
 
-        // Show the UI
-        callback(completions);
-    });
+            // Show the UI
+            callback(completions);
+        });
+    }
 };
