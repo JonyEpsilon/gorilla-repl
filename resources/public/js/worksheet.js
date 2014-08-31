@@ -286,13 +286,9 @@ var worksheet = function () {
             var seg = self.getActiveSegment();
             if (seg == null) return;
             if (seg.type == "code") {
-                var scm = seg.content.codeMirror;
-                var token = scm.getTokenAt(scm.getCursor());
-                if (token != null) {
-                    var text = token.string;
-                    if (text != " ") {
-                        window.open("http://clojuredocs.org/search?q=" + text, '_blank');
-                    }
+                var token = seg.getTokenAtCursor();
+                if (token != " ") {
+                    window.open("http://clojuredocs.org/search?q=" + token, '_blank');
                 }
             }
         });

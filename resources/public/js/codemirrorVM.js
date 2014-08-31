@@ -58,6 +58,12 @@ var codemirrorVM = function (id, initialContents, contentType) {
         self.codeMirror.focus();
     };
 
+    self.getTokenAtCursor = function () {
+        var token = self.codeMirror.getTokenAt(self.codeMirror.getCursor());
+        if (token != null) return token.string;
+        else return null;
+    };
+
     // ** Internal methods - should only be called by our CodeMirror instance. **
 
     // These will be called by the CodeMirror component, and will notify the application that something of note has
