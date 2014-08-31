@@ -2,6 +2,8 @@
 
 ## Version 0.3.3
 
+- Inline documentation.
+- Much better auto-complete, thanks to compliment and cider-nrepl.
 - Autoselects a free port by default.
 - Upgrade to CodeMirror 4.5.
 - Interoperable with Emacs/CIDER > v.0.7.0 i.e. auto-adds cider-nrepl middleware.
