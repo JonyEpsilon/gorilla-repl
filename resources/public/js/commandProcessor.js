@@ -181,7 +181,7 @@ commandList = [
         name: "command:docs:clojuredocs",
         desc: "Look up the symbol under the cursor in ClojureDocs.",
         showInMenu: true,
-        kb: combo('g', 'm'),
+        kb: combo('g', 'c'),
         action: function () {
             eventBus.trigger("docs:clojuredocs");
         }
