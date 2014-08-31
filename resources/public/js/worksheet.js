@@ -279,6 +279,23 @@ var worksheet = function () {
                 seg.content.complete(clojureCompleter);
             }
         });
+
+        // * External documentation *
+
+        addEventHandler("docs:clojuredocs", function () {
+            var seg = self.getActiveSegment();
+            if (seg == null) return;
+            if (seg.type == "code") {
+                var scm = seg.content.codeMirror;
+                var token = scm.getTokenAt(scm.getCursor());
+                if (token != null) {
+                    var text = token.string;
+                    if (text != " ") {
+                        window.open("http://clojuredocs.org/search?q=" + text, '_blank');
+                    }
+                }
+            }
+        });
     };
 
     return self;
