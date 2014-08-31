@@ -12,12 +12,17 @@ var clojureCompleter = function (cm, callback, options) {
     var start = token.start;
     var end = token.end;
 
+    // we send the whole editor contents as context, with __prefix__ inserted instead of the token.
+    var doc = cm.getDoc().copy(false);
+    doc.replaceRange("__prefix__", {line: cur.line, ch: start}, {line: cur.line, ch: end});
+    var context = doc.getValue();
+
     // we need to know what namespace the user is currently working in, which we get from the evaluator module
     var ns = repl.currentNamespace;
 
     // TODO: this is a workaround for https://github.com/alexander-yakushev/compliment/issues/15
     if (word[0] != "/") {
-        repl.getCompletions(word, ns, null, function (compl) {
+        repl.getCompletions(word, ns, context, function (compl) {
             var completions = {
                 list: compl,
                 from: CodeMirror.Pos(cur.line, start),
@@ -31,6 +36,7 @@ var clojureCompleter = function (cm, callback, options) {
                     repl.getCompletionDoc(s, ns, function (docs) {
                         if (docs != null && docs != "")
                             eventBus.trigger("completer:show-doc", docs);
+                        else eventBus.trigger("completer:hide-doc");
                     });
                 }
             });

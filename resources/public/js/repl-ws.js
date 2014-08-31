@@ -82,7 +82,7 @@ var repl = (function () {
     // query the REPL server for autocompletion suggestions. Relies on the cider-nrepl middleware.
     // We call the given callback with the list of symbols once the REPL server replies.
     self.getCompletions = function (symbol, ns, context, callback) {
-        sendServiceMessage({op: "complete", symbol: symbol, ns: ns}, function (d) {
+        sendServiceMessage({op: "complete", symbol: symbol, ns: ns, context: context}, function (d) {
             callback(d.value);
         });
     };
