@@ -35,15 +35,15 @@ var clojureCompleter = function (cm, callback, options) {
                 if (s != "/") {
                     repl.getCompletionDoc(s, ns, function (docs) {
                         if (docs != null && docs != "")
-                            eventBus.trigger("completer:show-doc", docs);
-                        else eventBus.trigger("completer:hide-doc");
+                            eventBus.trigger("app:show-doc", docs);
+                        else eventBus.trigger("app:hide-doc");
                     });
                 }
             });
 
             // When the autocomplete UI is dismissed, hide the docs
             CodeMirror.on(completions, "close", function () {
-                eventBus.trigger("completer:hide-doc");
+                eventBus.trigger("app:hide-doc");
             });
 
             // Show the UI

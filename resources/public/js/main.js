@@ -234,11 +234,11 @@ var app = function () {
     });
 
 
-    eventBus.on("completer:show-doc", function (e, d) {
+    eventBus.on("app:show-doc", function (e, d) {
         self.docViewer.doc(d.replace(/\n/g, "<br/>"));
         self.docViewer.show();
     });
-    eventBus.on("completer:hide-doc", function (e, d) {
+    eventBus.on("app:hide-doc", function (e, d) {
         self.docViewer.hide();
     });
 
