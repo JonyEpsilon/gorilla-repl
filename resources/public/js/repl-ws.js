@@ -54,7 +54,7 @@ var repl = (function () {
     self.currentNamespace = "user";
 
     // The public interface for executing code on the REPL server.
-    eventBus.on("evaluator:evaluate", function (e, d) {
+    self.beginEvaluation = function (d) {
         // generate an ID to tie the evaluation to its results - when responses are received, we route them to the
         // originating segment for display using this ID (see the repl:response event handler below).
         var id = UUID.generate();
@@ -62,7 +62,7 @@ var repl = (function () {
         evaluationMap[id] = d.segmentID;
         var message = {'op': 'eval', 'code': d.code, id: id, session: self.sessionID};
         self.sendREPLCommand(message);
-    });
+    };
 
     // as well as eval messages, we also send "service" messages to the nREPL server for things like autocomplete,
     // docs etc. We maintain a separate map which maps the ID of the service message to the callback function that

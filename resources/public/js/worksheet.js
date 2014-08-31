@@ -209,7 +209,7 @@ var worksheet = function () {
                 seg.clearErrorAndConsole();
                 seg.runningIndicator(true);
 
-                eventBus.trigger("evaluator:evaluate", {code: code, segmentID: seg.id});
+                repl.beginEvaluation({code: code, segmentID: seg.id});
             }
         };
 
