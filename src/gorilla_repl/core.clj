@@ -121,4 +121,4 @@
 
 (defn -main
   [& args]
-  (run-gorilla-server {}))
+  (run-gorilla-server {:port 8990}))
