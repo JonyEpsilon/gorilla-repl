@@ -13,7 +13,6 @@
                  [compojure "1.1.8"]
                  [org.slf4j/slf4j-api "1.7.7"]
                  [ch.qos.logback/logback-classic "1.1.2"]
-                 [clojure-complete "0.2.4"]
                  [gorilla-renderable "1.0.0"]
                  [org.clojure/data.codec "0.1.0"]
                  [javax.servlet/servlet-api "2.5"]
