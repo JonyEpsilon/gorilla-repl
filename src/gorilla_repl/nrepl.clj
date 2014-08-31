@@ -19,5 +19,5 @@
         repl-port-file (io/file ".nrepl-port")]
     (println "Started nREPL server on port" nrepl-port)
     (swap! nrepl (fn [x] nr))
-    (ws-relay/connect-to-nrepl nrepl-port)
+    (ws-relay/connect-to-nrepl! nrepl-port)
     (spit (doto repl-port-file .deleteOnExit) nrepl-port)))
