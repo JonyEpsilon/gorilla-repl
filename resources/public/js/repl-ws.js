@@ -87,6 +87,7 @@ var repl = (function () {
         });
     };
 
+    // queries the REPL server for docs for the given symbol. Calls back with the documentation text.
     self.getCompletionDoc = function (symbol, ns, callback) {
         sendServiceMessage({op: "complete-doc", symbol: symbol, ns: ns}, function (d) {
             callback(d.value);
