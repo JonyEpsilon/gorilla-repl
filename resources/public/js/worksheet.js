@@ -288,7 +288,17 @@ var worksheet = function () {
             if (seg.type == "code") {
                 var token = seg.getTokenAtCursor();
                 if (token != " ") {
-                    window.open("http://clojuredocs.org/search?q=" + token, '_blank');
+                    // we try and resolve the symbol's namespace to jump directly to the clojuredocs page.
+                    // This is async, so we open the window now so as not to be stymied by the popup-blocker
+                    var win = window.open('', '_blank')
+                    repl.resolveSymbol(token, repl.currentNamespace, function (d) {
+                        if (d.ns) {
+                            win.location = "http://clojuredocs.org/clojure_core/" + d.ns + "/" + d.symbol;
+                        } else {
+                            // if we can't resolve the symbol, then we fall back to searching
+                            win.location = "http://clojuredocs.org/search?q=" + token;
+                        }
+                    });
                 }
             }
         });

@@ -94,6 +94,14 @@ var repl = (function () {
         })
     };
 
+    // resolve a symbol to get its namespace takes the symbol and the namespace that should be used as context.
+    // Calls back with the symbol and the symbol's namespace
+    self.resolveSymbol = function (symbol, ns, callback) {
+        sendServiceMessage({op: "info", symbol: symbol, ns: ns}, function (d) {
+            callback({symbol: d.value.name, ns: d.value.ns});
+        })
+    };
+
     // handle the various different nREPL responses
     var handleMessage = function (message) {
         var d = JSON.parse(message.data);
