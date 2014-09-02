@@ -142,6 +142,15 @@ commandList = [
         }
     },
     {
+        name: "command:app:saveas",
+        desc: "Save the worksheet to a new filename.",
+        showInMenu: true,
+        kb: combo('g', 'a'),
+        action: function () {
+            eventBus.trigger("app:saveas");
+        }
+    },
+    {
         name: "command:worksheet:newBelow",
         desc: "Create a new segment below the highlighted segment.",
         showInMenu: true,
@@ -199,7 +208,8 @@ commandList = [
         desc: "Show possible auto-completions.",
         showInMenu: true,
         // alternative provided to workaround Firefox's idiotic unstoppable binding of ctrl+space
-        kb: ["ctrl+space", combo('g', 'a')],
+        // , combo('g', 'a')
+        kb: ["ctrl+space"],
         action: function () {
             eventBus.trigger("worksheet:completions");
         }
