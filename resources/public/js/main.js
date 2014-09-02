@@ -146,6 +146,11 @@ var app = function () {
                     ws.segments = ko.observableArray(segments);
                     // show it in the editor
                     self.setWorksheet(ws, filename);
+
+                    var cssFilename = filename.substr(0, filename.length-3) + 'css';
+                    $('link[title="wscss"]').prop('disabled', true).remove();
+                    $('head').append('<link rel="stylesheet" title="wscss" href="' + cssFilename + '"/>');
+
                     // highlight the first code segment if it exists
                     var codeSegments = _.filter(self.worksheet().segments(), function(s) {return s.type === 'code'});
                     if (codeSegments.length > 0)
