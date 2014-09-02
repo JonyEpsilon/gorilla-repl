@@ -1,5 +1,9 @@
 # Changelog
 
+## Version 0.3.4
+
+- Fix dependency problem to allow use of Gorilla without Leiningen (thanks to @stuarthalloway).
+
 ## Version 0.3.3
 
 - Look up symbol in ClojureDocs.
