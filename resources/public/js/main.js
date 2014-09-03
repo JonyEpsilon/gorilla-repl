@@ -204,6 +204,11 @@ var app = function () {
         } else self.saveDialog.show();
     });
 
+    eventBus.on("app:saveas", function () {
+        var fname = self.filename();
+        self.saveDialog.show(fname);
+    });
+
     eventBus.on("app:reset-worksheet", function () {
         setBlankWorksheet();
     });
