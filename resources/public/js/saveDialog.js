@@ -18,9 +18,8 @@ var saveDialog = function (callback) {
     self.filename = ko.observable("");
 
     // Show the dialog
-    self.show = function () {
-        self.filename("");
-        self.shown(true);
+    self.show = function ( existingFilename ) {
+        existingFilename && (self.filename(existingFilename));        self.shown(true);
         self.focused(true);
     };
 
