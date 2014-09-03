@@ -116,7 +116,7 @@
     (let [s (server/run-server #'app-routes {:port webapp-requested-port :join? false :ip ip})
           webapp-port (:local-port (meta s))]
       (spit (doto (io/file ".gorilla-port") .deleteOnExit) webapp-port)
-      (println (str "Running at http://localhost:" webapp-port "/worksheet.html ."))
+      (println (str "Running at http://" ip ":" webapp-port "/worksheet.html ."))
       (println "Ctrl+C to exit."))))
 
 (defn -main
