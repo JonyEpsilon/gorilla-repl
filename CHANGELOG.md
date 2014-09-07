@@ -2,6 +2,7 @@
 
 ## Version 0.3.4
 
+- Display bound IP on startup (thanks to @ticking).
 - Fix dependency problem to allow use of Gorilla without Leiningen (thanks to @stuarthalloway).
 
 ## Version 0.3.3
