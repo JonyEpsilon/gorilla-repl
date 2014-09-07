@@ -60,6 +60,7 @@ div.output {
     background-color: white;
     border-width: 1px;
     border-color: #cccccc;
+    word-wrap: break-word;
 }
 
 div.html-output {
@@ -94,6 +95,7 @@ div.console-text {
     border-style: solid;
     border-width: 1px;
     background-color: #FFFFFF;
+    word-wrap: break-word;
 }
 
 div.console-text pre {
