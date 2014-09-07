@@ -91,7 +91,8 @@ var renderLatex = function (data, callbackQueue, errorCallback) {
     var uuid = UUID.generate();
 
     callbackQueue.push(function () {
-        MathJax.Hub.Queue(["Typeset", MathJax.Hub, uuid]);
+        // MathJax might not be available.
+        if ("MathJax" in window) MathJax.Hub.Queue(["Typeset", MathJax.Hub, uuid]);
     });
 
     return wrapWithValue(data, "<span class='latex-span' id='" + uuid + "'>@@" + data.content + "@@</span>");
