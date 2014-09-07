@@ -2,6 +2,7 @@
 
 ## Version 0.3.4
 
+- Running without a 'net connection doesn't crash the app.
 - Show all output from segments with multiple top-level forms.
 - Improvements to stylesheet for printing (thanks to @kurtharriger).
 - Wrap long text lines in output.
