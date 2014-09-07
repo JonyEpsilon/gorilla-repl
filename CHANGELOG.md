@@ -2,6 +2,7 @@
 
 ## Version 0.3.4
 
+- Show all output from segments with multiple top-level forms.
 - Improvements to stylesheet for printing (thanks to @kurtharriger).
 - Wrap long text lines in output.
 - Fix a bug in scrolling long segments.

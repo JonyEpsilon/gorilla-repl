@@ -12,7 +12,8 @@ var render = function (data, element, errorCallback) {
     // after the HTML has been inserted into the document.
     var callbackQueue = [];
     var htmlString = renderPart(data, callbackQueue, errorCallback);
-    $(element).html("<pre>" + htmlString + "</pre>");
+    var el = $("<pre>" + htmlString + "</pre>");
+    $(element).append(el);
     _.each(callbackQueue, function (callback) {callback()});
 
     // Attach a click event handler to each element for value copy and paste.
