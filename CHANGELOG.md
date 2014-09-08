@@ -2,6 +2,7 @@
 
 ## Version 0.3.4
 
+- Switch to marked markdown renderer. Now supports tables.
 - "Save as..." command (thanks to @jococo). 
 - Running without a 'net connection doesn't crash the app.
 - Show all output from segments with multiple top-level forms.
