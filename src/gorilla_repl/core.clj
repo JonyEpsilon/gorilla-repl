@@ -91,7 +91,7 @@
            (GET "/config" [] (wrap-api-handler config))
            (GET "/repl" [] ws-relay/ring-handler)
            (route/resources "/")
-           (route/files "/project" [:root "."]))
+           (route/files "/project-files" [:root "."]))
 
 
 (defn run-gorilla-server
