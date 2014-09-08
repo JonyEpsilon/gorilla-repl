@@ -142,21 +142,21 @@ commandList = [
         }
     },
     {
-        name: "command:worksheet:newBelow",
-        desc: "Create a new segment below the highlighted segment.",
-        showInMenu: true,
-        kb: combo('g', 'n'),
-        action: function () {
-            eventBus.trigger("worksheet:newBelow");
-        }
-    },
-    {
         name: "command:app:saveas",
         desc: "Save the worksheet to a new filename.",
         showInMenu: true,
         kb: combo('g', 'e'),
         action: function () {
             eventBus.trigger("app:saveas");
+        }
+    },
+    {
+        name: "command:worksheet:newBelow",
+        desc: "Create a new segment below the highlighted segment.",
+        showInMenu: true,
+        kb: combo('g', 'n'),
+        action: function () {
+            eventBus.trigger("worksheet:newBelow");
         }
     },
     {
