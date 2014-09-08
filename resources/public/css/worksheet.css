@@ -120,3 +120,21 @@ div.container-segment {
     border-style: none;
 }
 
+
+table {
+    border: 1px #666;
+    border-collapse: collapse;
+}
+th {
+    font-family: 'Arvo', serif;
+    color: #4682b4;
+    padding: 0.5em;
+    border: 1px solid #666;
+    background-color: #ddd;
+}
+
+td {
+    padding: 1em;
+    border: 1px solid #666;
+    background-color: white;
+}
