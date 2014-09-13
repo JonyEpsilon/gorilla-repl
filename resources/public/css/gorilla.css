@@ -218,3 +218,19 @@ div.CodeMirror span.CodeMirror-matchingbracket {
     border-bottom: 1px solid;
     font-weight: bold;
 }
+
+@media print {
+
+    .menu-icon {
+        display:none;
+    }
+
+    div.selected {
+        outline: none;
+    }
+
+    div.segment {
+        page-break-inside: avoid;
+    }
+
+}

@@ -127,8 +127,10 @@ var worksheet = function () {
 
         // the event for this action contains the segment id
         addEventHandler("worksheet:segment-clicked", function (e, d) {
-            if (self.activeSegmentIndex != null) self.deactivateSegment(self.activeSegmentIndex);
+            // don't do anything if this segment is already selected
             var focusIndex = self.segmentIndexForID(d.id);
+            if (self.activeSegmentIndex == focusIndex) return;
+            if (self.activeSegmentIndex != null) self.deactivateSegment(self.activeSegmentIndex);
             self.activateSegment(focusIndex, true);
         });
 

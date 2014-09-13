@@ -1,5 +1,18 @@
 # Changelog
 
+## Version 0.3.4
+
+- Serve up project files so they can be accessed from markdown code.
+- Switch to marked markdown renderer. Now supports tables.
+- "Save as..." command (thanks to @jococo). 
+- Running without a 'net connection doesn't crash the app.
+- Show all output from segments with multiple top-level forms.
+- Improvements to stylesheet for printing (thanks to @kurtharriger).
+- Wrap long text lines in output.
+- Fix a bug in scrolling long segments.
+- Display bound IP on startup (thanks to @ticking).
+- Fix dependency problem to allow use of Gorilla without Leiningen (thanks to @stuarthalloway).
+
 ## Version 0.3.3
 
 - Look up symbol in ClojureDocs.

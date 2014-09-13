@@ -107,11 +107,8 @@ var freeSegment = function (contents) {
         return self.content.contents();
     };
 
-    // var mdConverter = Markdown.getSanitizingConverter();
-    var mdConverter = new Markdown.Converter();
-
     self.renderedContent = ko.computed(function () {
-        return mdConverter.makeHtml(self.content.contents());
+        return marked(self.content.contents());
     }).extend({throttle: 250});
 
     self.handleClick = function () {

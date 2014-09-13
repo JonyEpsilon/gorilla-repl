@@ -90,7 +90,8 @@
            (GET "/gorilla-files" [] (wrap-api-handler gorilla-files))
            (GET "/config" [] (wrap-api-handler config))
            (GET "/repl" [] ws-relay/ring-handler)
-           (route/resources "/"))
+           (route/resources "/")
+           (route/files "/project-files" [:root "."]))
 
 
 (defn run-gorilla-server
@@ -116,7 +117,7 @@
     (let [s (server/run-server #'app-routes {:port webapp-requested-port :join? false :ip ip})
           webapp-port (:local-port (meta s))]
       (spit (doto (io/file ".gorilla-port") .deleteOnExit) webapp-port)
-      (println (str "Running at http://localhost:" webapp-port "/worksheet.html ."))
+      (println (str "Running at http://" ip ":" webapp-port "/worksheet.html ."))
       (println "Ctrl+C to exit."))))
 
 (defn -main

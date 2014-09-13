@@ -16,7 +16,9 @@
 ;; <=
 
 ;; **
-;;; Some data to look at.
+;;; Some data to look at. And some gratuitous mathematics @@x = 5@@
+;;; 
+;;; $$a_i = \int_0^{l_i} \sin(x) dx$$
 ;; **
 
 ;; @@

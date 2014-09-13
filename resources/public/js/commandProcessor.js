@@ -142,6 +142,15 @@ commandList = [
         }
     },
     {
+        name: "command:app:saveas",
+        desc: "Save the worksheet to a new filename.",
+        showInMenu: true,
+        kb: combo('g', 'e'),
+        action: function () {
+            eventBus.trigger("app:saveas");
+        }
+    },
+    {
         name: "command:worksheet:newBelow",
         desc: "Create a new segment below the highlighted segment.",
         showInMenu: true,
