@@ -12,7 +12,7 @@ var render = function (data, element, errorCallback) {
     // after the HTML has been inserted into the document.
     var callbackQueue = [];
     var htmlString = renderPart(data, callbackQueue, errorCallback);
-    var el = $("<pre>" + htmlString + "</pre>");
+    var el = $(htmlString);
     $(element).append(el);
     _.each(callbackQueue, function (callback) {callback()});
 

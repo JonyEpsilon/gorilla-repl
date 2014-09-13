@@ -25,7 +25,6 @@ div.segment {
     border-color: #cccccc;
 }
 
-
 div.free {
     background-color: #ffffff;
     border-style: none;
@@ -34,7 +33,7 @@ div.free {
     margin-top: 0.5em;
 }
 
-div.free h1,h2,h3,h4,h5 {
+div.free h1, h2, h3, h4, h5 {
     font-family: 'Arvo', serif;
     color: #4682b4;
 }
@@ -55,7 +54,8 @@ div.code .segment-main {
 }
 
 div.output {
-    padding: 0.5em 1em 0.5em 1em;
+    font-family: monospace;
+    padding: 1em;
     border-style: solid;
     background-color: white;
     border-width: 1px;
@@ -120,11 +120,11 @@ div.container-segment {
     border-style: none;
 }
 
-
 table {
     border: 1px #666;
     border-collapse: collapse;
 }
+
 th {
     font-family: 'Arvo', serif;
     color: #4682b4;
