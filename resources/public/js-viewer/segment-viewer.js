@@ -38,10 +38,8 @@ var freeSegment = function (contents) {
     if (contents) self.contents = ko.observable(contents);
     else self.contents = ko.observable("");
 
-    var mdConverter = new Markdown.Converter();
-
     self.renderedContent = ko.computed(function () {
-        return mdConverter.makeHtml(self.contents());
+        return marked(self.contents());
     }).extend({throttle: 250});
 
     return self;
