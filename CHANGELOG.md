@@ -2,6 +2,7 @@
 
 ## Version 0.3.4
 
+- Cute favicon (thanks to @ticking and @ivan-kleshnin)
 - Serve up project files so they can be accessed from markdown code.
 - Switch to marked markdown renderer. Now supports tables.
 - "Save as..." command (thanks to @jococo). 
