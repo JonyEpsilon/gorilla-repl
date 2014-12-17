@@ -64,16 +64,16 @@ var repl = (function () {
         self.sendREPLCommand(message);
     };
 
-    // as well as eval messages, we also send "service" messages to the nREPL server for things like autocomplete,
-    // docs etc. We maintain a separate map which maps the ID of the service message to the callback function that
-    // we'd like to run on the returned data.
-    var serviceMessageMap = {};
+    // as well as eval messages, we also send CIDER messages to the nREPL server for things like autocomplete,
+    // docs etc. These are handled by the cider-nrepl middleware. We maintain a separate map which maps the ID of the
+    // CIDER message to the callback function that we'd like to run on the returned data.
+    var ciderMessageMap = {};
 
-    // send a service message, and schedule the given callback to run on completion. An ID and the session information
+    // send a CIDER message, and schedule the given callback to run on completion. An ID and the session information
     // will be added to the message,
-    var sendServiceMessage = function (msg, callback) {
+    var sendCIDERMessage = function (msg, callback) {
         var id = UUID.generate();
-        serviceMessageMap[id] = callback;
+        ciderMessageMap[id] = callback;
         msg.id = id;
         msg.session = self.sessionID;
         self.sendREPLCommand(msg);
@@ -82,22 +82,23 @@ var repl = (function () {
     // query the REPL server for autocompletion suggestions. Relies on the cider-nrepl middleware.
     // We call the given callback with the list of symbols once the REPL server replies.
     self.getCompletions = function (symbol, ns, context, callback) {
-        sendServiceMessage({op: "complete", symbol: symbol, ns: ns, context: context}, function (d) {
-            callback(d.value);
+        sendCIDERMessage({op: "complete", symbol: symbol, ns: ns, context: context}, function (d) {
+            callback(d.completions);
         });
     };
 
-    // queries the REPL server for docs for the given symbol. Calls back with the documentation text.
+    // queries the REPL server for docs for the given symbol. Relies on the cider-nrepl middleware.
+    // Calls back with the documentation text.
     self.getCompletionDoc = function (symbol, ns, callback) {
-        sendServiceMessage({op: "complete-doc", symbol: symbol, ns: ns}, function (d) {
-            callback(d.value);
+        sendCIDERMessage({op: "complete-doc", symbol: symbol, ns: ns}, function (d) {
+            callback(d["completion-doc"]);
         })
     };
 
     // resolve a symbol to get its namespace takes the symbol and the namespace that should be used as context.
-    // Calls back with the symbol and the symbol's namespace
+    // Relies on the cider-nrepl middleware. Calls back with the symbol and the symbol's namespace
     self.resolveSymbol = function (symbol, ns, callback) {
-        sendServiceMessage({op: "info", symbol: symbol, ns: ns}, function (d) {
+        sendCIDERMessage({op: "info", symbol: symbol, ns: ns}, function (d) {
             callback({symbol: d.value.name, ns: d.value.ns});
         })
     };
@@ -148,17 +149,18 @@ var repl = (function () {
             }
         }
 
-        // If this reply isn't associated with a segment, then it's probably a reply to a service message
-        if (serviceMessageMap[d.id]) {
-            // if it's a status "done" message, clean up the service map
+        // If this reply isn't associated with a segment, then it's probably a reply to a CIDER message
+        if (ciderMessageMap[d.id]) {
+            // if the message has an associated callback, then fire it
+            ciderMessageMap[d.id](d);
+            // if it contains a status "done" message, clean up the service map
             if (d.status) {
                 if (d.status.indexOf("done") >= 0) {
-                    delete serviceMessageMap[d.id];
+                    delete ciderMessageMap[d.id];
                     return;
                 }
             }
-            // otherwise, get the callback from the service map and run it
-            serviceMessageMap[d.id](d);
+
             return;
         }
 
