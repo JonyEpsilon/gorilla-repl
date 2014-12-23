@@ -222,6 +222,10 @@ var worksheet = function () {
             var seg = self.getActiveSegment();
             if (seg == null) return;
             evaluateSegment(seg);
+
+            // save the sheet on evaluate
+            eventBus.trigger("app:save-named");
+
             // if this isn't the last segment, move to the next
             if (self.activeSegmentIndex != self.segments().length - 1) eventBus.trigger("command:worksheet:leaveForward");
             // if it is the last, create a new one at the end
@@ -237,6 +241,12 @@ var worksheet = function () {
         addEventHandler("evaluator:value-response", function (e, d) {
             var segID = d.segmentID;
             var seg = self.getSegmentForID(segID);
+
+            // if the clear flag is set, clear the segment
+            if (d.clear) {
+                seg.clearOutput();
+            }
+
             try {
                 // If you're paying attention, you'll notice that the value gets JSON.parse'd twice: once here, and again
                 // in the output viewer. This is a workaround for a problem in the rendering nREPL middleware that results

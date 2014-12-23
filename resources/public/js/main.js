@@ -9,6 +9,8 @@
 var app = function () {
     var self = {};
 
+    self.conf = {};
+
     // Most importantly, the application has a worksheet! This is exposed so that the UI can bind to it, but note that
     // you should never change the worksheet directly, as this will leave the event handlers in an inconsistent state.
     // Rather you should use the `setWorksheet` function below.
@@ -19,7 +21,7 @@ var app = function () {
     // whenever we change the filename, we update the URL to match
     self.filename.subscribe(function (filename) {
         if (filename !== "") history.pushState(null, null, "?filename=" + filename);
-        else history.pushState(null, null, "/worksheet.html");
+        else history.pushState(null, null, self.config.worksheetName || "/worksheet.html");
      });
     // shows the name of the Leiningen project that gorilla was launched from, makes it easier to manage multiple
     // tabs with multiple gorilla sessions.
@@ -39,7 +41,7 @@ var app = function () {
     // UI and, if appropriate, load an initial worksheet.
     self.start = function (initialFilename) {
         // get hold of configuration information from the backend
-        $.get("/config")
+        $.get(/^.*\//.exec(window.location.pathname)[0]+"config")
             .done(function (data) {
                 self.config = data;
                 // If we've got the configuration, then start the app
@@ -54,6 +56,11 @@ var app = function () {
                 // start the UI
                 commandProcessor.installCommands(self.config.keymap);
                 ko.applyBindings(self, document.getElementById("document"));
+
+                // allow the filename to be passed as a parameter
+                if (!initialFilename && data.filename) {
+                    initialFilename = data.filename;
+                }
 
                 if (initialFilename) loadFromFile(initialFilename);
                 else setBlankWorksheet();
@@ -70,12 +77,15 @@ var app = function () {
         ws.segments().push(
             // Note that the variable ck here is defined in commandProcessor.js, and gives the appropriate
             // shortcut key (ctrl or alt) for the platform.
-            freeSegment("# Gorilla REPL\n\nWelcome to gorilla :-)\n\nShift + enter evaluates code. " +
-                "Hit " + ck + "+g twice in quick succession or click the menu icon (upper-right corner) " +
-                "for more commands ...\n\nIt's a good habit to run each worksheet in its own namespace: feel " +
-                "free to use the declaration we've provided below if you'd like.")
+            freeSegment(self.config.introMessage ||
+                        ("# Gorilla REPL\n\nWelcome to gorilla :-)\n\nShift + enter evaluates code. " +
+                         "Hit " + ck + "+g twice in quick succession or click the menu icon (upper-right corner) " +
+                         "for more commands ...\n\nIt's a good habit to run each worksheet in its own namespace: feel " +
+                         "free to use the declaration we've provided below if you'd like."))
         );
-        ws.segments().push(codeSegment("(ns " + makeHipNSName() + "\n  (:require [gorilla-plot.core :as plot]))"));
+        ws.segments().push(codeSegment(self.config.nsSegment ||
+                                       ("(ns " + (self.config.nameSpace || makeHipNSName()) +
+                                        "\n  (:require [gorilla-plot.core :as plot]))")));
         self.setWorksheet(ws, "");
         // make it easier for the user to get started by highlighting the empty code segment
         eventBus.trigger("worksheet:segment-clicked", {id: self.worksheet().segments()[1].id});
@@ -84,7 +94,7 @@ var app = function () {
 
     // bound to the window's title
     self.title = ko.computed(function () {
-        if (self.filename() === "") return "Gorilla REPL - " + self.project();
+        if (self.filename() === "") return (self.conf.title || "Gorilla REPL - ") + self.project();
         else return self.project() + " : " + self.filename();
     });
 
@@ -124,11 +134,11 @@ var app = function () {
 
     // Helpers for loading and saving the worksheet - called by the various command handlers
     var saveToFile = function (filename, successCallback) {
-        $.post("/save", {
+        $.post(/^.*\//.exec(window.location.pathname)[0]+"save", {
             "worksheet-filename": filename,
             "worksheet-data": self.worksheet().toClojure()
         }).done(function () {
-            self.flashStatusMessage("Saved: " + filename);
+            if (!self.conf.hideSavedMsg) self.flashStatusMessage("Saved: " + filename);
             if (successCallback) successCallback();
         }).fail(function () {
             self.flashStatusMessage("Failed to save worksheet: " + filename, 2000);
@@ -137,21 +147,23 @@ var app = function () {
 
     var loadFromFile = function (filename) {
         // ask the backend to load the data from disk
-        $.get("/load", {"worksheet-filename": filename})
-            .done(function (data) {
-                if (data['worksheet-data']) {
-                    // parse and construct the new worksheet
-                    var segments = worksheetParser.parse(data["worksheet-data"]);
-                    var ws = worksheet();
-                    ws.segments = ko.observableArray(segments);
-                    // show it in the editor
-                    self.setWorksheet(ws, filename);
-                    // highlight the first code segment if it exists
-                    var codeSegments = _.filter(self.worksheet().segments(), function(s) {return s.type === 'code'});
-                    if (codeSegments.length > 0)
-                        eventBus.trigger("worksheet:segment-clicked", {id: codeSegments[0].id});
-                }
-            })
+        $.get(/^.*\//.exec(window.location.pathname)[0]+"load", {"worksheet-filename": filename}
+                           .done (function (data) {
+                               if (data['worksheet-data']) {
+                                   // parse and construct the new worksheet
+                                   var segments = worksheetParser.parse(data["worksheet-data"]);
+                                   var ws = worksheet();
+                                   ws.segments = ko.observableArray(segments);
+                                   // show it in the editor
+                                   self.setWorksheet(ws, filename);
+                                   // highlight the first code segment if it exists
+                                   var codeSegments = _.filter(self.worksheet().segments(), function(s) {return s.type === 'code'});
+                                   if (codeSegments.length > 0) {
+                                       eventBus.trigger("worksheet:segment-clicked", {id: codeSegments[0].id});
+                                       if (self.config.recalcAllOnLoad)eventBus.trigger("worksheet:evaluate-all");
+                                   }
+                               }
+                           }))
             .fail(function () {
                 self.flashStatusMessage("Failed to load worksheet: " + filename, 2000);
             });
@@ -178,7 +190,7 @@ var app = function () {
         self.palette.show("Scanning for files ...", []);
         $.ajax({
             type: "GET",
-            url: "/gorilla-files",
+            url: /^.*\//.exec(window.location.pathname)[0]+"gorilla-files",
             success: function (data) {
                 var paletteFiles = data.files.map(function (c) {
                     return {
@@ -203,6 +215,16 @@ var app = function () {
             saveToFile(fname);
         } else self.saveDialog.show();
     });
+
+    // Save only if the worksheet is named. Used for autosave.
+    eventBus.on("app:save-named", function () {
+        var fname = self.filename();
+        // if we already have a filename, save to it. Else, prompt for a name.
+        if (fname !== "" && self.conf.autosave) {
+            saveToFile(fname);
+        }
+    });
+
 
     eventBus.on("app:saveas", function () {
         var fname = self.filename();

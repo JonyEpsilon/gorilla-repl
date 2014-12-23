@@ -46,6 +46,9 @@
           _ (println "done.")]
       (res/response {:worksheet-data ws-data}))))
 
+;; A hook so another system can capture the
+;; saving of the file
+(def capture-save (atom (fn [& _])))
 
 ;; the client can post a request to have the worksheet saved, handled by the following
 (defn save
@@ -54,6 +57,7 @@
   (when-let [ws-data (:worksheet-data (:params req))]
     (when-let [ws-file (:worksheet-filename (:params req))]
       (print (str "Saving: " ws-file " ... "))
+      (@capture-save ws-data ws-file)
       (spit ws-file ws-data)
       (println (str "done. [" (java.util.Date.) "]"))
       (res/response {:status "ok"}))))
@@ -93,15 +97,60 @@
            (route/resources "/")
            (route/files "/project-files" [:root "."]))
 
+(defn fix-prefix
+  [{:keys [uri] :as  request}]
+  (if-let [info (re-find #"^/visi/[^/]*(/.*)$" uri)]
+    (do
+      (println "Rewriting " uri " to " (get info 1))
+      (assoc request :uri (get info 1)))
+    request
+    )
+  )
+
+(defn fix-slash
+  [{:keys [uri] :as  request}]
+  (if (.endsWith uri "/")
+    (assoc request :uri (str uri "index.html"))
+    request)
+  )
+
+(defn rw-app-routes
+  [request]
+  (-> request fix-prefix fix-slash app-routes)
+  )
+
+(defn- mk-number
+  [x]
+  (if (string? x) (read-string x) x))
+
+;; set to capture the configuration
+(def config-capture-hook (atom (fn [& _])))
 
 (defn run-gorilla-server
   [conf]
   ;; get configuration information from parameters
-  (let [version (or (:version conf) "develop")
-        webapp-requested-port (or (:port conf) 0)
-        ip (or (:ip conf) "127.0.0.1")
+  (@config-capture-hook conf)
+  (let [version (or (get conf "version")
+                    (:version conf)
+                    "develop")
+
+        webapp-requested-port (mk-number
+                               (or
+                                (get conf "port")
+                                (:port conf)
+                                0))
+        ip (or
+            (get conf "ip")
+            (:ip conf)
+            "127.0.0.1")
+
         nrepl-requested-port (or (:nrepl-port conf) 0)  ;; auto-select port if none requested
-        project (or (:project conf) "no project")
+
+        project (or
+                 (get conf "project")
+                 (:project conf)
+                 "no project")
+
         keymap (or (:keymap (:gorilla-options conf)) {})
         _ (swap! excludes (fn [x] (set/union x (:load-scan-exclude (:gorilla-options conf)))))]
     ;; app startup
@@ -114,10 +163,23 @@
     ;; first startup nREPL
     (nrepl/start-and-connect nrepl-requested-port)
     ;; and then the webserver
-    (let [s (server/run-server #'app-routes {:port webapp-requested-port :join? false :ip ip})
+    (let [s (server/run-server #'rw-app-routes {:port webapp-requested-port :join? false :ip ip})
           webapp-port (:local-port (meta s))]
       (spit (doto (io/file ".gorilla-port") .deleteOnExit) webapp-port)
       (println (str "Running at http://" ip ":" webapp-port "/worksheet.html ."))
+
+      ;; support "touching" a file on startup to let other
+      ;; processes know that the REPL is listening
+      (if-let [touch (get conf "touch")]
+        (do
+          (try
+            (let [fos (java.io.FileOutputStream. (java.io.File.  touch))]
+              (.write fos (.getBytes "hello" "UTF-8"))
+              (.close fos)
+              )
+            (catch Exception e nil))
+          ))
+
       (println "Ctrl+C to exit."))))
 
 (defn -main
