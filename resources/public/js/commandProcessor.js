@@ -212,5 +212,23 @@ commandList = [
         action: function () {
             eventBus.trigger("worksheet:completions");
         }
+    },
+    {
+        name: "command:worksheet:clear-output",
+        desc: "Clear the output of the highlighted segment.",
+        showInMenu: true,
+        kb: combo('g', 'o'),
+        action: function () {
+            eventBus.trigger("worksheet:clear-output");
+        }
+    },
+    {
+        name: "command:worksheet:clear-all",
+        desc: "Clear the output of all code segments.",
+        showInMenu: true,
+        kb: combo('g', 'z'),
+        action: function () {
+            eventBus.trigger("worksheet:clear-all-output");
+        }
     }
 ];
