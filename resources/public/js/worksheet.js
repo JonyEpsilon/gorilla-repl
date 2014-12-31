@@ -312,7 +312,6 @@ var worksheet = function () {
             if (seg.type == "code") {
                 seg.clearOutput();
                 seg.clearErrorAndConsole();
-                seg.runningIndicator(false);
             }
         };
 
