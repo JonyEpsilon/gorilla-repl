@@ -2,7 +2,7 @@
 
 ## Version 0.3.5
 
-
+- Command to delete output from the worksheet (thanks to @dasmoth).
 
 ## Version 0.3.4
 
