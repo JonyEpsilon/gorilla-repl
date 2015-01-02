@@ -12,7 +12,12 @@ var getFromGithub = function (user, repo, path, callback) {
 
 var getFromGist = function (id, filename, callback) {
     $.get("https://api.github.com/gists/" + id).success(function (data) {
-        callback(data.files[filename].content);
+        var file;
+        // default to the only file
+        if (data.files.length = 1) file = data.files[Object.keys(data.files)[0]];
+        else file = data.files[filename];
+        console.log(file);
+        callback(file.content);
     });
 };
 
