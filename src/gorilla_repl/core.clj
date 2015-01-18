@@ -16,7 +16,6 @@
             [gorilla-repl.renderer :as renderer] ;; this is needed to bring the render implementations into scope
             [gorilla-repl.files :as files]
             [gorilla-repl.version :as version]
-            [complete.core :as complete]
             [clojure.set :as set]
             [clojure.java.io :as io])
   (:gen-class))
@@ -59,14 +58,6 @@
       (res/response {:status "ok"}))))
 
 
-;; API endpoint for getting completions
-(defn completions
-  [req]
-  (when-let [stub (:stub (:params req))]
-    (when-let [ns (:ns (:params req))]
-      (res/response {:completions (complete/completions stub (symbol ns))}))))
-
-
 ;; More ugly atom usage to support defroutes
 (def excludes (atom #{".git"}))
 ;; API endpoint for getting the list of worksheets in the project
@@ -86,7 +77,6 @@
 (defroutes app-routes
            (GET "/load" [] (wrap-api-handler load-worksheet))
            (POST "/save" [] (wrap-api-handler save))
-           (GET "/completions" [] (wrap-api-handler completions))
            (GET "/gorilla-files" [] (wrap-api-handler gorilla-files))
            (GET "/config" [] (wrap-api-handler config))
            (GET "/repl" [] ws-relay/ring-handler)
