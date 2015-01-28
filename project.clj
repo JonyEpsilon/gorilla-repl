@@ -18,8 +18,8 @@
                            [javax.servlet/servlet-api "2.5"]
                            [grimradical/clj-semver "0.2.0" :exclusions [org.clojure/clojure]]
                            [cider/cider-nrepl "0.8.1"]
-                           [org.clojure/tools.nrepl "0.2.3"]
-                           [clojure-complete "0.2.3"]]
+                           [visi/core "0.1.0-SNAPSHOT"]
+                           [org.clojure/tools.nrepl "0.2.3"]]
   :main ^:skip-aot gorilla-repl.core
   :target-path "target/%s"
   :profiles {:uberjar {:aot :all}})

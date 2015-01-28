@@ -314,6 +314,25 @@ var worksheet = function () {
                 }
             }
         });
+
+        // * Clearing output *
+
+        var clearSegment = function(seg) {
+            if (seg == null) return;
+            if (seg.type == "code") {
+                seg.clearOutput();
+                seg.clearErrorAndConsole();
+            }
+        };
+
+        addEventHandler("worksheet:clear-output", function() {
+            var seg = self.getActiveSegment();
+            clearSegment(seg);
+        });
+
+        addEventHandler("worksheet:clear-all-output", function() {
+            self.segments().forEach(clearSegment);
+        });
     };
 
     return self;
