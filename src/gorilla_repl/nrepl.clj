@@ -9,10 +9,12 @@
 
 (def nrepl (atom nil))
 
+(def additional-middleware (atom nil))
+
 (defn start-and-connect
   [nrepl-requested-port]
   (let [cider-mw (map resolve cider/cider-middleware)
-        middleware (conj cider-mw #'render-mw/render-values)
+        middleware (conj (concat @additional-middleware cider-mw) #'render-mw/render-values)
         nr (nrepl-server/start-server :port nrepl-requested-port
                                       :handler (apply nrepl-server/default-handler middleware))
         nrepl-port (:port nr)

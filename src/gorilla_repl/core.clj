@@ -113,31 +113,24 @@
   [x]
   (if (string? x) (read-string x) x))
 
-;; set to capture the configuration
-(def config-capture-hook (atom (fn [& _])))
 
 (defn run-gorilla-server
   [conf]
-  ;; get configuration information from parameters
-  (@config-capture-hook conf)
-  (let [version (or (get conf "version")
+  (let [version (or
                     (:version conf)
                     "develop")
 
         webapp-requested-port (mk-number
                                (or
-                                (get conf "port")
                                 (:port conf)
                                 0))
         ip (or
-            (get conf "ip")
             (:ip conf)
             "127.0.0.1")
 
         nrepl-requested-port (or (:nrepl-port conf) 0)  ;; auto-select port if none requested
 
         project (or
-                 (get conf "project")
                  (:project conf)
                  "no project")
 
@@ -158,17 +151,6 @@
       (spit (doto (io/file ".gorilla-port") .deleteOnExit) webapp-port)
       (println (str "Running at http://" ip ":" webapp-port "/worksheet.html ."))
 
-      ;; support "touching" a file on startup to let other
-      ;; processes know that the REPL is listening
-      (if-let [touch (get conf "touch")]
-        (do
-          (try
-            (let [fos (java.io.FileOutputStream. (java.io.File.  touch))]
-              (.write fos (.getBytes "hello" "UTF-8"))
-              (.close fos)
-              )
-            (catch Exception e nil))
-          ))
 
       (println "Ctrl+C to exit."))))
 
