@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<!--
+  ~ This file is part of gorilla-repl. Copyright (C) 2014-, Jony Hudson.
+  ~
+  ~ gorilla-repl is licenced to you under the MIT licence. See the file LICENCE.txt for full details.
+  -->
+
+<html id="document">
+<head>
+  <meta charset="UTF-8">
+
+    <link rel="shortcut icon" href="favicon.ico"/>
+
+    <link href='//fonts.googleapis.com/css?family=Arvo:400,700,400italic,700italic|Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="jslib/codemirror-4.5/lib/codemirror.css"/>
+    <link rel="stylesheet" href="css/codemirror-hint.css"/>
+    <link rel="stylesheet" href="css/worksheet.css"/>
+    <link rel="stylesheet" href="css/gorilla.css"/>
+    <link rel="stylesheet" href="css/output.css"/>
+
+    <script type="text/javascript"
+            src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_SVG-full.js&delayStartupUntil=configured"></script>
+    <script type="text/javascript" src="jslib/marked/marked.min.js"></script>
+    <script type="text/javascript" src="jslib/jquery/jquery-1.10.2.min.js"></script>
+    <script type="text/javascript" src="jslib/underscore/underscore.min.js"></script>
+    <script type="text/javascript" src="jslib/knockoutjs/knockout-3.0.0.min.js"></script>
+    <script type="text/javascript" src="jslib/codemirror-4.5/lib/codemirror.js"></script>
+    <script type="text/javascript" src="jslib/codemirror-4.5/addon/edit/closebrackets.js"></script>
+    <script type="text/javascript" src="jslib/codemirror-4.5/addon/edit/matchbrackets.js"></script>
+    <script type="text/javascript" src="jslib/codemirror-4.5/addon/runmode/runmode.js"></script>
+    <script type="text/javascript" src="jslib/codemirror-4.5/addon/runmode/colorize.js"></script>
+    <script type="text/javascript" src="jslib/codemirror-4.5/addon/hint/show-hint.js"></script>
+    <script type="text/javascript" src="jslib/codemirror-4.5/mode/clojure/clojure.js"></script>
+    <script type="text/javascript" src="jslib/codemirror-4.5/mode/markdown/markdown.js"></script>
+    <script type="text/javascript" src="jslib/codemirror-4.5/mode/xml/xml.js"></script>
+    <script type="text/javascript" src="jslib/d3/d3.v3.min.js"></script>
+    <script type="text/javascript" src="jslib/d3/d3.geo.projection.min.js"></script>
+    <script type="text/javascript" src="jslib/vega/vega.1.3.3.min.js"></script>
+    <script type="text/javascript" src="jslib/uuid/uuid.core.js"></script>
+    <script type="text/javascript" src="jslib/mousetrap/mousetrap.min.js"></script>
+    <script type="text/javascript" src="js/eventbus.js"></script>
+    <script type="text/javascript" src="js/commandProcessor.js"></script>
+    <script type="text/javascript" src="js/repl-ws.js"></script>
+    <script type="text/javascript" src="js/utils.js"></script>
+    <script type="text/javascript" src="js/worksheetParser.js"></script>
+    <script type="text/javascript" src="js/codemirrorVM.js"></script>
+    <script type="text/javascript" src="js/completions.js"></script>
+    <script type="text/javascript" src="js/mathJaxViewer.js"></script>
+    <script type="text/javascript" src="js/outputViewer.js"></script>
+    <script type="text/javascript" src="js/renderer.js"></script>
+    <script type="text/javascript" src="js/segment.js"></script>
+    <script type="text/javascript" src="js/worksheet.js"></script>
+    <script type="text/javascript" src="js/palette.js"></script>
+    <script type="text/javascript" src="js/saveDialog.js"></script>
+    <script type="text/javascript" src="js/codeDialog.js"></script>
+    <script type="text/javascript" src="js/docViewer.js"></script>
+    <script type="text/javascript" src="js/main.js"></script>
+
+    <title data-bind="text: title">Gorilla REPL</title>
+</head>
+<body>
+
+<!-- The page stub -->
+<div class="status" data-bind="visible: (status() !== '')"><h3 data-bind="html: status">Loading ...</h3></div>
+<div class="menu-icon" data-bind="click: handleMenuClick">&#9776;</div>
+<div data-bind="template: {name: 'palette-template', data: palette}"></div>
+<div data-bind="template: {name: 'code-dialog-template', data: codeDialog}"></div>
+<div data-bind="template: {name: 'save-template', data: saveDialog}"></div>
+<div data-bind="template: {name: 'doc-template', data: docViewer}"></div>
+
+
+<div id="contents">
+    <div class="segment container-segment">
+        <div class="container-children">
+        <div data-bind="template: {name: 'segment-template', foreach: worksheet().segments()}">
+        </div>
+        </div>
+    </div>
+</div>
+<div class="scroll-pad"></div>
+
+<!-- Templates -->
+
+<script type="text/html" id="palette-template">
+    <div class="modal-overlay" data-bind="visible: shown, click: handleOverlayClick"></div>
+    <div class="modal" data-bind="visible: shown">
+        <h3 data-bind="text: caption"></h3>
+        <div class="modal-content">
+            <input type="text"
+                   data-bind="hasFocus: focused, value: filterText, valueUpdate: 'input', event: {keydown: handleKeyPress}"/>
+            <div class="palette-items">
+                <ul data-bind="foreach: items">
+                    <li data-bind="click: $parent.handleItemClick, attr: {id: ('palette-item-' + $index())}">
+                        <div class="palette-item"
+                             data-bind="html: desc, css: {highlight: ($index() == $parent.highlight())}">
+                        </div>
+                        <!--<div class="command-shortcut" data-bind="text: kb"></div>-->
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</script>
+
+<script type="text/html" id="save-template">
+    <div class="modal-overlay" data-bind="visible: shown, click: handleOverlayClick"></div>
+    <div class="modal" data-bind="visible: shown">
+        <h3>Filename (relative to project directory):</h3>
+        <div class="modal-content">
+            <input type="text" data-bind="hasFocus: focused, value: filename, valueUpdate: 'input', event: {keydown: handleKeyPress}"/>
+        <div><div class="modal-button" data-bind="click: handleCancelClick">Cancel</div>
+            <div class="modal-button highlight" data-bind="click: handleOKClick">OK</div>
+        </div>
+        </div>
+    </div>
+</script>
+
+<script type="text/html" id="code-dialog-template">
+    <div class="modal-overlay" data-bind="visible: shown, click: handleOverlayClick"></div>
+    <div class="modal" data-bind="visible: shown">
+        <h3 data-bind="text: caption"></h3>
+        <div class="modal-content">
+            <div class="message" data-bind="html: message"></div>
+            <div class='last-chance'>
+            <textarea class="last-chance"
+                      data-bind="hasFocus: focused, value: contents, event: {keydown: handleKeyPress}"></textarea>
+            </div>
+            <div>
+                <div class="modal-button highlight" data-bind="text: okButtonText, click: handleOKClick"></div>
+            </div>
+        </div>
+    </div>
+</script>
+
+<script type="text/html" id="doc-template">
+    <div class="doc-viewer" data-bind="visible: shown">
+        <div class="doc-viewer-content">
+            <div data-bind="html: doc"></div>
+        </div>
+    </div>
+</script>
+
+<script type="text/html" id="segment-template">
+    <div data-bind="template: {name: renderTemplate}"></div>
+</script>
+
+<script type="text/html" id="code-segment-template">
+    <div class="segment code running"
+         data-bind="css: {selected: active(), running: runningIndicator}, attr: {id: id}">
+
+        <div class="segment-main">
+            <textarea class="codeTextArea mousetrap" data-bind="codemirror: content"></textarea>
+        </div>
+        <div class="error-text" data-bind="text: errorText, visible: errorText() !== ''"></div>
+        <div class="console-text" data-bind="visible: consoleText() !== ''">
+            <pre><code data-bind="html: consoleText"></code></pre>
+        </div>
+        <div class="output"
+             data-bind="visible: (output() != ''), outputViewer: output, segmentID: id">
+            </div>
+        <div class="segment-footer"></div>
+    </div>
+</script>
+
+<script type="text/html" id="free-segment-template">
+    <div class="segment free" data-bind="css: {selected: active()}, attr: {id: id}, click: handleClick">
+        <div class="segment-main">
+            <div class="free-preview" data-bind="mathJaxViewer: renderedContent, visible: !markupVisible()"></div>
+            <div class="free-markup" data-bind="visible: markupVisible">
+                <textarea data-bind="codemirror: content"></textarea>
+            </div>
+        </div>
+        <div class="segment-footer"></div>
+    </div>
+</script>
+
+
+</body>
+</html>

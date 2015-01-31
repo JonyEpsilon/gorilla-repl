@@ -15,7 +15,6 @@
             [gorilla-repl.websocket-relay :as ws-relay]
             [gorilla-repl.renderer :as renderer] ;; this is needed to bring the render implementations into scope
             [gorilla-repl.files :as files]
-            [gorilla-repl.version :as version]
             [clojure.set :as set]
             [clojure.java.io :as io])
   (:gen-class))
@@ -116,24 +115,13 @@
 
 (defn run-gorilla-server
   [conf]
-  (let [version (or
-                    (:version conf)
-                    "develop")
+  (let [version (or (:version conf) "develop")
 
-        webapp-requested-port (mk-number
-                               (or
-                                (:port conf)
-                                0))
-        ip (or
-            (:ip conf)
-            "127.0.0.1")
-
+        webapp-requested-port (mk-number (or (:port conf) 0))
+        ip (or (:ip conf) "127.0.0.1")
         nrepl-requested-port (or (:nrepl-port conf) 0)  ;; auto-select port if none requested
-
-        project (or
-                 (:project conf)
-                 "no project")
-
+        project (or (:project conf) "no project")
+        to-load (or (:load-file conf) "/worksheet.html")
         keymap (or (:keymap (:gorilla-options conf)) {})
         _ (swap! excludes (fn [x] (set/union x (:load-scan-exclude (:gorilla-options conf)))))]
     ;; app startup
@@ -141,16 +129,19 @@
     ;; build config information for client
     (set-config :project project)
     (set-config :keymap keymap)
-    ;; check for updates
-    (version/check-for-update version)  ;; runs asynchronously
+    (set-config :worksheetName to-load)
+    (set-config :params (:client-params conf))
+    (set-config :strings (:client-strings conf))
+    (set-config :autosave true)
+    (set-config :recalcAllOnLoad true)
+
     ;; first startup nREPL
     (nrepl/start-and-connect nrepl-requested-port)
     ;; and then the webserver
     (let [s (server/run-server #'rw-app-routes {:port webapp-requested-port :join? false :ip ip})
           webapp-port (:local-port (meta s))]
       (spit (doto (io/file ".gorilla-port") .deleteOnExit) webapp-port)
-      (println (str "Running at http://" ip ":" webapp-port "/worksheet.html ."))
-
+      (println (str "Running at http://" ip ":" webapp-port to-load))
 
       (println "Ctrl+C to exit."))))
 

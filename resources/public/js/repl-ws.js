@@ -190,7 +190,7 @@ var repl = (function () {
 
         // If we get here, then we don't know what the message was for - just log it
         // unless the message is explicitly set as ignore
-        if (!d.ignore && (d.status.indexOf("done") < 0)) {
+        if (!d.ignore && (!d.status || d.status.indexOf("done") < 0)) {
             console.log("Unknown response: " + JSON.stringify(d));
         }
     };

@@ -11,6 +11,8 @@ var app = function () {
 
     self.conf = {};
 
+    self.conf.strings = {};
+
     // Most importantly, the application has a worksheet! This is exposed so that the UI can bind to it, but note that
     // you should never change the worksheet directly, as this will leave the event handlers in an inconsistent state.
     // Rather you should use the `setWorksheet` function below.
@@ -21,7 +23,7 @@ var app = function () {
     // whenever we change the filename, we update the URL to match
     self.filename.subscribe(function (filename) {
         if (filename !== "") history.pushState(null, null, "?filename=" + filename);
-        else history.pushState(null, null, self.config.worksheetName || "/worksheet.html");
+        else history.pushState(null, null, self.conf.worksheetName || "/worksheet.html");
      });
     // shows the name of the Leiningen project that gorilla was launched from, makes it easier to manage multiple
     // tabs with multiple gorilla sessions.
@@ -43,9 +45,9 @@ var app = function () {
         // get hold of configuration information from the backend
         $.get(/^.*\//.exec(window.location.pathname)[0]+"config")
             .done(function (data) {
-                self.config = data;
+                self.conf = data;
                 // If we've got the configuration, then start the app
-                self.project(self.config.project);
+                self.project(self.conf.project);
                 // Prepare an empty worksheet so the UI has something to bind to. We do this as if we are loading a
                 // worksheet on startup, we do it asynchronously, so need to have something in place before starting
                 // the UI. This is easier than having two paths that both have UI startup code on them. (Although, the
@@ -54,7 +56,7 @@ var app = function () {
                 self.setWorksheet(ws, "");
 
                 // start the UI
-                commandProcessor.installCommands(self.config.keymap);
+                commandProcessor.installCommands(self.conf.keymap);
                 ko.applyBindings(self, document.getElementById("document"));
 
                 // allow the filename to be passed as a parameter
@@ -74,17 +76,19 @@ var app = function () {
     // A helper function to create a new, blank worksheet with some introductory messages in.
     var setBlankWorksheet = function () {
         var ws = worksheet();
+        var meinConf = self.conf;
+        var myStrings = self.conf.strings;
         ws.segments().push(
             // Note that the variable ck here is defined in commandProcessor.js, and gives the appropriate
             // shortcut key (ctrl or alt) for the platform.
-            freeSegment(self.config.introMessage ||
+            freeSegment(self.conf.strings.introMessage ||
                         ("# Gorilla REPL\n\nWelcome to gorilla :-)\n\nShift + enter evaluates code. " +
                          "Hit " + ck + "+g twice in quick succession or click the menu icon (upper-right corner) " +
                          "for more commands ...\n\nIt's a good habit to run each worksheet in its own namespace: feel " +
                          "free to use the declaration we've provided below if you'd like."))
         );
-        ws.segments().push(codeSegment(self.config.nsSegment ||
-                                       ("(ns " + (self.config.nameSpace || makeHipNSName()) +
+        ws.segments().push(codeSegment(self.conf.strings.nsSegment ||
+                                       ("(ns " + (self.conf.nameSpace || makeHipNSName()) +
                                         "\n  (:require [gorilla-plot.core :as plot]))")));
         self.setWorksheet(ws, "");
         // make it easier for the user to get started by highlighting the empty code segment
@@ -94,7 +98,7 @@ var app = function () {
 
     // bound to the window's title
     self.title = ko.computed(function () {
-        if (self.filename() === "") return (self.conf.title || "Gorilla REPL - ") + self.project();
+        if (self.filename() === "") return (self.conf.strings.title || "Gorilla REPL - ") + self.project();
         else return self.project() + " : " + self.filename();
     });
 
@@ -147,8 +151,8 @@ var app = function () {
 
     var loadFromFile = function (filename) {
         // ask the backend to load the data from disk
-        $.get(/^.*\//.exec(window.location.pathname)[0]+"load", {"worksheet-filename": filename}
-                           .done (function (data) {
+        $.get(/^.*\//.exec(window.location.pathname)[0]+"load", {"worksheet-filename": filename})
+                           .done(function (data) {
                                if (data['worksheet-data']) {
                                    // parse and construct the new worksheet
                                    var segments = worksheetParser.parse(data["worksheet-data"]);
@@ -160,10 +164,10 @@ var app = function () {
                                    var codeSegments = _.filter(self.worksheet().segments(), function(s) {return s.type === 'code'});
                                    if (codeSegments.length > 0) {
                                        eventBus.trigger("worksheet:segment-clicked", {id: codeSegments[0].id});
-                                       if (self.config.recalcAllOnLoad)eventBus.trigger("worksheet:evaluate-all");
+                                       if (self.conf.recalcAllOnLoad) eventBus.trigger("worksheet:evaluate-all");
                                    }
                                }
-                           }))
+                           })
             .fail(function () {
                 self.flashStatusMessage("Failed to load worksheet: " + filename, 2000);
             });
