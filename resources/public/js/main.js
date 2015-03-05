@@ -76,19 +76,19 @@ var app = function () {
     // A helper function to create a new, blank worksheet with some introductory messages in.
     var setBlankWorksheet = function () {
         var ws = worksheet();
-        var meinConf = self.conf;
-        var myStrings = self.conf.strings;
+        var meinConf = self.conf || {};
+        var myStrings = self.conf.strings || {};
         ws.segments().push(
             // Note that the variable ck here is defined in commandProcessor.js, and gives the appropriate
             // shortcut key (ctrl or alt) for the platform.
-            freeSegment(self.conf.strings.introMessage ||
+            freeSegment(myStrings.introMessage ||
                         ("# Gorilla REPL\n\nWelcome to gorilla :-)\n\nShift + enter evaluates code. " +
                          "Hit " + ck + "+g twice in quick succession or click the menu icon (upper-right corner) " +
                          "for more commands ...\n\nIt's a good habit to run each worksheet in its own namespace: feel " +
                          "free to use the declaration we've provided below if you'd like."))
         );
-        ws.segments().push(codeSegment(self.conf.strings.nsSegment ||
-                                       ("(ns " + (self.conf.nameSpace || makeHipNSName()) +
+        ws.segments().push(codeSegment(myStrings.nsSegment ||
+                                       ("(ns " + (meinConf.nameSpace || makeHipNSName()) +
                                         "\n  (:require [gorilla-plot.core :as plot]))")));
         self.setWorksheet(ws, "");
         // make it easier for the user to get started by highlighting the empty code segment
