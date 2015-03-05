@@ -20,12 +20,6 @@
             [clojure.java.io :as io])
   (:gen-class))
 
-;; useful for debugging the nREPL requests
-(defn print-req
-  [handler]
-  (fn [request]
-    (println (:params request))
-    (handler request)))
 
 ;; a wrapper for JSON API calls
 (defn wrap-api-handler
