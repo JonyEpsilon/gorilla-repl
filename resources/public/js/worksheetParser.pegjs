@@ -16,10 +16,12 @@ segmentWithBlankLine = seg:segment lineEnd? {return seg;}
 
 segment = freeSegment / codeSegment
 
-freeSegment = freeSegmentOpenTag content:stringNoDelim? freeSegmentCloseTag
+freeSegment = freeSegmentOpenTag freeSegmentLockedTag? content:stringNoDelim? freeSegmentCloseTag
                 {return freeSegment(unmakeClojureComment(content));}
 
 freeSegmentOpenTag = ";; **" lineEnd
+
+freeSegmentLockedTag = ";; locked" lineEnd
 
 freeSegmentCloseTag = lineEnd ";; **" lineEnd
 

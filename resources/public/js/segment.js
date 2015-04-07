@@ -93,6 +93,7 @@ var freeSegment = function (contents) {
     // Segment UI state
     self.active = ko.observable(false);
     self.markupVisible = ko.observable(false);
+    self.locked = ko.observable(false);
 
     // The markup
     // handle null contents
@@ -132,13 +133,27 @@ var freeSegment = function (contents) {
         self.content.blur();
         self.markupVisible(false);
         self.active(false);
+    };
 
+    self.lock = function () {
+        self.content.setUneditable();
+        self.locked(true);
+    };
+
+    self.unlock = function () {
+        self.content.setEditable();
+        self.locked(false);
     };
 
     // serialises the segment for saving. The result is valid clojure code, marked up with some magic comments.
     self.toClojure = function () {
         var tag = ";; **\n";
-        return tag + makeClojureComment(self.getContents()) + "\n" + tag;
+        var lockedTag = ";; tagged\n";
+        if (self.locked()) {
+            return tag + lockedTag + makeClojureComment(self.getContents()) + "\n" + tag;
+        } else {
+            return tag + makeClojureComment(self.getContents()) + "\n" + tag;
+        }
     };
 
 

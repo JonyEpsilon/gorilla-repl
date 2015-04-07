@@ -30,6 +30,14 @@ var codemirrorVM = function (id, initialContents, contentType) {
         self.codeMirror.getInputField().blur();
     };
 
+    self.setEditable = function () {
+        self.codeMirror.setOption("readOnly", false);
+    };
+
+    self.setUneditable = function () {
+        self.codeMirror.setOption("readOnly", true);
+    };
+
     self.complete = function (completionFunc) {
         CodeMirror.showHint(self.codeMirror, completionFunc,
             {async: true, completeSingle: false, alignWithWord: false});

@@ -56,6 +56,20 @@ var worksheet = function () {
         self.activeSegmentIndex = null;
     };
 
+    self.lockSegment = function (index) {
+        var seg = self.segments()[index]
+        if (seg.type == "free") {
+            seg.lock();
+        }
+    };
+
+    self.unlockSegment = function (index) {
+        var seg = self.segments()[index]
+        if (seg.type == "free") {
+            seg.unlock();
+        }
+    }
+
     self.deleteSegment = function (index) {
         self.segments.splice(index, 1);
     };
@@ -199,6 +213,13 @@ var worksheet = function () {
             changeActiveSegmentType("code", codeSegment);
         });
 
+        addEventHandler("worksheet:lockSegment", function () {
+            self.getActiveSegment().lock();
+        });
+
+        addEventHandler("worksheet:unlockSegment", function () {
+            self.getActiveSegment().unlock();
+        });
 
         // * Evaluation *
 
