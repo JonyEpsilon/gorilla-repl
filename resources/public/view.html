@@ -39,6 +39,7 @@
     <script type="text/javascript" src="js-viewer/segment-viewer.js"></script>
     <script type="text/javascript" src="js-viewer/worksheet-viewer.js"></script>
     <script type="text/javascript" src="js-viewer/github.js"></script>
+    <script type="text/javascript" src="js-viewer/bitbucket.js"></script>
     <script type="text/javascript" src="js-viewer/main-viewer.js"></script>
 
     <title data-bind="text: title">Gorilla REPL viewer</title>
@@ -50,7 +51,7 @@
     <div class="header-left">Made with <a href="http://clojure.org" target="_blank">Clojure</a> and
         <a href="http://gorilla-repl.org" target="_blank">Gorilla REPL</a></div>
     <div class="header-right">
-        <a href="#" data-bind="click: showCopyBox">View this worksheet on GitHub</a>
+        <a href="#" data-bind="click: showCopyBox">View this worksheet on <span data-bind="text: host"></span></a>
     </div>
 </div>
 
@@ -99,7 +100,7 @@
 
 <!-- Copying instructions -->
 <div class="copyBox" style="display: none" data-bind="visible: copyBoxVisible">
-    <p>This code can be found on GitHub here:</p>
+    <p>This code can be found on <span data-bind="text: host"></span> here:</p>
     <div data-bind="visible: (!(source().toLowerCase() === 'gist'))">
         <a data-bind="attr: {href: sourceURL}, text: sourceURL" target="_blank"></a>
         </div>
@@ -113,7 +114,7 @@
     <ul>
         <li>If you don't yet have Leiningen installed, then follow the instructions
             <a href="http://leiningen.org/#install" target="_blank">here</a>. It only takes a couple of minutes.</li>
-        <li>Clone the GitHub project that contains this worksheet:
+        <li>Clone the <span data-bind="text: host"></span>  project that contains this worksheet:
             <a data-bind="attr: {href: sourceURL}, text: sourceURL" target="_blank"></a>.</li>
         <li>Open a terminal in the project directory and run "lein gorilla".</li>
         <li>Open the load dialog by pressing "alt+g alt+l" ("ctrl+g ctrl+l" on Mac).</li>

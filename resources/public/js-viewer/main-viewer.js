@@ -16,6 +16,7 @@ var app = function () {
     });
     self.sourceURL = ko.observable("");
     self.source = ko.observable("");
+    self.host = ko.observable("");
 
     // The copyBox is a UI element that gives links to the source of the worksheet, and how to copy/edit it.
     self.copyBoxVisible = ko.observable(false);
@@ -34,6 +35,7 @@ var app = function () {
         self.sourceURL(sourceURL);
         self.filename(worksheetName);
         self.source(source);
+        self.host((source.toLowerCase() === "bitbucket") ? "Bitbucket" : "GitHub");
 
         // wire up the UI
         ko.applyBindings(self, document.getElementById("document"));
@@ -70,6 +72,15 @@ $(function () {
             var filename = getParameterByName("filename");
             getFromGist(id, filename, function (data) {
                 viewer.start(data,  "https://gist.github.com/" + id, filename, source);
+            });
+            return;
+        case "bitbucket":
+            var user = getParameterByName("user");
+            var repo = getParameterByName("repo");
+            var path = getParameterByName("path");
+            var revision = getParameterByName("revision") || "HEAD";
+            getFromBitbucket(user, repo, path, revision, function (data) {
+                viewer.start(data, "https://bitbucket.org/" + user + "/" + repo, path, source);
             });
             return;
         case "test":
