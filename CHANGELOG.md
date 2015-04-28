@@ -2,6 +2,7 @@
 
 ## Version 0.3.5
 
+- Can view worksheets hosted on BitBucket (thanks for @tbrx).
 - Command to delete output from the worksheet (thanks to @dasmoth).
 
 ## Version 0.3.4
