@@ -102,9 +102,13 @@
           webapp-port (:local-port (meta s))
           url (str "http://" ip ":" webapp-port "/worksheet.html")]
       (spit (doto (io/file ".gorilla-port") .deleteOnExit) webapp-port)
-      (.. java.awt.Desktop getDesktop (browse (java.net.URI. url))) 
-      (println (str "Running at " url "."))
-      (println "Ctrl+C to exit."))))
+      (println "Running at" url)
+      (println "Ctrl+C to exit")
+      (try
+        (.. java.awt.Desktop getDesktop (browse (java.net.URI. url))) 
+        (catch java.awt.HeadlessException e 
+          ;; running headless
+          nil)))))
 
 (defn -main
   [& args]
