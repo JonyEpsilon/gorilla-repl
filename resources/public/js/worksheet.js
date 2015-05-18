@@ -234,6 +234,27 @@ var worksheet = function () {
 
         // messages from the evaluator
 
+        // When more than a single value is returned from evaluating
+        // a segment, values are combined into a list-like structure.
+
+        var appendValue = function(oldValue, parsedValue) {
+            // Parsed values are strings extracted from JSON response.
+            // The strings are JSON representations of data objects;
+            // we parse them to insert into the compound object and then
+            // stringify the final structure.
+            oldValue = JSON.parse(oldValue);
+            parsedValue = JSON.parse(parsedValue);
+
+            return JSON.stringify({
+                type: "list-like",
+                open: "",
+                close: "",
+                separator: "</pre><pre>", // preserves the current behavior
+                items: [oldValue, parsedValue],
+                value: "["+oldValue.value+","+parsedValue.value+"]" 
+            });
+        }
+
         addEventHandler("evaluator:value-response", function (e, d) {
             var segID = d.segmentID;
             var seg = self.getSegmentForID(segID);
@@ -244,6 +265,10 @@ var worksheet = function () {
                 // string that will JSON.parse to the object. This round of unescaping is done here in order that the
                 // value associated with the segment (and hence saved in the worksheet) is not double escaped.
                 var parsedValue = JSON.parse(d.value);
+                var oldValue = seg.output();
+                if(oldValue) { // multiple values from segment
+                    parsedValue = appendValue(oldValue, parsedValue);
+                }
                 seg.output(parsedValue);
             } catch (e) {
                 // if anything goes wrong, fall back to displaying the raw response.
