@@ -15,7 +15,6 @@
             [gorilla-repl.websocket-relay :as ws-relay]
             [gorilla-repl.renderer :as renderer] ;; this is needed to bring the render implementations into scope
             [gorilla-repl.files :as files]
-            [gorilla-repl.version :as version]
             [clojure.set :as set]
             [clojure.java.io :as io])
   (:gen-class))
@@ -39,6 +38,9 @@
           _ (println "done.")]
       (res/response {:worksheet-data ws-data}))))
 
+;; A hook so another system can capture the
+;; saving of the file
+(def capture-save (atom (fn [& _])))
 
 ;; the client can post a request to have the worksheet saved, handled by the following
 (defn save
@@ -47,6 +49,7 @@
   (when-let [ws-data (:worksheet-data (:params req))]
     (when-let [ws-file (:worksheet-filename (:params req))]
       (print (str "Saving: " ws-file " ... "))
+      (@capture-save ws-data ws-file)
       (spit ws-file ws-data)
       (println (str "done. [" (java.util.Date.) "]"))
       (res/response {:status "ok"}))))
@@ -77,15 +80,42 @@
            (route/resources "/")
            (route/files "/project-files" [:root "."]))
 
+(defn fix-prefix
+  [{:keys [uri] :as  request}]
+  (if-let [info (re-find #"^/visi/[^/]*(/.*)$" uri)]
+    (do
+      (println "Rewriting " uri " to " (get info 1))
+      (assoc request :uri (get info 1)))
+    request
+    )
+  )
+
+(defn fix-slash
+  [{:keys [uri] :as  request}]
+  (if (.endsWith uri "/")
+    (assoc request :uri (str uri "index.html"))
+    request)
+  )
+
+(defn rw-app-routes
+  [request]
+  (-> request fix-prefix fix-slash app-routes)
+  )
+
+(defn- mk-number
+  [x]
+  (if (string? x) (read-string x) x))
+
 
 (defn run-gorilla-server
   [conf]
-  ;; get configuration information from parameters
   (let [version (or (:version conf) "develop")
-        webapp-requested-port (or (:port conf) 0)
+
+        webapp-requested-port (mk-number (or (:port conf) 0))
         ip (or (:ip conf) "127.0.0.1")
         nrepl-requested-port (or (:nrepl-port conf) 0)  ;; auto-select port if none requested
         project (or (:project conf) "no project")
+        to-load (or (:load-file conf) "/worksheet.html")
         keymap (or (:keymap (:gorilla-options conf)) {})
         _ (swap! excludes (fn [x] (set/union x (:load-scan-exclude (:gorilla-options conf)))))]
     ;; app startup
@@ -93,15 +123,20 @@
     ;; build config information for client
     (set-config :project project)
     (set-config :keymap keymap)
-    ;; check for updates
-    (version/check-for-update version)  ;; runs asynchronously
+    (set-config :worksheetName to-load)
+    (set-config :params (:client-params conf))
+    (set-config :strings (:client-strings conf))
+    (set-config :autosave true)
+    (set-config :recalcAllOnLoad true)
+
     ;; first startup nREPL
     (nrepl/start-and-connect nrepl-requested-port)
     ;; and then the webserver
-    (let [s (server/run-server #'app-routes {:port webapp-requested-port :join? false :ip ip})
+    (let [s (server/run-server #'rw-app-routes {:port webapp-requested-port :join? false :ip ip})
           webapp-port (:local-port (meta s))]
       (spit (doto (io/file ".gorilla-port") .deleteOnExit) webapp-port)
-      (println (str "Running at http://" ip ":" webapp-port "/worksheet.html ."))
+      (println (str "Running at http://" ip ":" webapp-port to-load))
+
       (println "Ctrl+C to exit."))))
 
 (defn -main

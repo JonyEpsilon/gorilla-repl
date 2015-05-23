@@ -17,12 +17,18 @@ var repl = (function () {
         self.ws.send(JSON.stringify(message));
     };
 
+    // the function that deals with pinging the server which serves as
+    // (1) keep-alive and (2) a way to piggyback pushes from the server on the ping
+    self.pinger = function () {};
+
     // Connect to the websocket nREPL bridge.
     // TODO: handle errors.
     self.connect = function (successCallback, failureCallback) {
         // hard to believe we have to do this
         var loc = window.location;
-        var url = "ws://" + loc.hostname + ":" + loc.port + "/repl";
+        var protocol = window.location.protocol == "https:" ? "wss:" : "ws:";
+        var url = protocol + "//" + loc.hostname + ":" + loc.port +
+            /^.*\//.exec(loc.pathname)[0] +"repl";
         self.ws = new WebSocket(url);
 
         // we first install a handler that will capture the session id from the clone message. Once it's done its work
@@ -38,11 +44,24 @@ var repl = (function () {
 
         // The first thing we do is send a clone op, to get a new session.
         self.ws.onopen = function () {
+            // we're got an open web socket... proceed with pinging
+            self.pinger = function () {
+                if (self.sessionID) {
+                    var id = UUID.generate();
+                    self.ws.send(JSON.stringify({"op": "ping",
+                                                 id: id,
+                                                 "session": self.sessionID}));
+                }
+
+                setTimeout(function() {self.pinger();}, 1000);
+            };
+            self.pinger();
             self.ws.send(JSON.stringify({"op": "clone"}));
         };
 
         // If the websocket connection dies we're done for, message the app to tell it so.
         self.ws.onclose = function () {
+            self.pinger = function () {};
             eventBus.trigger("app:connection-lost");
         };
     };
@@ -60,7 +79,11 @@ var repl = (function () {
         var id = UUID.generate();
         // store the evaluation ID and the segment ID in the evaluationMap
         evaluationMap[id] = d.segmentID;
-        var message = {'op': 'eval', 'code': d.code, id: id, session: self.sessionID};
+
+        // include the segmentID in the message so data can be pushed to
+        // the segment in the future
+        var message = {'op': 'eval', 'segmentID': d.segmentID,
+                       'code': d.code, id: id, session: self.sessionID};
         self.sendREPLCommand(message);
     };
 
@@ -108,13 +131,13 @@ var repl = (function () {
         var d = JSON.parse(message.data);
 
         // Is this a message relating to an evaluation triggered by the user?
-        var segID = evaluationMap[d.id];
+        var segID = d.segmentID || evaluationMap[d.id];
         if (segID != null) {
 
             // - evaluation result (Hopefully no other responses have an ns component!)
             if (d.ns) {
                 self.currentNamespace = d.ns;
-                eventBus.trigger("evaluator:value-response", {ns: d.ns, value: d.value, segmentID: segID});
+                eventBus.trigger("evaluator:value-response", {clear: d.clear, ns: d.ns, value: d.value, segmentID: segID});
                 return;
             }
 
@@ -166,7 +189,10 @@ var repl = (function () {
 
 
         // If we get here, then we don't know what the message was for - just log it
-        console.log("Unknown response: " + JSON.stringify(d));
+        // unless the message is explicitly set as ignore
+        if (!d.ignore && (!d.status || d.status.indexOf("done") < 0)) {
+            console.log("Unknown response: " + JSON.stringify(d));
+        }
     };
 
 

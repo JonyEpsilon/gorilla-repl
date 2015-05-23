@@ -30,7 +30,10 @@
   [channel data]
   (let [parsed-message (assoc (json/parse-string data true) :as-html 1)
         client (nrepl/client @conn Long/MAX_VALUE)
-        replies (nrepl/message client parsed-message)]
+        replies
+        (if (= "ping" (-> parsed-message :op))
+          (nrepl/message client (assoc parsed-message :op "eval" :code "nil" :ignore "yes"))
+          (nrepl/message client parsed-message))]
     ;; send the messages out over the WS connection one-by-one.
     (doall (map (partial send-json-over-ws channel) replies))))
 
