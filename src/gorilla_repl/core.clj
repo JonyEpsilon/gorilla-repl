@@ -99,10 +99,16 @@
     (nrepl/start-and-connect nrepl-requested-port)
     ;; and then the webserver
     (let [s (server/run-server #'app-routes {:port webapp-requested-port :join? false :ip ip})
-          webapp-port (:local-port (meta s))]
+          webapp-port (:local-port (meta s))
+          url (str "http://" ip ":" webapp-port "/worksheet.html")]
       (spit (doto (io/file ".gorilla-port") .deleteOnExit) webapp-port)
-      (println (str "Running at http://" ip ":" webapp-port "/worksheet.html ."))
-      (println "Ctrl+C to exit."))))
+      (println "Running at" url)
+      (println "Ctrl+C to exit")
+      (try
+        (.. java.awt.Desktop getDesktop (browse (java.net.URI. url))) 
+        (catch java.awt.HeadlessException e 
+          ;; running headless
+          nil)))))
 
 (defn -main
   [& args]
