@@ -2,11 +2,12 @@
 ;;;;
 ;;;; gorilla-repl is licenced to you under the MIT licence. See the file LICENCE.txt for full details.
 
-(defproject gorilla-repl "0.3.5-SNAPSHOT"
+(defproject gorilla-repl "0.4.0-SNAPSHOT"
   :description "A rich REPL for Clojure in the notebook style."
   :url "https://github.com/JonyEpsilon/gorilla-repl"
   :license {:name "MIT"}
   :dependencies ^:replace [[org.clojure/clojure "1.6.0"]
+                           [org.clojure/tools.cli "0.3.1"]
                            [http-kit "2.1.18"]
                            [ring/ring-json "0.3.1"]
                            [cheshire "5.3.1"]
@@ -22,3 +23,10 @@
   :main ^:skip-aot gorilla-repl.core
   :target-path "target/%s"
   :profiles {:uberjar {:aot :all}})
+
+
+;; Run using
+
+;;   lein run -p 7999
+
+;; to connect to an existing nrepl server.

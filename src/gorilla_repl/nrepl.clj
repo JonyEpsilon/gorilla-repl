@@ -9,7 +9,8 @@
 
 (def nrepl (atom nil))
 
-(defn start-and-connect
+(defn start
+  "Starts a new nrepl server and return the port it binds to."
   [nrepl-requested-port]
   (let [cider-mw (map resolve cider/cider-middleware)
         middleware (conj cider-mw #'render-mw/render-values)
@@ -19,5 +20,13 @@
         repl-port-file (io/file ".nrepl-port")]
     (println "Started nREPL server on port" nrepl-port)
     (swap! nrepl (fn [x] nr))
-    (ws-relay/connect-to-nrepl nrepl-port)
-    (spit (doto repl-port-file .deleteOnExit) nrepl-port)))
+    (spit (doto repl-port-file .deleteOnExit) nrepl-port)
+    nrepl-port
+    ))
+
+
+
+(defn connect
+  "Connects to an existing nrepl server using the host/port specified"
+  [host port]
+  (ws-relay/connect-to-nrepl host port))

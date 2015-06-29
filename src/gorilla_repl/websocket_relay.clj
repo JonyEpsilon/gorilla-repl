@@ -16,8 +16,8 @@
 ;; routing macro, so I can't pass the connection around, to give a more functional API.
 (defn connect-to-nrepl
   "Connect to the nREPL server and store the connection."
-  [port]
-  (let [new-conn (nrepl/connect :port port)]
+  [host port]
+  (let [new-conn (nrepl/connect :host host :port port)]
     (swap! conn (fn [x] new-conn))))
 
 (defn- send-json-over-ws

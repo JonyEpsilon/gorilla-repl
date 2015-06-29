@@ -1,5 +1,9 @@
 # Changelog
 
+## Version 0.4.0
+- Can start GorillaREPL without starting nrepl
+
+
 ## Version 0.3.5
 
 - Can view worksheets hosted on BitBucket (thanks for @tbrx).
