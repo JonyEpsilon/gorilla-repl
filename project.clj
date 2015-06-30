@@ -14,6 +14,7 @@
                            [compojure "1.1.8"]
                            [org.slf4j/slf4j-api "1.7.7"]
                            [ch.qos.logback/logback-classic "1.1.2"]
+                           [org.clojure/tools.logging "0.3.1"]
                            [gorilla-renderable "2.0.0"]
                            [gorilla-plot "0.1.3"]
                            [javax.servlet/servlet-api "2.5"]
