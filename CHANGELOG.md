@@ -2,6 +2,7 @@
 
 ## Version 0.3.5
 
+- Large worksheets (>8MB) now save successfully.
 - Can view worksheets hosted on BitBucket (thanks for @tbrx).
 - Command to delete output from the worksheet (thanks to @dasmoth).
 
