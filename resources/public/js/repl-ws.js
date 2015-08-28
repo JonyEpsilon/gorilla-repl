@@ -83,7 +83,8 @@ var repl = (function () {
     // We call the given callback with the list of symbols once the REPL server replies.
     self.getCompletions = function (symbol, ns, context, callback) {
         sendCIDERMessage({op: "complete", symbol: symbol, ns: ns, context: context}, function (d) {
-            callback(d.completions);
+            var compl = _.map(d.completions, function (c) {return c.candidate});
+            callback(compl);
         });
     };
 

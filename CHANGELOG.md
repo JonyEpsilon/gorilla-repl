@@ -2,6 +2,7 @@
 
 ## Version 0.3.5
 
+- Update to support CIDER-nrepl version 0.9.1.
 - Large worksheets (>8MB) now save successfully.
 - Can view worksheets hosted on BitBucket (thanks for @tbrx).
 - Command to delete output from the worksheet (thanks to @dasmoth).
