@@ -2,6 +2,7 @@
 
 ## Version 0.3.5
 
+- Generate a main class to ease usage in Java projects.
 - Viewer properly supports non-ASCII text.
 - Update to support CIDER-nrepl version 0.9.1.
 - Large worksheets (>8MB) now save successfully.
