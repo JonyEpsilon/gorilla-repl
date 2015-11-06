@@ -35,11 +35,15 @@ var app = function () {
         newWorksheet.addEventHandlers();
     };
 
+    var createPath = function(suffix) {
+        return window.location.pathname.replace(/[^/]+$/,suffix);
+    };
+
     // This starts the application. First of all we ask the server for configuration information, and then prepare the
     // UI and, if appropriate, load an initial worksheet.
     self.start = function (initialFilename) {
         // get hold of configuration information from the backend
-        $.get("/config")
+        $.get(createPath('config'))
             .done(function (data) {
                 self.config = data;
                 // If we've got the configuration, then start the app
@@ -124,7 +128,7 @@ var app = function () {
 
     // Helpers for loading and saving the worksheet - called by the various command handlers
     var saveToFile = function (filename, successCallback) {
-        $.post("/save", {
+        $.post(createPath('save'), {
             "worksheet-filename": filename,
             "worksheet-data": self.worksheet().toClojure()
         }).done(function () {
@@ -137,7 +141,7 @@ var app = function () {
 
     var loadFromFile = function (filename) {
         // ask the backend to load the data from disk
-        $.get("/load", {"worksheet-filename": filename})
+        $.get(createPath('load'), {"worksheet-filename": filename})
             .done(function (data) {
                 if (data['worksheet-data']) {
                     // parse and construct the new worksheet
@@ -178,7 +182,7 @@ var app = function () {
         self.palette.show("Scanning for files ...", []);
         $.ajax({
             type: "GET",
-            url: "/gorilla-files",
+            url: createPath('gorilla-files'),
             success: function (data) {
                 var paletteFiles = data.files.map(function (c) {
                     return {
