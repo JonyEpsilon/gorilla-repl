@@ -16,7 +16,7 @@
         nr (nrepl-server/start-server :port nrepl-requested-port
                                       :handler (apply nrepl-server/default-handler middleware))
         nrepl-port (:port nr)
-        repl-port-file (io/file ".nrepl-port")]
+        repl-port-file (io/file (System/getenv "HOME") ".nrepl-port")]
     (println "Started nREPL server on port" nrepl-port)
     (swap! nrepl (fn [x] nr))
     (ws-relay/connect-to-nrepl nrepl-port)
