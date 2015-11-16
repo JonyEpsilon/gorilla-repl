@@ -13,11 +13,12 @@
             [ring.util.response :as res]
             [gorilla-repl.nrepl :as nrepl]
             [gorilla-repl.websocket-relay :as ws-relay]
-            [gorilla-repl.renderer :as renderer] ;; this is needed to bring the render implementations into scope
+            [gorilla-repl.renderer :as renderer]            ;; this is needed to bring the render implementations into scope
             [gorilla-repl.files :as files]
             [gorilla-repl.version :as version]
             [clojure.set :as set]
-            [clojure.java.io :as io])
+            [clojure.java.io :as io]
+            [gorilla-repl.cli :as cli])
   (:gen-class))
 
 
@@ -57,7 +58,7 @@
 ;; API endpoint for getting the list of worksheets in the project
 (defn gorilla-files [req]
   (let [excludes @excludes]
-  (res/response {:files (files/gorilla-filepaths-in-current-directory excludes)})))
+    (res/response {:files (files/gorilla-filepaths-in-current-directory excludes)})))
 
 ;; configuration information that will be made available to the webapp
 (def conf (atom {}))
@@ -84,7 +85,6 @@
   (let [version (or (:version conf) "develop")
         webapp-requested-port (or (:port conf) 0)
         ip (or (:ip conf) "127.0.0.1")
-        nrepl-requested-port (or (:nrepl-port conf) 0)  ;; auto-select port if none requested
         project (or (:project conf) "no project")
         keymap (or (:keymap (:gorilla-options conf)) {})
         _ (swap! excludes (fn [x] (set/union x (:load-scan-exclude (:gorilla-options conf)))))]
@@ -94,9 +94,7 @@
     (set-config :project project)
     (set-config :keymap keymap)
     ;; check for updates
-    (version/check-for-update version)  ;; runs asynchronously
-    ;; first startup nREPL
-    (nrepl/start-and-connect nrepl-requested-port)
+    (version/check-for-update version)                      ;; runs asynchronously
     ;; and then the webserver
     (let [s (server/run-server #'app-routes {:port webapp-requested-port :join? false :ip ip :max-body 500000000})
           webapp-port (:local-port (meta s))]
@@ -106,4 +104,23 @@
 
 (defn -main
   [& args]
-  (run-gorilla-server {:port 8990}))
+
+  (let [{:keys [options arguments errors summary]} (cli/parse-opts args)]
+
+    (println options)
+
+    ;; first startup nREPL
+
+    (if (:standalone options)
+      (let [port (nrepl/start (or (:nrepl-port options) 0))]   ;; auto-select port if none requested
+        (nrepl/connect (or (:nrepl-host options) "127.0.0.1") port))
+
+      (nrepl/connect (:nrepl-host options) (:nrepl-port options)))
+
+
+    ;; then start the actual GorillaREPL server
+    (run-gorilla-server {:port (:port options)
+                         :ip (:host options)
+                         :project (:project options)
+                         })))
+

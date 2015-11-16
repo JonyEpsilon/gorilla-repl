@@ -1,5 +1,9 @@
 # Changelog
 
+## Version 0.4.0
+- Can start GorillaREPL without starting nrepl
+
+
 ## Version 0.3.5
 
 - Make URLs relative to support easier embedding (thanks to @deas).
