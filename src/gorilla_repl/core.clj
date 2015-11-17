@@ -97,7 +97,7 @@
     ;; check for updates
     (version/check-for-update version)  ;; runs asynchronously
     ;; first startup nREPL
-    (nrepl/start-and-connect nrepl-requested-port)
+    (nrepl/start-and-connect nrepl-requested-port requested-port-file)
     ;; and then the webserver
     (let [s (server/run-server #'app-routes {:port webapp-requested-port :join? false :ip ip :max-body 500000000})
           webapp-port (:local-port (meta s))]
