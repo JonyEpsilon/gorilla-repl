@@ -2,6 +2,7 @@
 
 ## Version 0.3.5
 
+- Separate out handlers from embedded HTTPKit to ease embedding (thanks to @deas).
 - Make URLs relative to support easier embedding (thanks to @deas).
 - Generate a main class to ease usage in Java projects.
 - Viewer properly supports non-ASCII text.

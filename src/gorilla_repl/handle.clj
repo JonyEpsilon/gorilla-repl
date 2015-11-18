@@ -1,5 +1,11 @@
+;;;; This file is part of gorilla-repl. Copyright (C) 2015-, Gorilla REPL contributors.
+;;;;
+;;;; gorilla-repl is licenced to you under the MIT licence. See the file LICENCE.txt for full details.
+
 (ns gorilla-repl.handle
-  "Generic ring handlers."
+  "Ring handlers for Gorilla server functions. Broken out into their own namespace so as to be usable without having to
+  use Gorilla's embedded HTTPKit server. Note that as well as the handlers there are two functions in this NS,
+  `update-excludes` and `set-config` that modify the state returned by handlers."
   (:require [ring.middleware.keyword-params :as keyword-params]
             [ring.middleware.params :as params]
             [ring.middleware.json :as json]
