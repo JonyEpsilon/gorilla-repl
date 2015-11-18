@@ -13,7 +13,7 @@ var render = function (data, element, errorCallback) {
     var callbackQueue = [];
     var htmlString = renderPart(data, callbackQueue, errorCallback);
     var el = $("<pre>" + htmlString + "</pre>");
-    $(element).append(el);
+    $(element).html(el);
     _.each(callbackQueue, function (callback) {callback()});
 
     // Attach a click event handler to each element for value copy and paste.
@@ -74,7 +74,8 @@ var renderVega = function (data, callbackQueue, errorCallback) {
         vg.parse.spec(data.content, function (chart) {
             try {
                 var element = $("#" + uuid).get()[0];
-                chart({el: element, renderer: 'svg'}).update();
+                if(element) // may have been removed
+                    chart({el: element, renderer: 'svg'}).update();
             } catch (e) {
                 // we'll end up here if vega throws an error. We try and route this error back to the
                 // segment so the user has an idea of what's going on.
