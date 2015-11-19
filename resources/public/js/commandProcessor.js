@@ -133,6 +133,24 @@ commandList = [
         }
     },
     {
+        name: "command:worksheet:lockSegment",
+        desc: "Lock the highlighted markdown segment to prevent changes.",
+        showInMenu: true,
+        kb: combo('g', 'k'),
+        action: function () {
+            eventBus.trigger("worksheet:lockSegment");
+        }
+    },
+    {
+        name: "command:worksheet:unlockSegment",
+        desc: "Unlock the highlighted markdown segment to allow changes.",
+        showInMenu: true,
+        kb: combo('g', 'u'),
+        action: function () {
+            eventBus.trigger("worksheet:unlockSegment");
+        }
+    },
+    {
         name: "command:worksheet:changeToCode",
         desc: "Convert the highlighted segment to a clojure segment.",
         showInMenu: true,
