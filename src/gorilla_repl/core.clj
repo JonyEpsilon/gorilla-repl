@@ -22,9 +22,10 @@
            (POST "/save" [] (handle/wrap-api-handler handle/save))
            (GET "/gorilla-files" [] (handle/wrap-api-handler handle/gorilla-files))
            (GET "/config" [] (handle/wrap-api-handler handle/config))
-           (GET "/repl" [] ws-relay/ring-handler)
-           (route/resources "/" {:root "gorilla-repl-client"})
-           (route/files "/project-files" {:root "."}))
+           ;; (GET "/repl" [] (ws-relay/repl-ring-handler ws-relay/on-receive-mem))
+           (GET "/repl" [] (ws-relay/repl-ring-handler ws-relay/on-receive-net))
+           (route/resources "/")
+           (route/files "/project-files" [:root "."]))
 
 
 (defn run-gorilla-server
