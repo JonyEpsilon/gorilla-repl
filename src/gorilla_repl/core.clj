@@ -23,8 +23,8 @@
            (GET "/gorilla-files" [] (handle/wrap-api-handler handle/gorilla-files))
            (GET "/config" [] (handle/wrap-api-handler handle/config))
            (GET "/repl" [] ws-relay/ring-handler)
-           (route/resources "/")
-           (route/files "/project-files" [:root "."]))
+           (route/resources "/" {:root "gorilla-repl-client"})
+           (route/files "/project-files" {:root "."}))
 
 
 (defn run-gorilla-server
