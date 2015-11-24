@@ -2,6 +2,7 @@
 
 ## Version 0.3.5
 
+- Serve resources from less generic location to avoid clashing with project files.
 - Port files are now configurable (thanks to @mattexx).
 - Separate out handlers from embedded HTTPKit to ease embedding (thanks to @deas).
 - Make URLs relative to support easier embedding (thanks to @deas).
