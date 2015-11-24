@@ -10,7 +10,6 @@
 (def nrepl (atom nil))
 
 (defn start-and-connect
-  ([nrepl-requested-port] (start-and-connect nrepl-requested-port (io/file ".nrepl-port")))
   ([nrepl-requested-port repl-port-file]
    (let [cider-mw (map resolve cider/cider-middleware)
          middleware (conj cider-mw #'render-mw/render-values)

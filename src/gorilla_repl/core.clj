@@ -34,8 +34,8 @@
         webapp-requested-port (or (:port conf) 0)
         ip (or (:ip conf) "127.0.0.1")
         nrepl-requested-port (or (:nrepl-port conf) 0)  ;; auto-select port if none requested
-        nrepl-port-file (or (:nrepl-port-file conf) (io/file ".nrepl-port"))
-        gorilla-port-file (or (:gorilla-port-file conf) (io/file ".gorilla-port"))
+        nrepl-port-file (io/file (or (:nrepl-port-file conf) ".nrepl-port"))
+        gorilla-port-file (io/file (or (:gorilla-port-file conf) ".gorilla-port"))
         project (or (:project conf) "no project")
         keymap (or (:keymap (:gorilla-options conf)) {})
         _ (handle/update-excludes (fn [x] (set/union x (:load-scan-exclude (:gorilla-options conf)))))]
