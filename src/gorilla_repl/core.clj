@@ -34,6 +34,8 @@
         webapp-requested-port (or (:port conf) 0)
         ip (or (:ip conf) "127.0.0.1")
         nrepl-requested-port (or (:nrepl-port conf) 0)  ;; auto-select port if none requested
+        nrepl-port-file (or (:nrepl-port-file conf) (io/file ".nrepl-port"))
+        gorilla-port-file (or (:gorilla-port-file conf) (io/file ".gorilla-port"))
         project (or (:project conf) "no project")
         keymap (or (:keymap (:gorilla-options conf)) {})
         _ (handle/update-excludes (fn [x] (set/union x (:load-scan-exclude (:gorilla-options conf)))))]
@@ -45,11 +47,11 @@
     ;; check for updates
     (version/check-for-update version)  ;; runs asynchronously
     ;; first startup nREPL
-    (nrepl/start-and-connect nrepl-requested-port)
+    (nrepl/start-and-connect nrepl-requested-port nrepl-port-file)
     ;; and then the webserver
     (let [s (server/run-server #'app-routes {:port webapp-requested-port :join? false :ip ip :max-body 500000000})
           webapp-port (:local-port (meta s))]
-      (spit (doto (io/file ".gorilla-port") .deleteOnExit) webapp-port)
+      (spit (doto gorilla-port-file .deleteOnExit) webapp-port)
       (println (str "Running at http://" ip ":" webapp-port "/worksheet.html ."))
       (println "Ctrl+C to exit."))))
 
