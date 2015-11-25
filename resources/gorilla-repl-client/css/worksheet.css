@@ -82,8 +82,49 @@ div.error-text {
     clear: both;
     padding: 0.5em 1em 0.5em 1em;
     margin-bottom: 0.3em;
-    background-color: #FCE4E8;
+    background-color: #faf0f2;
 }
+
+div.stack-trace {
+    font-family: monospace;
+    border-style: solid;
+    border-width: 1px;
+    border-color: #ff0000;
+    color: #ff0000;
+    clear: both;
+    padding: 0.5em 1em 0.5em 1em;
+    margin-bottom: 0.3em;
+    background-color: white;
+}
+
+div.stack-trace ul {
+    margin-top: 0.25em;
+}
+
+li.clj-stackframe {
+    color: lightseagreen;
+}
+
+li.java-stackframe {
+    color: steelblue;
+}
+
+li.tooling-stackframe {
+    opacity: 0.25;
+}
+
+span.stackframe-ns {
+    color: #666666;
+}
+
+span.stackframe-fileloc {
+    color: #444444;
+}
+
+span.exception-header {
+    color: #444444;
+}
+
 
 div.console-text {
     padding: 0.5em 1em 0.5em 1em;

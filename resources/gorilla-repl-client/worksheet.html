@@ -143,6 +143,24 @@
     <div data-bind="template: {name: renderTemplate}"></div>
 </script>
 
+<script type="text/html" id="stacktrace-template">
+    <div class="exception"><span class="exception-header" data-bind="text: heading"></span>
+        <span data-bind="text: value.class"></span> (<span data-bind="text: value.message"></span>)</div>
+    <ul data-bind="foreach: value.stacktrace">
+        <li data-bind="css: {'java-stackframe': type === 'java', 'clj-stackframe': type === 'clj', 'tooling-stackframe': flags.indexOf('tooling') >= 0}">
+            <!-- ko if: type === "clj" -->
+            <span data-bind="text: fn"></span>
+            - <span data-bind="text: ns" class="stackframe-ns"></span>
+            - <span data-bind="text: '(' + file + ':' + line + ')'" class="stackframe-fileloc"></span>
+            <!-- /ko -->
+            <!-- ko if: type === "java" -->
+            <span data-bind="text: method"></span>
+            - <span data-bind="text: '(' + file + ':' + line + ')'" class="stackframe-fileloc"></span>
+            <!-- /ko -->
+        </li>
+    </ul>
+</script>
+
 <script type="text/html" id="code-segment-template">
     <div class="segment code running"
          data-bind="css: {selected: active(), running: runningIndicator}, attr: {id: id}">
@@ -151,6 +169,12 @@
             <textarea class="codeTextArea mousetrap" data-bind="codemirror: content"></textarea>
         </div>
         <div class="error-text" data-bind="text: errorText, visible: errorText() !== ''"></div>
+        <!-- ko if: stackTrace() !== null -->
+        <div class="stack-trace" data-bind="with: stackTrace">
+            <div data-bind="template: {name: 'stacktrace-template', data: {value: cause, heading: 'An exception was caused by: '}}"></div>
+            <div data-bind="template: {name: 'stacktrace-template', data: {value: exception, heading: 'Exception thrown: '}}"></div>
+        </div>
+        <!-- /ko -->
         <div class="console-text" data-bind="visible: consoleText() !== ''">
             <pre><code data-bind="html: consoleText"></code></pre>
         </div>

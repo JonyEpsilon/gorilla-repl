@@ -264,11 +264,18 @@ var worksheet = function () {
             seg.runningIndicator(false);
         });
 
-        addEventHandler("evaluator:error-response output:output-error", function (e, d) {
+        addEventHandler("output:output-error", function (e, d) {
             var segID = d.segmentID;
             var seg = self.getSegmentForID(segID);
             seg.errorText(d.error);
         });
+
+        addEventHandler("evaluator:error-response", function (e, d) {
+            var segID = d.segmentID;
+            var seg = self.getSegmentForID(segID);
+            seg.stackTrace(d);
+        });
+
 
 
         // * Auto-completion *
