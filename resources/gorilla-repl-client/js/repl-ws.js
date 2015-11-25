@@ -149,6 +149,9 @@ var repl = (function () {
                 var errorObj = {};
                 errorObj.error = d.err;
                 errorObj.segmentID = segID;
+                // this is very important. The cause field must be present for the renderer to not choke, it is set to
+                // null here, and will be assigned later if the exception does have a cause.
+                errorObj.cause = null;
                 sendCIDERMessage({op: "stacktrace"}, function (ds) {
                     // once we receive the done message, we can trigger rendering of the error message on the front end.
                     if (ds.status) {

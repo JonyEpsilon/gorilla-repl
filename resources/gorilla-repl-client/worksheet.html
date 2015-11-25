@@ -171,7 +171,9 @@
         <div class="error-text" data-bind="text: errorText, visible: errorText() !== ''"></div>
         <!-- ko if: stackTrace() !== null -->
         <div class="stack-trace" data-bind="with: stackTrace">
+            <!-- ko if: cause !== null -->
             <div data-bind="template: {name: 'stacktrace-template', data: {value: cause, heading: 'An exception was caused by: '}}"></div>
+            <!-- /ko -->
             <div data-bind="template: {name: 'stacktrace-template', data: {value: exception, heading: 'Exception thrown: '}}"></div>
         </div>
         <!-- /ko -->
