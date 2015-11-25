@@ -7,7 +7,6 @@
 - Port files are now configurable (thanks to @mattexx).
 - Separate out handlers from embedded HTTPKit to ease embedding (thanks to @deas).
 - Make URLs relative to support easier embedding (thanks to @deas).
-- Generate a main class to ease usage in Java projects.
 - Viewer properly supports non-ASCII text.
 - Update to support CIDER-nrepl version 0.9.1.
 - Large worksheets (>8MB) now save successfully.
