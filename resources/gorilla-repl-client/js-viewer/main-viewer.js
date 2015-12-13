@@ -27,15 +27,14 @@ var app = function () {
         self.copyBoxVisible(false);
     };
 
-    self.start = function (worksheetData, sourceURL, worksheetName, source) {
+    self.start = function (worksheetData, sourceURL, worksheetName, host) {
 
         var ws = worksheet();
         ws.segments = ko.observableArray(worksheetParser.parse(worksheetData));
         self.worksheet(ws);
         self.sourceURL(sourceURL);
         self.filename(worksheetName);
-        self.source(source);
-        self.host((source.toLowerCase() === "bitbucket") ? "Bitbucket" : "GitHub");
+        self.host(host);
 
         // wire up the UI
         ko.applyBindings(self, document.getElementById("document"));
@@ -64,14 +63,14 @@ $(function () {
             var repo = getParameterByName("repo");
             var path = getParameterByName("path");
             getFromGithub(user, repo, path, function (data) {
-                viewer.start(data, "https://github.com/" + user + "/" + repo, path, source);
+                viewer.start(data, "https://github.com/" + user + "/" + repo, path, "GitHub");
             });
             return;
         case "gist":
             var id = getParameterByName("id");
             var filename = getParameterByName("filename");
             getFromGist(id, filename, function (data) {
-                viewer.start(data,  "https://gist.github.com/" + id, filename, source);
+                viewer.start(data,  "https://gist.github.com/" + id, filename, "GitHub");
             });
             return;
         case "bitbucket":
@@ -80,7 +79,19 @@ $(function () {
             var path = getParameterByName("path");
             var revision = getParameterByName("revision") || "HEAD";
             getFromBitbucket(user, repo, path, revision, function (data) {
-                viewer.start(data, "https://bitbucket.org/" + user + "/" + repo, path, source);
+                viewer.start(data, "https://bitbucket.org/" + user + "/" + repo, path, "Bitbucket");
+            });
+            return;
+        case "ipfs":
+            var hash = getParameterByName("hash");
+            getFromIpfs(hash, function(data) {
+                viewer.start(data, "http://gateway.ipfs.io/ipfs/" + hash, hash, "IPFS");
+            });
+            return;
+        case "ipns":
+            var hash = getParameterByName("hash");
+            getFromIpns(hash, function(data) {
+                viewer.start(data, "http://gateway.ipfs.io/ipns/" + hash, hash, "IPFS");
             });
             return;
         case "test":
