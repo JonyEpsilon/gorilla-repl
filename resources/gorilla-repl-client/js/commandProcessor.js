@@ -124,6 +124,15 @@ commandList = [
         }
     },
     {
+        name: "command:worksheet:undelete",
+        desc: "Undo the last segment delete.",
+        showInMenu: true,
+        kb: combo('g', '\\'),
+        action: function () {
+            eventBus.trigger("worksheet:undelete");
+        }
+    },
+    {
         name: "command:worksheet:changeToFree",
         desc: "Convert the highlighted segment to a markdown segment.",
         showInMenu: true,
