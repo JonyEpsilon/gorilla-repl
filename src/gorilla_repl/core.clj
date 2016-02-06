@@ -26,7 +26,6 @@
            (route/resources "/" {:root "gorilla-repl-client"})
            (route/files "/project-files" {:root "."}))
 
-
 (defn run-gorilla-server
   [conf]
   ;; get configuration information from parameters
@@ -36,6 +35,8 @@
         nrepl-requested-port (or (:nrepl-port conf) 0)  ;; auto-select port if none requested
         nrepl-port-file (io/file (or (:nrepl-port-file conf) ".nrepl-port"))
         gorilla-port-file (io/file (or (:gorilla-port-file conf) ".gorilla-port"))
+        wrap (:wrap conf indentity)
+        app (wrap app-routes)
         project (or (:project conf) "no project")
         keymap (or (:keymap (:gorilla-options conf)) {})
         _ (handle/update-excludes (fn [x] (set/union x (:load-scan-exclude (:gorilla-options conf)))))]
@@ -49,7 +50,7 @@
     ;; first startup nREPL
     (nrepl/start-and-connect nrepl-requested-port nrepl-port-file)
     ;; and then the webserver
-    (let [s (server/run-server #'app-routes {:port webapp-requested-port :join? false :ip ip :max-body 500000000})
+    (let [s (server/run-server app {:port webapp-requested-port :join? false :ip ip :max-body 500000000})
           webapp-port (:local-port (meta s))]
       (spit (doto gorilla-port-file .deleteOnExit) webapp-port)
       (println (str "Running at http://" ip ":" webapp-port "/worksheet.html ."))
