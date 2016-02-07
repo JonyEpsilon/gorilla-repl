@@ -35,7 +35,7 @@
         nrepl-requested-port (or (:nrepl-port conf) 0)  ;; auto-select port if none requested
         nrepl-port-file (io/file (or (:nrepl-port-file conf) ".nrepl-port"))
         gorilla-port-file (io/file (or (:gorilla-port-file conf) ".gorilla-port"))
-        wrap (:wrap conf indentity)
+        wrap (:wrap conf identity)
         app (wrap app-routes)
         project (or (:project conf) "no project")
         keymap (or (:keymap (:gorilla-options conf)) {})
