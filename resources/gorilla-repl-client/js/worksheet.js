@@ -12,6 +12,7 @@ var worksheet = function () {
 
     // the content of the worksheet is a list of segments.
     self.segments = ko.observableArray();
+    self.deletedSegment = null;
 
     // serialises the worksheet for saving. The result is valid clojure code, marked up with some magic comments.
     self.toClojure = function () {
@@ -57,7 +58,19 @@ var worksheet = function () {
     };
 
     self.deleteSegment = function (index) {
-        self.segments.splice(index, 1);
+        var seg = self.segments.splice(index, 1)[0];
+        self.deletedSegment = {
+            index: index,
+            segment: seg
+        };
+    };
+
+    self.undeleteSegment = function () {
+        if (self.deletedSegment == null) return;
+        self.deactivateSegment(self.activeSegmentIndex);
+        self.segments.splice(self.deletedSegment.index, 0, self.deletedSegment.segment);
+        self.activateSegment(self.deletedSegment.index, true);
+        self.deletedSegment = null;
     };
 
     // an offset of 1 inserts below the active segment, 0 above.
@@ -69,6 +82,7 @@ var worksheet = function () {
         self.deactivateSegment(currentIndex);
         self.segments.splice(currentIndex + offset, 0, seg);
         self.activateSegment(currentIndex + offset);
+        self.deletedSegment = null;
     };
 
     self.moveSegment = function (up) {
@@ -85,6 +99,7 @@ var worksheet = function () {
         var offset = up ? -1 : 1;
         self.segments.splice(index + offset, 0, self.segments.splice(index, 1)[0]);
         self.activateSegment(index + offset);
+        self.deletedSegment = null;
     };
 
 
@@ -146,6 +161,10 @@ var worksheet = function () {
             if (index == self.segments().length) self.activateSegment(self.segments().length - 1, false);
             // otherwise, select the one below.
             else self.activateSegment(index, true);
+        });
+
+        addEventHandler("worksheet:undelete", function () {
+            self.undeleteSegment();
         });
 
         // ... whereas this one is called if backspace is pressed in an empty segment.
