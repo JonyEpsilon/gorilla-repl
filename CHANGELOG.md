@@ -2,6 +2,8 @@
 
 ## Version 0.3.6
 
+- Axis labels on plots (thanks to @dtolpin).
+- Bump to latest CIDER-nrepl version 0.10.2.
 
 
 ## Version 0.3.5
