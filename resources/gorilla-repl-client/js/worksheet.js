@@ -82,7 +82,7 @@ var worksheet = function () {
         self.deactivateSegment(currentIndex);
         self.segments.splice(currentIndex + offset, 0, seg);
         self.activateSegment(currentIndex + offset);
-        self.deletedSegment == null;
+        self.deletedSegment = null;
     };
 
     self.moveSegment = function (up) {
@@ -99,7 +99,7 @@ var worksheet = function () {
         var offset = up ? -1 : 1;
         self.segments.splice(index + offset, 0, self.segments.splice(index, 1)[0]);
         self.activateSegment(index + offset);
-        self.deletedSegment == null;
+        self.deletedSegment = null;
     };
 
 
