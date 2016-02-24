@@ -4,7 +4,7 @@
 
 - Axis labels on plots (thanks to @dtolpin).
 - Bump to latest CIDER-nrepl version 0.10.2.
-
+- Undo segment delete (thanks to @mikeivanov).
 
 ## Version 0.3.5
 
