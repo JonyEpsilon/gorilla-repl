@@ -36,8 +36,9 @@
 
 ;; Unfortunately nREPL's interruptible-eval middleware has a fixed dependency on the pr-values middleware. So here,
 ;; what we do is fudge the :requires and :expects values to ensure that our rendering middleware gets inserted into
-;; the linearized middlware stack between the eval middleware and the pr-values middleware. A bit of a hack!
+;; the linearized middleware stack between the eval middleware and the pr-values middleware. A bit of a hack!
 (middleware/set-descriptor! #'render-values
                             {:requires #{#'clojure.tools.nrepl.middleware.pr-values/pr-values}
                              :expects  #{"eval"}
                              :handles  {}})
+
