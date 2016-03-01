@@ -38,7 +38,7 @@
   "Should a file be included in the 'load file' list? Currently all .cljw files, and .clj files with a Gorilla header
   are included."
   [file]
-  (or (cljw-file? file) (and (clj-file? file) (gorilla-file? file))))
+  (or (cljw-file? file) (clj-file? file)))
 
 (defn gorilla-filepaths-in-current-directory
   [excludes]

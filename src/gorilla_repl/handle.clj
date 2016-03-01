@@ -26,7 +26,9 @@
   ;; TODO: S'pose some error handling here wouldn't be such a bad thing
   (when-let [ws-file (:worksheet-filename (:params req))]
     (let [_ (print (str "Loading: " ws-file " ... "))
-          ws-data (slurp (str ws-file) :encoding "UTF-8")
+          ws-data (if (files/gorilla-file? (clojure.java.io/file ws-file))
+                    (slurp (str ws-file) :encoding "UTF-8")
+                    (str ";; gorilla-repl.fileformat = 1\n\n;; @@\n" (slurp (str ws-file) :encoding "UTF-8") "\n;; @@\n"))
           _ (println "done.")]
       (res/response {:worksheet-data ws-data}))))
 
