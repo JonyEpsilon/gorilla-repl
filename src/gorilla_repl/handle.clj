@@ -40,7 +40,9 @@
       (let [marked-down-data (apply str (interpose "\n" (filter
                                                           #(and (> (count %) 1) (not= ";;" (subs % 0 2)))
                                                           (clojure.string/split ws-data #"\n"))))
-            marked-down-file (str ws-file ".clj")]
+            marked-down-file (if (and (> (count ws-file) 3) (= (apply str (take-last 4 ws-file)) ".clj"))
+                                 (apply str (concat (drop-last 4 ws-file) "_raw.clj"))
+                                 (str ws-file "_raw.clj"))]
         (print (str "Saving: " marked-down-file " ... "))
         (spit marked-down-file marked-down-data)
         (println (str "done. [" (java.util.Date.) "]"))
