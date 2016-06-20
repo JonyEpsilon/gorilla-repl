@@ -14,6 +14,14 @@
   [file]
   (ends-with (.getName file) ".clj"))
 
+(defn cljs-file?
+  [file]
+  (ends-with (.getName file) ".cljs"))
+
+(defn cljc-file?
+  [file]
+  (ends-with (.getName file) ".cljc"))
+
 (defn cljw-file?
   [file]
   (ends-with (.getName file) ".cljw"))
@@ -38,7 +46,7 @@
   "Should a file be included in the 'load file' list? Currently all .cljw files, and .clj files with a Gorilla header
   are included."
   [file]
-  (or (cljw-file? file) (clj-file? file)))
+  (or (cljw-file? file) (cljs-file? file) (cljc-file? file) (clj-file? file)))
 
 (defn gorilla-filepaths-in-current-directory
   [excludes]
