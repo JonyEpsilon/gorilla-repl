@@ -39,10 +39,13 @@
   ;; TODO: error handling!
   (when-let [ws-data (:worksheet-data (:params req))]
     (when-let [ws-file (:worksheet-filename (:params req))]
-      (print (str "Saving: " ws-file " ... "))
-      (spit ws-file ws-data)
-      (println (str "done. [" (java.util.Date.) "]"))
-      (res/response {:status "ok"}))))
+      (when-let [with-markup (:with-markup (:params req))]
+        (print (str "Saving: " ws-file " ... "))
+        (if with-markup
+          (spit ws-file ws-data)
+          (spit ws-file (clojure.string/replace ws-data #"(?s).*@@\s(.*)\s;; @@\s" "$1")))
+        (println (str "done. [" (java.util.Date.) "]"))
+        (res/response {:status "ok"})))))
 
 ;; More ugly atom usage to support defroutes
 (def ^:private excludes (atom #{".git"}))

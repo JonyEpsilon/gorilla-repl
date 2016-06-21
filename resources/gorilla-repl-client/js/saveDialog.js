@@ -21,7 +21,9 @@ var saveDialog = function (callback) {
 
     // Show the dialog
     self.show = function ( existingFilename ) {
-        existingFilename && (self.filename(existingFilename));        self.shown(true);
+        existingFilename && (self.filename(existingFilename));
+        self.markup();
+        self.shown(true);
         self.focused(true);
     };
 

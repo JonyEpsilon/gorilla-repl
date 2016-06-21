@@ -107,6 +107,10 @@
         <h3>Filename (relative to project directory):</h3>
         <div class="modal-content">
             <input type="text" data-bind="hasFocus: focused, value: filename, valueUpdate: 'input', event: {keydown: handleKeyPress}"/>
+          </div>
+        <h3>Save with markup?</h3>
+        <div class="modal=content">
+          <input type="checkbox" data-bind="checked: markup"/>
         <div><div class="modal-button" data-bind="click: handleCancelClick">Cancel</div>
             <div class="modal-button highlight" data-bind="click: handleOKClick">OK</div>
         </div>
