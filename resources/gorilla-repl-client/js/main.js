@@ -213,6 +213,13 @@ var app = function () {
         self.saveDialog.show(fname);
     });
 
+    $(document).on("keydown", function (event) {
+        if (event.which == 27) {
+            Mousetrap.enable(Mousetrap.stopCallback());
+            self.flashStatusMessage("Gorilla keymap: " + Mousetrap.enabled, 2000);
+        }
+    });
+
     eventBus.on("app:reset-worksheet", function () {
         setBlankWorksheet();
     });
