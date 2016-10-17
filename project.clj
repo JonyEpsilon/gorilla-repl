@@ -2,9 +2,9 @@
 ;;;;
 ;;;; gorilla-repl is licenced to you under the MIT licence. See the file LICENCE.txt for full details.
 
-(defproject org.clojars.benfb/gorilla-repl "0.4.0-SNAPSHOT"
+(defproject org.clojars.benfb/gorilla-repl "0.4.0"
   :description "A rich REPL for Clojure in the notebook style."
-  :url "https://github.com/JonyEpsilon/gorilla-repl"
+  :url "https://github.com/benfb/gorilla-repl"
   :license {:name "MIT"}
   :dependencies ^:replace [[org.clojure/clojure "1.6.0"]
                            [http-kit "2.1.18"]

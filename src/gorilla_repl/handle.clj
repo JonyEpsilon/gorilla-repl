@@ -39,11 +39,11 @@
   ;; TODO: error handling!
   (when-let [ws-data (:worksheet-data (:params req))]
     (when-let [ws-file (:worksheet-filename (:params req))]
-      (when-let [with-markup (:with-markup (:params req))]
+      (let [ws-data (if (= (:with-markup (:params req)) "true")
+                      ws-data
+                      (apply str (take-nth 2 (rest (clojure.string/split ws-data #";; @@")))))]
         (print (str "Saving: " ws-file " ... "))
-        (if with-markup
-          (spit ws-file ws-data)
-          (spit ws-file (clojure.string/replace ws-data #"(?s).*@@\s(.*)\s;; @@\s" "$1")))
+        (spit ws-file ws-data)
         (println (str "done. [" (java.util.Date.) "]"))
         (res/response {:status "ok"})))))
 
