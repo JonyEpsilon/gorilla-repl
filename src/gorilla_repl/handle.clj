@@ -41,7 +41,7 @@
     (when-let [ws-file (:worksheet-filename (:params req))]
       (let [ws-data (if (= (:with-markup (:params req)) "true")
                       ws-data
-                      (apply str (take-nth 2 (rest (clojure.string/split ws-data #";; @@")))))]
+                      (apply str (map #(subs % 1) (take-nth 2 (rest (clojure.string/split ws-data #";; @@"))))))]
         (print (str "Saving: " ws-file " ... "))
         (spit ws-file ws-data)
         (println (str "done. [" (java.util.Date.) "]"))
