@@ -4,7 +4,7 @@
 
 (defproject gorilla-repl "0.4.0"
   :description "A rich REPL for Clojure in the notebook style."
-  :url "https://github.com/benfb/gorilla-repl"
+  :url "https://github.com/JonyEpsilon/gorilla-repl"
   :license {:name "MIT"}
   :dependencies ^:replace [[org.clojure/clojure "1.6.0"]
                            [http-kit "2.1.18"]
