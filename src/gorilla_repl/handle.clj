@@ -26,7 +26,9 @@
   ;; TODO: S'pose some error handling here wouldn't be such a bad thing
   (when-let [ws-file (:worksheet-filename (:params req))]
     (let [_ (print (str "Loading: " ws-file " ... "))
-          ws-data (slurp (str ws-file) :encoding "UTF-8")
+          ws-data (if (files/gorilla-file? (clojure.java.io/file ws-file))
+                    (slurp (str ws-file) :encoding "UTF-8")
+                    (str ";; gorilla-repl.fileformat = 1\n\n;; @@\n" (slurp (str ws-file) :encoding "UTF-8") "\n;; @@\n"))
           _ (println "done.")]
       (res/response {:worksheet-data ws-data}))))
 
@@ -37,10 +39,13 @@
   ;; TODO: error handling!
   (when-let [ws-data (:worksheet-data (:params req))]
     (when-let [ws-file (:worksheet-filename (:params req))]
-      (print (str "Saving: " ws-file " ... "))
-      (spit ws-file ws-data)
-      (println (str "done. [" (java.util.Date.) "]"))
-      (res/response {:status "ok"}))))
+      (let [ws-data (if (= (:with-markup (:params req)) "true")
+                      ws-data
+                      (apply str (map #(subs % 1) (take-nth 2 (rest (clojure.string/split ws-data #";; @@"))))))]
+        (print (str "Saving: " ws-file " ... "))
+        (spit ws-file ws-data)
+        (println (str "done. [" (java.util.Date.) "]"))
+        (res/response {:status "ok"})))))
 
 ;; More ugly atom usage to support defroutes
 (def ^:private excludes (atom #{".git"}))

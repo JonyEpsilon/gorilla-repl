@@ -169,6 +169,15 @@ commandList = [
         }
     },
     {
+        name: "command:app:savewithout",
+        desc: "Save the worksheet without markup.",
+        showInMenu: true,
+        kb: combo('g', 'w'),
+        action: function () {
+            eventBus.trigger("app:savewithout");
+        }
+    },
+    {
         name: "command:app:saveas",
         desc: "Save the worksheet to a new filename.",
         showInMenu: true,

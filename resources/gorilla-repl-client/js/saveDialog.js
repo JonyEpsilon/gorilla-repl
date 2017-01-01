@@ -16,10 +16,14 @@ var saveDialog = function (callback) {
     self.focused = ko.observable(false);
     // the text the user has put in the box
     self.filename = ko.observable("");
+    // the checkbox that determines to save with markup
+    self.markup = ko.observable(true);
 
     // Show the dialog
     self.show = function ( existingFilename ) {
-        existingFilename && (self.filename(existingFilename));        self.shown(true);
+        existingFilename && (self.filename(existingFilename));
+        self.markup();
+        self.shown(true);
         self.focused(true);
     };
 
@@ -38,7 +42,7 @@ var saveDialog = function (callback) {
 
     self.handleOKClick = function () {
         self.hide();
-        callback(self.filename());
+        callback(self.filename(), self.markup());
     };
 
     // This is bound to keypresses on the text input.
@@ -51,7 +55,7 @@ var saveDialog = function (callback) {
         // enter
         if (event.keyCode === 13) {
             self.hide();
-            callback(self.filename());
+            callback(self.filename(), self.markup());
             return false;
         }
         // Pass through keypresses to the default handler.

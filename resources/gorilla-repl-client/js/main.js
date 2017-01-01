@@ -109,11 +109,11 @@ var app = function () {
     };
 
     // The save dialog UI component. See below for a summary of the app:save logic.
-    self.saveDialog = saveDialog((function (f) {self.handleSaveDialogSuccess(f)}));
+    self.saveDialog = saveDialog((function (f, m) {self.handleSaveDialogSuccess(f, m)}));
     // the callback that the save dialog will call
-    self.handleSaveDialogSuccess = function (fname) {
+    self.handleSaveDialogSuccess = function (fname, withmarkup) {
         if (fname) {
-            saveToFile(fname, function() {
+            saveToFile(fname, withmarkup, function() {
                 // if the save was successful, hold on to the filename.
                 self.filename(fname);
             });
@@ -127,10 +127,11 @@ var app = function () {
     self.docViewer = docViewer();
 
     // Helpers for loading and saving the worksheet - called by the various command handlers
-    var saveToFile = function (filename, successCallback) {
+    var saveToFile = function (filename, withMarkup, successCallback) {
         $.post(createPath('save'), {
             "worksheet-filename": filename,
-            "worksheet-data": self.worksheet().toClojure()
+            "worksheet-data": self.worksheet().toClojure(),
+            "with-markup": withMarkup
         }).done(function () {
             self.flashStatusMessage("Saved: " + filename);
             if (successCallback) successCallback();
@@ -204,7 +205,15 @@ var app = function () {
         var fname = self.filename();
         // if we already have a filename, save to it. Else, prompt for a name.
         if (fname !== "") {
-            saveToFile(fname);
+            saveToFile(fname, true);
+        } else self.saveDialog.show();
+    });
+
+    eventBus.on("app:savewithout", function () {
+        var fname = self.filename();
+        // if we already have a filename, save to it. Else, prompt for a name.
+        if (fname !== "") {
+            saveToFile(fname, false);
         } else self.saveDialog.show();
     });
 
