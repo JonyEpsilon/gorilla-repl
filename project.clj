@@ -8,7 +8,7 @@
   :license {:name "MIT"}
   :dependencies ^:replace [[org.clojure/clojure "1.6.0"]
                            [http-kit "2.1.18"]
-                           [ring/ring-json "0.3.1"]
+                           [ring/ring-json "0.4.0"]
                            [cheshire "5.3.1"]
                            [compojure "1.1.8"]
                            [org.slf4j/slf4j-api "1.7.7"]
