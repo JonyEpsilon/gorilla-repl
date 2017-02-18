@@ -101,7 +101,7 @@ var repl = (function () {
     // Relies on the cider-nrepl middleware. Calls back with the symbol and the symbol's namespace
     self.resolveSymbol = function (symbol, ns, callback) {
         sendCIDERMessage({op: "info", symbol: symbol, ns: ns}, function (d) {
-            callback({symbol: d.value.name, ns: d.value.ns});
+            callback({symbol: d.name, ns: d.ns});
         })
     };
 
