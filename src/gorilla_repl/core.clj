@@ -34,6 +34,7 @@
         webapp-requested-port (or (:port conf) 0)
         ip (or (:ip conf) "127.0.0.1")
         nrepl-requested-port (or (:nrepl-port conf) 0)  ;; auto-select port if none requested
+        nrepl-requested-host (or (:nrepl-host conf) "127.0.0.1")
         nrepl-port-file (io/file (or (:nrepl-port-file conf) ".nrepl-port"))
         gorilla-port-file (io/file (or (:gorilla-port-file conf) ".gorilla-port"))
         project (or (:project conf) "no project")
@@ -47,7 +48,7 @@
     ;; check for updates
     (version/check-for-update version)  ;; runs asynchronously
     ;; first startup nREPL
-    (nrepl/start-and-connect nrepl-requested-port nrepl-port-file)
+    (nrepl/start-and-connect nrepl-requested-port nrepl-requested-host nrepl-port-file)
     ;; and then the webserver
     (let [s (server/run-server #'app-routes {:port webapp-requested-port :join? false :ip ip :max-body 500000000})
           webapp-port (:local-port (meta s))]

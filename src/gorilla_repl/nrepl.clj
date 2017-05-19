@@ -10,10 +10,11 @@
 (def nrepl (atom nil))
 
 (defn start-and-connect
-  ([nrepl-requested-port repl-port-file]
+  ([nrepl-requested-port nrepl-requested-host repl-port-file]
    (let [cider-mw (map resolve cider/cider-middleware)
          middleware (conj cider-mw #'render-mw/render-values)
          nr (nrepl-server/start-server :port nrepl-requested-port
+                                       :bind nrepl-requested-host
                                        :handler (apply nrepl-server/default-handler middleware))
          nrepl-port (:port nr)]
      (println "Started nREPL server on port" nrepl-port)
