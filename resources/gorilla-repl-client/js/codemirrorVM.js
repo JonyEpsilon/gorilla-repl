@@ -107,7 +107,7 @@ ko.bindingHandlers.codemirror = {
             fallthrough: "default"};
         var cm = CodeMirror.fromTextArea(element,
             {
-                lineNumbers: false,
+                lineNumbers: true,
                 matchBrackets: true,
                 autoCloseBrackets: '()[]{}""',
                 lineWrapping: true,
