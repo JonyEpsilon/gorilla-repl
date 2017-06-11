@@ -97,6 +97,15 @@ commandList = [
         }
     },
     {
+        name: "command:evaluator:evaluate-rest",
+        desc: "Evaluate remaining segments, starting from the current one.",
+        showInMenu: true,
+        kb: combo('g', 'enter'),
+        action: function () {
+            eventBus.trigger("worksheet:evaluate-rest");
+        }
+    },
+    {
         name: "command:evaluator:evaluate-stationary",
         desc: "Evaluate the highlighted segment without creating new cells.",
         showInMenu: false,

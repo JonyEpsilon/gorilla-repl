@@ -251,6 +251,14 @@ var worksheet = function () {
             self.segments().forEach(evaluateSegment);
         });
 
+        addEventHandler("worksheet:evaluate-rest", function () {
+            var seg = self.getActiveSegment();
+            if (seg == null) return;
+            segs = self.segments()
+            segsToEval = segs.slice(self.activeSegmentIndex, self.segments().length)
+            segsToEval.forEach(evaluateSegment);
+        });
+
         // This is the same as the evaluate command, but it doesn't move on to the next cell automatically
         addEventHandler("worksheet:evaluate-stationary", function () {
             // check that a segment is active
