@@ -15,7 +15,7 @@ var saveDialog = function (callback) {
     // that will take the focus, and is focused when the dialog appears.
     self.focused = ko.observable(false);
     // the text the user has put in the box
-    self.filename = ko.observable("");
+    self.filename = ko.observable(".clj");
     // the checkbox that determines to save with markup
     self.markup = ko.observable(true);
 
