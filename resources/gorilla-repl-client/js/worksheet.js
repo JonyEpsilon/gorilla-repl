@@ -324,6 +324,17 @@ var worksheet = function () {
             }
         });
 
+        // * Auto-indentation *
+
+        addEventHandler("worksheet:reindent", function (e, d) {
+            // check that a segment is active
+            var seg = self.getActiveSegment();
+            if (seg == null) return;
+            if (seg.type == "code") {
+                seg.content.reindent();
+            }
+        });
+
         // * External documentation *
 
         addEventHandler("docs:clojuredocs", function () {

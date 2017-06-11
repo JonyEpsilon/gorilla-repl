@@ -35,6 +35,10 @@ var codemirrorVM = function (id, initialContents, contentType) {
             {async: true, completeSingle: false, alignWithWord: false});
     };
 
+    self.reindent = function (completionFunc) {
+        self.codeMirror.execCommand("indentAuto")
+    };
+
     // These can be called to position the CodeMirror cursor appropriately. They are used when the cell is receiving
     // focus from another cell.
     self.positionCursorAtContentStart = function () {
@@ -104,6 +108,7 @@ ko.bindingHandlers.codemirror = {
             'Shift-Enter': "doNothing",
             'Shift-Ctrl-Enter': "doNothing",
             'Shift-Alt-Enter': "doNothing",
+            'Shift-Tab': "doNothing",
             fallthrough: "default"};
         var cm = CodeMirror.fromTextArea(element,
             {

@@ -266,5 +266,15 @@ commandList = [
         action: function () {
             eventBus.trigger("worksheet:completions");
         }
+    },
+    {
+        name: "command:worksheet:reindent",
+        desc: "Auto reindent the current segment.",
+        showInMenu: true,
+        // alternative provided to workaround Firefox's idiotic unstoppable binding of ctrl+space
+        kb: ["shift+tab", combo('g', 'i')],
+        action: function () {
+            eventBus.trigger("worksheet:reindent");
+        }
     }
 ];
