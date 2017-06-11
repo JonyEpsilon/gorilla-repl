@@ -97,6 +97,15 @@ commandList = [
         }
     },
     {
+        name: "command:evaluator:evaluate-stationary",
+        desc: "Evaluate the highlighted segment without creating new cells.",
+        showInMenu: false,
+        kb: ck + "+enter",
+        action: function () {
+            eventBus.trigger("worksheet:evaluate-stationary");
+        }
+    },
+    {
         name: "command:worksheet:clear-output",
         desc: "Clear the output of the highlighted segment.",
         showInMenu: true,
