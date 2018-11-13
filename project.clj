@@ -6,7 +6,7 @@
   :description "A rich REPL for Clojure in the notebook style."
   :url "https://github.com/JonyEpsilon/gorilla-repl"
   :license {:name "MIT"}
-  :dependencies ^:replace [[org.clojure/clojure "1.6.0"]
+  :dependencies ^:replace [[org.clojure/clojure "1.9.0"]
                            [http-kit "2.1.18"]
                            [ring/ring-json "0.4.0"]
                            [cheshire "5.3.1"]
@@ -17,7 +17,7 @@
                            [gorilla-plot "0.1.4"]
                            [javax.servlet/servlet-api "2.5"]
                            [grimradical/clj-semver "0.2.0" :exclusions [org.clojure/clojure]]
-                           [cider/cider-nrepl "0.10.2"]
+                           [cider/cider-nrepl "0.18.0"]
                            [org.clojure/tools.nrepl "0.2.12"]]
   :main ^:skip-aot gorilla-repl.core
   :target-path "target/%s")
