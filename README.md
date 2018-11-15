@@ -1,3 +1,6 @@
+# Latest clojars version
+[![Clojars Project](https://img.shields.io/clojars/v/org.clojars.gscacco/gorilla-repl.svg)](https://clojars.org/org.clojars.gscacco/gorilla-repl)
+
 # Gorilla REPL
 
 Gorilla is a rich REPL for Clojure in the notebook style. If you're interested you should take a look at its
