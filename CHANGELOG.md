@@ -1,6 +1,7 @@
 # Changelog
 
 ## Version 0.5.0
+- Simplify nrepl printing middleware using new custom printing options (see [this PR](https://github.com/nrepl/nrepl/pull/59))
 - Clojure 1.9 support (thanks to @elisehuard, @include, @glts, and @gscacco)
 - Java 9 support via https://www.deps.co/blog/how-to-upgrade-clojure-projects-to-use-java-9/ (thanks @johannesborgstrom)
 - Ability to disable network-reliant update check via options

@@ -7,6 +7,7 @@
 (ns gorilla-repl.websocket-relay
   (:require [org.httpkit.server :as server]
             [nrepl.core :as nrepl]
+            [gorilla-repl.render-values-mw :as render-mw]
             [cheshire.core :as json]))
 
 ;; We will open a single connection to the nREPL server for the life of the application. It will be stored here.
@@ -24,11 +25,11 @@
   [channel data]
   (let [json-data (json/generate-string data)]
     #_(println json-data)
-    (server/send! channel json-data)))
+    (server/send! channel json-data))))
 
 (defn- process-message
   [channel data]
-  (let [parsed-message (assoc (json/parse-string data true) :as-html 1)
+  (let [parsed-message (assoc (json/parse-string data true) :printer `render-mw/custom-renderer :print-options {:as-html 1})
         client (nrepl/client @conn Long/MAX_VALUE)
         replies (nrepl/message client parsed-message)]
     ;; send the messages out over the WS connection one-by-one.
