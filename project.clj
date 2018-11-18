@@ -31,4 +31,5 @@
                   ["deploy"]
                   ["change" "version" "leiningen.release/bump-version"]
                   ["vcs" "commit"]
-                  ["vcs" "push"]])
+                  ["vcs" "push"]]
+  :deploy-repositories {"releases" {:url "https://repo.clojars.org" :username :env :password :env}})
