@@ -1,0 +1,13 @@
+image: debian/stretch
+packages:
+  - leiningen
+repositories:
+  buster: http://http.us.debian.org/debian testing main
+sources:
+  - https://github.com/benfb/gorilla-repl.git
+secrets:
+  - 7ebab768-e5e4-4c9d-ba57-ec41a72c5665
+tasks:
+  - setup: |
+      cd gorilla-repl
+      lein test
