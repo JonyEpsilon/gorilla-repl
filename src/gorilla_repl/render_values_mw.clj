@@ -3,11 +3,11 @@
 ;;;; gorilla-repl is licenced to you under the MIT licence. See the file LICENCE.txt for full details.
 
 (ns gorilla-repl.render-values-mw
-  (:require [clojure.tools.nrepl.transport :as transport]
-            [clojure.tools.nrepl.middleware :as middleware]
+  (:require [nrepl.transport :as transport]
+            [nrepl.middleware :as middleware]
             [gorilla-renderable.core :as render]
             [cheshire.core :as json])
-  (:import clojure.tools.nrepl.transport.Transport))
+  (:import nrepl.transport.Transport))
 
 ;; There's absolutely no way I would have figured this out without referring to
 ;; https://github.com/clojure/tools.nrepl/blob/master/src/main/clojure/clojure/tools/nrepl/middleware/pr_values.clj
@@ -38,7 +38,7 @@
 ;; what we do is fudge the :requires and :expects values to ensure that our rendering middleware gets inserted into
 ;; the linearized middleware stack between the eval middleware and the pr-values middleware. A bit of a hack!
 (middleware/set-descriptor! #'render-values
-                            {:requires #{#'clojure.tools.nrepl.middleware.pr-values/pr-values}
+                            {:requires #{#'nrepl.middleware.pr-values/pr-values}
                              :expects  #{"eval"}
                              :handles  {}})
 

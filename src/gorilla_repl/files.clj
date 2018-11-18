@@ -1,6 +1,7 @@
 (ns gorilla-repl.files
   "Utility functions to help with scanning for and loading gorilla files."
-  (:require [clojure.string :as str]))
+  (:require [clojure.string :as str]
+            [clojure.java.io :as io]))
 
 (defn ends-with
   [string ending]
@@ -57,5 +58,5 @@
   [excludes]
   (map #(str/replace-first (. % getPath) "./" "")
        (filter include-file? (excluded-file-seq
-                               (clojure.java.io/file ".")
+                               (io/file ".")
                                excludes))))

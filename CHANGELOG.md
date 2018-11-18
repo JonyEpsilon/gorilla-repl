@@ -1,5 +1,16 @@
 # Changelog
 
+## Version 0.5.0
+- Clojure 1.9 support (thanks to @elisehuard, @include, @glts, and @gscacco)
+- Java 9 support via https://www.deps.co/blog/how-to-upgrade-clojure-projects-to-use-java-9/ (thanks @johannesborgstrom)
+- Ability to disable network-reliant update check via options
+```
+:profiles {:uberjar {:aot :all}
+             :user
+              {:gorilla-options
+                {:phone-home false}}})
+```
+
 ## Version 0.4.1
 - Switch from MathJax CDN to Cloudflare (thanks to @ribelo and @jsa-aerial)
 - Add line numbers to text editor

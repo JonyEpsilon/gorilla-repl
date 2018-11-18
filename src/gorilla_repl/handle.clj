@@ -10,6 +10,8 @@
             [ring.middleware.params :as params]
             [ring.middleware.json :as json]
             [ring.util.response :as res]
+            [clojure.java.io :as io]
+            [clojure.string :as string]
             [gorilla-repl.files :as files]))
 
 ;; a wrapper for JSON API calls
@@ -26,7 +28,7 @@
   ;; TODO: S'pose some error handling here wouldn't be such a bad thing
   (when-let [ws-file (:worksheet-filename (:params req))]
     (let [_ (print (str "Loading: " ws-file " ... "))
-          ws-data (if (files/gorilla-file? (clojure.java.io/file ws-file))
+          ws-data (if (files/gorilla-file? (io/file ws-file))
                     (slurp (str ws-file) :encoding "UTF-8")
                     (str ";; gorilla-repl.fileformat = 1\n\n;; @@\n" (slurp (str ws-file) :encoding "UTF-8") "\n;; @@\n"))
           _ (println "done.")]
@@ -41,7 +43,7 @@
     (when-let [ws-file (:worksheet-filename (:params req))]
       (let [ws-data (if (= (:with-markup (:params req)) "true")
                       ws-data
-                      (apply str (map #(subs % 1) (take-nth 2 (rest (clojure.string/split ws-data #";; @@"))))))]
+                      (apply str (map #(subs % 1) (take-nth 2 (rest (string/split ws-data #";; @@"))))))]
         (print (str "Saving: " ws-file " ... "))
         (spit ws-file ws-data)
         (println (str "done. [" (java.util.Date.) "]"))

@@ -1,0 +1,38 @@
+version: 2
+jobs:
+  build:
+    docker:
+      # specify the version you desire here
+      - image: circleci/clojure:lein-2.7.1
+    working_directory: ~/gorilla-repl
+    environment:
+      LEIN_ROOT: "true"
+      # Customize the JVM maximum heap limit
+      JVM_OPTS: -Xmx3200m
+    steps:
+      - checkout
+      # Download and cache dependencies
+      - restore_cache:
+          keys:
+          - v1-dependencies-{{ checksum "project.clj" }}
+          # fallback to using the latest cache if no exact match is found
+          - v1-dependencies-
+      - run: lein deps
+      - save_cache:
+          paths:
+            - ~/.m2
+          key: v1-dependencies-{{ checksum "project.clj" }}
+      - run: lein test
+      - run:
+          name: Snapshot release
+          command: |
+            if [ "${CIRCLE_BRANCH}" == "develop" ]; then
+              lein release :rc
+            fi
+      - run:
+          name: Full release
+          command: |
+            if [ "${CIRCLE_BRANCH}" == "master" ]; then
+              echo "Full release"
+              lein release :patch
+            fi

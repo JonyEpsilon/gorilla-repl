@@ -3,8 +3,8 @@
 ;;;; gorilla-repl is licenced to you under the MIT licence. See the file LICENCE.txt for full details.
 
 (ns gorilla-repl.core
-  (:use compojure.core)
-  (:require [compojure.route :as route]
+  (:require [compojure.core :refer :all]
+            [compojure.route :as route]
             [org.httpkit.server :as server]
             [gorilla-repl.nrepl :as nrepl]
             [gorilla-repl.websocket-relay :as ws-relay]
@@ -38,6 +38,7 @@
         gorilla-port-file (io/file (or (:gorilla-port-file conf) ".gorilla-port"))
         project (or (:project conf) "no project")
         keymap (or (:keymap (:gorilla-options conf)) {})
+        phone-home (or (:phone-home (:gorilla-options conf)) (nil? (:phone-home (:gorilla-options conf))))
         _ (handle/update-excludes (fn [x] (set/union x (:load-scan-exclude (:gorilla-options conf)))))]
     ;; app startup
     (println "Gorilla-REPL:" version)
@@ -45,7 +46,8 @@
     (handle/set-config :project project)
     (handle/set-config :keymap keymap)
     ;; check for updates
-    (version/check-for-update version)  ;; runs asynchronously
+    (if phone-home
+      (version/check-for-update version))  ;; runs asynchronously)
     ;; first startup nREPL
     (nrepl/start-and-connect nrepl-requested-port nrepl-port-file)
     ;; and then the webserver

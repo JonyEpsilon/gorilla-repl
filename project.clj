@@ -2,22 +2,25 @@
 ;;;;
 ;;;; gorilla-repl is licenced to you under the MIT licence. See the file LICENCE.txt for full details.
 
-(defproject gorilla-repl "0.4.0"
+(defproject org.clojars.benfb/gorilla-repl "0.4.3-SNAPSHOT"
   :description "A rich REPL for Clojure in the notebook style."
-  :url "https://github.com/JonyEpsilon/gorilla-repl"
+  :url "https://github.com/benfb/gorilla-repl"
   :license {:name "MIT"}
-  :dependencies ^:replace [[org.clojure/clojure "1.6.0"]
-                           [http-kit "2.1.18"]
-                           [ring/ring-json "0.4.0"]
-                           [cheshire "5.3.1"]
-                           [compojure "1.1.8"]
-                           [org.slf4j/slf4j-api "1.7.7"]
-                           [ch.qos.logback/logback-classic "1.1.2"]
+  :dependencies ^:replace [[org.clojure/clojure "1.9.0"]
+                           [http-kit "2.3.0" :exclusions [ring/ring-core]]
+                           [ring/ring-json "0.4.0" :exclusions [org.clojure/clojure]]
+                           [cheshire "5.8.1"]
+                           [compojure "1.6.1" :exclusions [ring/ring-core ring/ring-json] ]
+                           [ch.qos.logback/logback-classic "1.2.3"]
                            [gorilla-renderable "2.0.0"]
-                           [gorilla-plot "0.1.4"]
-                           [javax.servlet/servlet-api "2.5"]
+                           [gorilla-plot "0.1.4" :exclusions [org.clojure/clojure]]
                            [grimradical/clj-semver "0.2.0" :exclusions [org.clojure/clojure]]
-                           [cider/cider-nrepl "0.10.2"]
-                           [org.clojure/tools.nrepl "0.2.12"]]
+                           [cider/cider-nrepl "0.18.0" :exclusions [org.clojure/clojure]]
+                           [nrepl/nrepl "0.4.5"]]
   :main ^:skip-aot gorilla-repl.core
-  :target-path "target/%s")
+  :target-path "target/%s"
+  :jvm-opts ~(let [version     (System/getProperty "java.version")
+                   [major _ _] (clojure.string/split version #"\.")]
+               (if (>= (java.lang.Integer/parseInt major) 9)
+                 ["--add-modules" "java.xml.bind"]
+                 [])))

@@ -3,7 +3,7 @@
   (:require [org.httpkit.client :as http]
             [clj-semver.core :as semver]))
 
-(def update-url "http://updates.gorilla-repl.org/latest-version?v=")
+(def update-url "https://updates.gorilla-repl.org/latest-version?v=")
 
 (defn version-check
   "Compares the latest version to the running version and prints a message to the console if there's an update

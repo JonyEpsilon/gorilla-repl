@@ -6,7 +6,7 @@
 
 (ns gorilla-repl.websocket-relay
   (:require [org.httpkit.server :as server]
-            [clojure.tools.nrepl :as nrepl]
+            [nrepl.core :as nrepl]
             [cheshire.core :as json]))
 
 ;; We will open a single connection to the nREPL server for the life of the application. It will be stored here.

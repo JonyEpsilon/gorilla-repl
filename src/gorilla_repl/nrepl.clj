@@ -1,6 +1,6 @@
 (ns gorilla-repl.nrepl
   (:require [gorilla-repl.websocket-relay :as ws-relay]
-            [clojure.tools.nrepl.server :as nrepl-server]
+            [nrepl.server :as nrepl-server]
             [gorilla-repl.render-values-mw :as render-mw] ;; it's essential this import comes after the previous one! It
                                                           ;; refers directly to a var in nrepl (as a hack to workaround
                                                           ;; a weakness in nREPL's middleware resolution).
