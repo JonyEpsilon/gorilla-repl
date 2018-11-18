@@ -23,4 +23,12 @@
                    [major _ _] (clojure.string/split version #"\.")]
                (if (>= (java.lang.Integer/parseInt major) 9)
                  ["--add-modules" "java.xml.bind"]
-                 [])))
+                 []))
+  :release-tasks [["vcs" "assert-committed"]
+                  ["change" "version" "leiningen.release/bump-version" "release"]
+                  ["vcs" "commit"]
+                  ["vcs" "tag" "v" "--no-sign"]
+                  ["deploy"]
+                  ["change" "version" "leiningen.release/bump-version"]
+                  ["vcs" "commit"]
+                  ["vcs" "push"]])
