@@ -7,7 +7,6 @@ jobs:
     working_directory: ~/gorilla-repl
     environment:
       LEIN_ROOT: "true"
-      # Customize the JVM maximum heap limit
       JVM_OPTS: -Xmx3200m
     steps:
       - checkout
@@ -27,6 +26,8 @@ jobs:
           name: Snapshot release
           command: |
             if [ "${CIRCLE_BRANCH}" == "develop" ]; then
+              git config user.email "circleci@example.com"
+              git config user.name "Circle CI"
               lein release :rc
             fi
       - run:
