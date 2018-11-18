@@ -2,7 +2,7 @@
 ;;;;
 ;;;; gorilla-repl is licenced to you under the MIT licence. See the file LICENCE.txt for full details.
 
-(defproject org.clojars.benfb/gorilla-repl "0.4.3-SNAPSHOT"
+(defproject org.clojars.benfb/gorilla-repl "0.5.0-SNAPSHOT"
   :description "A rich REPL for Clojure in the notebook style."
   :url "https://github.com/benfb/gorilla-repl"
   :license {:name "MIT"}
@@ -19,8 +19,8 @@
                            [nrepl/nrepl "0.4.5"]]
   :main ^:skip-aot gorilla-repl.core
   :target-path "target/%s"
-  :jvm-opts ~(let [version     (System/getProperty "java.version")
-                   [major _ _] (clojure.string/split version #"\.")]
+  :jvm-opts ~(let [version    (System/getProperty "java.version")
+                  [major _ _] (clojure.string/split version #"\.")]
                (if (>= (java.lang.Integer/parseInt major) 9)
                  ["--add-modules" "java.xml.bind"]
                  []))
